@@ -1,0 +1,582 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D3F139B23F12C4651F6ECAF /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
+		212E49A8977BCDA0C3B97959 /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
+		4E052A9C494CA5F12B05B513 /* iCodexBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA09EE5D04EE743FE3357100 /* iCodexBarApp.swift */; };
+		6ABE1BEA0173A488E8557B1B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */; };
+		7CEFA77D67D4D0C213D12A3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE58C1C516F60C12ED52476 /* Assets.xcassets */; };
+		7EF3609568ECD7F89ED1F9AE /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
+		7FD2FE36EBE48E095BEBD63D /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		8331E5E4292BA6CC40867F61 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
+		892FD58EAFB4E17E1827FD1E /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
+		B49D1934C160F4FEC6912D4F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
+		B691B0FE536BDAA53B5B9144 /* iCodexBarWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BC884A2DA41614C98C9D82C8 /* iCodexBarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */; };
+		C5FB458C804919B323953A41 /* APIKeyEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CBBDFFD19159A3634DABD4 /* APIKeyEntryView.swift */; };
+		C8038F0405A877B3127C5C39 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF3F9644B215AF992059E1 /* UsageStore.swift */; };
+		C96DFE5DDD17D58A75B88ABE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6758361B6645402DE8C9827F /* DashboardView.swift */; };
+		D553AAD3F0436EE373BEBCB5 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
+		D62B27A1ADE792CF80D27574 /* UsageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51134BC00231FABBA5454D16 /* UsageCardView.swift */; };
+		DF76489BCF2E6DDEE103E90F /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
+		EC45F111110709EFB4212B8B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
+		EEBD5228E4C1901E3BA3EAD4 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
+		EF9E87572DEC439FC38590A2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6255D81437795DF1627C28 /* DashboardViewModel.swift */; };
+		FCE5D0C8414DE13AC5E4236B /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		51C0C20477F74F47EA6F2F16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACB167B3C55AA2969BB4CBAB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E7ADC1085F871A71FDF6589B;
+			remoteInfo = iCodexBarWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0BA6BBA32CF54855885D44AE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B691B0FE536BDAA53B5B9144 /* iCodexBarWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		33BF3F9644B215AF992059E1 /* UsageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStore.swift; sourceTree = "<group>"; };
+		38F4439BD45390A80E0D8CED /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		3F8E706AF7E230FEE41C354B /* RateWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateWindow.swift; sourceTree = "<group>"; };
+		45B42CF72D4B6CD7145D340F /* UsageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageData.swift; sourceTree = "<group>"; };
+		4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageAPIService.swift; sourceTree = "<group>"; };
+		51134BC00231FABBA5454D16 /* UsageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageCardView.swift; sourceTree = "<group>"; };
+		5247D1DA62ACCA2806070568 /* UsageFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageFormatter.swift; sourceTree = "<group>"; };
+		6758361B6645402DE8C9827F /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyUsageEntry.swift; sourceTree = "<group>"; };
+		6EE58C1C516F60C12ED52476 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6FB86633B8F2FEB85FB3635C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCodexBarWidget.swift; sourceTree = "<group>"; };
+		7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
+		846EDC32AA5BAC4A61920660 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		8A5943A2F2C958B8F14E8101 /* iCodexBar.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = iCodexBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = iCodexBarWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B89DF51912DD02811E25D316 /* AlertThreshold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertThreshold.swift; sourceTree = "<group>"; };
+		B93E05543A2B3B528445C4D5 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
+		C0CBBDFFD19159A3634DABD4 /* APIKeyEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyEntryView.swift; sourceTree = "<group>"; };
+		CA09EE5D04EE743FE3357100 /* iCodexBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCodexBarApp.swift; sourceTree = "<group>"; };
+		DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderUsageSnapshot.swift; sourceTree = "<group>"; };
+		E35E208272B965D3886815B8 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		EB6255D81437795DF1627C28 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
+		ECC764ED99C580EF0ABA73CC /* iCodexBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iCodexBar.entitlements; sourceTree = "<group>"; };
+		F3B544FEDFF10118C1DD73FA /* iCodexBarWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iCodexBarWidgetExtension.entitlements; sourceTree = "<group>"; };
+		F5438B193D082AFCB3EFC676 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2DA2B3B653190C7E4D43F240 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				CA09EE5D04EE743FE3357100 /* iCodexBarApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2E8BC54164351CA657E8FA60 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				3509D27986E67DD24F3AE2D1 /* AddAccount */,
+				7C1359E6EC37DA2850E27553 /* Dashboard */,
+				3AB8E8EE8F6241E3550725CC /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		3509D27986E67DD24F3AE2D1 /* AddAccount */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AddAccount;
+			sourceTree = "<group>";
+		};
+		3AB8E8EE8F6241E3550725CC /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C0CBBDFFD19159A3634DABD4 /* APIKeyEntryView.swift */,
+				2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		4805344079C7C893FC13EB93 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6EE58C1C516F60C12ED52476 /* Assets.xcassets */,
+				ECC764ED99C580EF0ABA73CC /* iCodexBar.entitlements */,
+				6FB86633B8F2FEB85FB3635C /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		61BEE70AC48C59084FE0E05F /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */,
+				5247D1DA62ACCA2806070568 /* UsageFormatter.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		7C1359E6EC37DA2850E27553 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				6758361B6645402DE8C9827F /* DashboardView.swift */,
+				EB6255D81437795DF1627C28 /* DashboardViewModel.swift */,
+				51134BC00231FABBA5454D16 /* UsageCardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		7CD4125D3BC7B9A061CDC167 /* iCodexBarWidget */ = {
+			isa = PBXGroup;
+			children = (
+				70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */,
+				F3B544FEDFF10118C1DD73FA /* iCodexBarWidgetExtension.entitlements */,
+				F5438B193D082AFCB3EFC676 /* Info.plist */,
+			);
+			path = iCodexBarWidget;
+			sourceTree = "<group>";
+		};
+		80E34A791904F8BB1DC67D75 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				9F861EBAB8CA29515FA12B52 /* Models */,
+				9C563C39CA288F4F25D3DEB9 /* Services */,
+				61BEE70AC48C59084FE0E05F /* Utilities */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		9C563C39CA288F4F25D3DEB9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				38F4439BD45390A80E0D8CED /* KeychainService.swift */,
+				E35E208272B965D3886815B8 /* NotificationService.swift */,
+				4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */,
+				33BF3F9644B215AF992059E1 /* UsageStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9F861EBAB8CA29515FA12B52 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B89DF51912DD02811E25D316 /* AlertThreshold.swift */,
+				846EDC32AA5BAC4A61920660 /* APIKey.swift */,
+				6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */,
+				B93E05543A2B3B528445C4D5 /* Provider.swift */,
+				DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */,
+				3F8E706AF7E230FEE41C354B /* RateWindow.swift */,
+				45B42CF72D4B6CD7145D340F /* UsageData.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BCA26BB64FBAD85CDC429317 /* iCodexBar */ = {
+			isa = PBXGroup;
+			children = (
+				2DA2B3B653190C7E4D43F240 /* App */,
+				80E34A791904F8BB1DC67D75 /* Core */,
+				2E8BC54164351CA657E8FA60 /* Features */,
+				4805344079C7C893FC13EB93 /* Resources */,
+			);
+			path = iCodexBar;
+			sourceTree = "<group>";
+		};
+		D12AC1DF275458A79591EA13 = {
+			isa = PBXGroup;
+			children = (
+				BCA26BB64FBAD85CDC429317 /* iCodexBar */,
+				7CD4125D3BC7B9A061CDC167 /* iCodexBarWidget */,
+				E9D3DE1BFD44809A52A643CF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E9D3DE1BFD44809A52A643CF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8A5943A2F2C958B8F14E8101 /* iCodexBar.app */,
+				B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		200B0182C911169C72F073B4 /* iCodexBar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C5E097D4E37607F8D2DC76BA /* Build configuration list for PBXNativeTarget "iCodexBar" */;
+			buildPhases = (
+				96F554D09F0A6D646AF4072C /* Sources */,
+				4483F1E00F717972320E1347 /* Resources */,
+				0BA6BBA32CF54855885D44AE /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19986BEF1F335CECE5467AB9 /* PBXTargetDependency */,
+			);
+			name = iCodexBar;
+			packageProductDependencies = (
+			);
+			productName = iCodexBar;
+			productReference = 8A5943A2F2C958B8F14E8101 /* iCodexBar.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93AAC399AFDD3ED172BA23AC /* Build configuration list for PBXNativeTarget "iCodexBarWidgetExtension" */;
+			buildPhases = (
+				545DD855C92FB0C81AC6E1DD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iCodexBarWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = iCodexBarWidgetExtension;
+			productReference = B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACB167B3C55AA2969BB4CBAB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					200B0182C911169C72F073B4 = {
+						DevelopmentTeam = "";
+					};
+					E7ADC1085F871A71FDF6589B = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 12EF84A990B17082F2A04EC2 /* Build configuration list for PBXProject "iCodexBar" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D12AC1DF275458A79591EA13;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E9D3DE1BFD44809A52A643CF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				200B0182C911169C72F073B4 /* iCodexBar */,
+				E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4483F1E00F717972320E1347 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7CEFA77D67D4D0C213D12A3A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		545DD855C92FB0C81AC6E1DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC884A2DA41614C98C9D82C8 /* iCodexBarWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96F554D09F0A6D646AF4072C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B49D1934C160F4FEC6912D4F /* APIKey.swift in Sources */,
+				C5FB458C804919B323953A41 /* APIKeyEntryView.swift in Sources */,
+				212E49A8977BCDA0C3B97959 /* AlertThreshold.swift in Sources */,
+				7EF3609568ECD7F89ED1F9AE /* CurrencyFormatter.swift in Sources */,
+				D553AAD3F0436EE373BEBCB5 /* DailyUsageEntry.swift in Sources */,
+				C96DFE5DDD17D58A75B88ABE /* DashboardView.swift in Sources */,
+				EF9E87572DEC439FC38590A2 /* DashboardViewModel.swift in Sources */,
+				0D3F139B23F12C4651F6ECAF /* KeychainService.swift in Sources */,
+				EC45F111110709EFB4212B8B /* NotificationService.swift in Sources */,
+				8331E5E4292BA6CC40867F61 /* Provider.swift in Sources */,
+				7FD2FE36EBE48E095BEBD63D /* ProviderUsageSnapshot.swift in Sources */,
+				FCE5D0C8414DE13AC5E4236B /* RateWindow.swift in Sources */,
+				6ABE1BEA0173A488E8557B1B /* SettingsView.swift in Sources */,
+				EEBD5228E4C1901E3BA3EAD4 /* UsageAPIService.swift in Sources */,
+				D62B27A1ADE792CF80D27574 /* UsageCardView.swift in Sources */,
+				892FD58EAFB4E17E1827FD1E /* UsageData.swift in Sources */,
+				DF76489BCF2E6DDEE103E90F /* UsageFormatter.swift in Sources */,
+				C8038F0405A877B3127C5C39 /* UsageStore.swift in Sources */,
+				4E052A9C494CA5F12B05B513 /* iCodexBarApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		19986BEF1F335CECE5467AB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */;
+			targetProxy = 51C0C20477F74F47EA6F2F16 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2A5F35082FF600A569C7F831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = iCodexBarWidget/iCodexBarWidgetExtension.entitlements;
+				INFOPLIST_FILE = iCodexBarWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		3D79B4FA50AB8956F8141ACF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		64BB8714D0891263AFAE5FC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = iCodexBarWidget/iCodexBarWidgetExtension.entitlements;
+				INFOPLIST_FILE = iCodexBarWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		7446FBEE619E1347310A0643 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iCodexBar/Resources/iCodexBar.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = iCodexBar/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CF074B485144F756AA5E7EBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		FF3BAE381F9220CC779BC93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iCodexBar/Resources/iCodexBar.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = iCodexBar/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		12EF84A990B17082F2A04EC2 /* Build configuration list for PBXProject "iCodexBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF074B485144F756AA5E7EBE /* Debug */,
+				3D79B4FA50AB8956F8141ACF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		93AAC399AFDD3ED172BA23AC /* Build configuration list for PBXNativeTarget "iCodexBarWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A5F35082FF600A569C7F831 /* Debug */,
+				64BB8714D0891263AFAE5FC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C5E097D4E37607F8D2DC76BA /* Build configuration list for PBXNativeTarget "iCodexBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7446FBEE619E1347310A0643 /* Debug */,
+				FF3BAE381F9220CC779BC93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACB167B3C55AA2969BB4CBAB /* Project object */;
+}

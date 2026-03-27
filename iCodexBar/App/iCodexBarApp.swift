@@ -1,0 +1,38 @@
+import SwiftUI
+
+@main
+struct iCodexBarApp: App {
+
+    init() {
+        requestNotificationPermission()
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+
+    private func requestNotificationPermission() {
+        Task {
+            try? await NotificationService.shared.requestAuthorization()
+        }
+    }
+}
+
+struct ContentView: View {
+    var body: some View {
+        TabView {
+            DashboardView()
+                .tabItem {
+                    Label("Dashboard", systemImage: "gauge.with.dots.needle.bottom.50percent")
+                }
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
+        }
+        .tint(.accentColor)
+    }
+}

@@ -1,200 +1,292 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Timeline Entry
+// MARK: - Widget Entry
 
 struct iCodexBarEntry: TimelineEntry {
     let date: Date
-    let configuration: ConfigurationAppIntent
-}
+    let snapshots: [Provider: ProviderUsageSnapshot]
+    let provider: Provider
 
-// MARK: - Configuration Intent
-
-struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Configuration"
-    static var description = IntentDescription("Configure iCodexBar Widget")
+    static let placeholder = iCodexBarEntry(
+        date: Date(),
+        snapshots: [:],
+        provider: .openAI
+    )
 }
 
 // MARK: - Timeline Provider
 
-struct iCodexBarProvider: AppIntentTimelineProvider {
-    func placeholder(in context: Context) -> iCodexBarEntry {
-        iCodexBarEntry(date: Date(), configuration: ConfigurationAppIntent())
+struct iCodexBarProvider: TimelineProvider {
+
+    typealias Entry = iCodexBarEntry
+
+    private let appGroupID = "group.com.icodexbar.shared"
+    private let snapshotsKey = "provider_usage_snapshots"
+    private let lastFetchedKey = "last_fetched_at"
+
+    func placeholder(in context: Context) -> Entry {
+        .placeholder
     }
 
-    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> iCodexBarEntry {
-        iCodexBarEntry(date: Date(), configuration: configuration)
+    func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
+        let entry = loadEntry()
+        completion(entry)
     }
 
-    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<iCodexBarEntry> {
-        let entry = iCodexBarEntry(date: Date(), configuration: configuration)
-        return Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(3600)))
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
+        let entry = loadEntry()
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: Date())!
+        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+        completion(timeline)
+    }
+
+    private func loadEntry() -> Entry {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else {
+            return .placeholder
+        }
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
+        var snapshots: [Provider: ProviderUsageSnapshot] = [:]
+        if let data = defaults.data(forKey: snapshotsKey),
+           let decoded = try? decoder.decode([Provider: ProviderUsageSnapshot].self, from: data) {
+            snapshots = decoded
+        }
+
+        // Default to first configured provider, or OpenAI
+        let provider = snapshots.keys.first ?? .openAI
+
+        return iCodexBarEntry(date: Date(), snapshots: snapshots, provider: provider)
     }
 }
 
-// MARK: - Small Widget View
+// MARK: - Widget Views
 
 struct SmallWidgetView: View {
     let entry: iCodexBarEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        let snapshot = entry.snapshots[entry.provider]
+
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: "book.fill")
+                Image(systemName: entry.provider.iconName)
                     .font(.caption)
-                    .foregroundColor(.blue)
-                Text("iCodexBar")
-                    .font(.caption2)
-                    .fontWeight(.semibold)
+                    .foregroundStyle(entry.provider.accentColor)
+                Text(entry.provider.displayName)
+                    .font(.caption)
+                    .fontWeight(.medium)
             }
+
             Spacer()
-            Text("Code Snippet")
-                .font(.headline)
-                .fontWeight(.bold)
-            Text("10 items")
-                .font(.caption)
-                .foregroundColor(.secondary)
+
+            if let snapshot {
+                Text(snapshot.formattedCost)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .minimumScaleFactor(0.5)
+
+                usageBar(percent: snapshot.primary?.usedPercent ?? 0)
+
+                Text(snapshot.formattedTokens)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text("No data")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
-        .padding()
+        .padding(12)
         .containerBackground(.fill.tertiary, for: .widget)
     }
-}
 
-// MARK: - Medium Widget View
+    @ViewBuilder
+    private func usageBar(percent: Double) -> some View {
+        let clampedPercent = max(0, min(100, percent))
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.white.opacity(0.2))
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(entry.provider.accentColor)
+                    .frame(width: geo.size.width * (clampedPercent / 100))
+            }
+        }
+        .frame(height: 6)
+    }
+}
 
 struct MediumWidgetView: View {
     let entry: iCodexBarEntry
 
+    private var providers: [Provider] {
+        let configured = entry.snapshots.keys.sorted { $0.rawValue < $1.rawValue }
+        return configured.isEmpty ? [.openAI] : Array(configured.prefix(2))
+    }
+
     var body: some View {
         HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Image(systemName: "book.fill")
-                        .font(.caption)
-                        .foregroundColor(.blue)
-                    Text("iCodexBar")
-                        .font(.caption2)
+            ForEach(providers) { provider in
+                let snapshot = entry.snapshots[provider]
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Image(systemName: provider.iconName)
+                            .font(.caption2)
+                            .foregroundStyle(provider.accentColor)
+                        Text(provider.displayName)
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                    }
+
+                    Spacer()
+
+                    Text(snapshot?.formattedCost ?? "—")
+                        .font(.headline)
                         .fontWeight(.semibold)
+
+                    usageBar(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor)
+
+                    Text(snapshot?.formattedTokens ?? "—")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
-                Spacer()
-                Text("Recent Snippets")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                Text("5 code snippets saved")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            VStack(alignment: .trailing, spacing: 8) {
-                StatView(icon: "swift", value: "3", label: "Swift")
-                StatView(icon: "doc.text", value: "2", label: "Other")
+                .padding(10)
+                .frame(maxWidth: .infinity)
             }
         }
-        .padding()
+        .padding(12)
         .containerBackground(.fill.tertiary, for: .widget)
     }
-}
 
-struct StatView: View {
-    let icon: String
-    let value: String
-    let label: String
-
-    var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.caption2)
-                .foregroundColor(.blue)
-            VStack(alignment: .leading, spacing: 0) {
-                Text(value)
-                    .font(.caption)
-                    .fontWeight(.bold)
-                Text(label)
-                    .font(.system(size: 8))
-                    .foregroundColor(.secondary)
+    @ViewBuilder
+    private func usageBar(percent: Double, color: Color) -> some View {
+        let clampedPercent = max(0, min(100, percent))
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.white.opacity(0.2))
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(color)
+                    .frame(width: geo.size.width * (clampedPercent / 100))
             }
         }
+        .frame(height: 6)
     }
 }
-
-// MARK: - Large Widget View
 
 struct LargeWidgetView: View {
     let entry: iCodexBarEntry
 
+    private var providers: [Provider] {
+        let configured = entry.snapshots.keys.sorted { $0.rawValue < $1.rawValue }
+        return configured.isEmpty ? Provider.allCases : configured
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
+            // Header
             HStack {
-                Image(systemName: "book.fill")
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
                 Text("iCodexBar")
-                    .font(.subheadline)
+                    .font(.caption)
                     .fontWeight(.semibold)
                 Spacer()
-                Text("Today")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text(entry.date, style: .time)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
             }
 
             Divider()
 
-            Text("Recent Snippets")
-                .font(.headline)
-                .fontWeight(.bold)
+            // Provider rows
+            ForEach(providers) { provider in
+                let snapshot = entry.snapshots[provider]
+                HStack {
+                    Image(systemName: provider.iconName)
+                        .font(.caption)
+                        .foregroundStyle(provider.accentColor)
+                        .frame(width: 20)
 
-            VStack(alignment: .leading, spacing: 6) {
-                SnippetRowView(language: "Swift", title: "Quick Sort Algorithm", lines: "12 lines")
-                SnippetRowView(language: "Python", title: "Fibonacci Sequence", lines: "8 lines")
-                SnippetRowView(language: "JavaScript", title: "Event Handler", lines: "5 lines")
-                SnippetRowView(language: "Swift", title: "Core Data Fetch", lines: "15 lines")
+                    Text(provider.displayName)
+                        .font(.caption)
+                        .frame(width: 70, alignment: .leading)
+
+                    usageBar(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor)
+
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(snapshot?.formattedCost ?? "—")
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                        Text(snapshot?.formattedTokens ?? "—")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(width: 70, alignment: .trailing)
+                }
             }
 
             Spacer()
 
+            // Footer
             HStack {
-                Text("View All")
-                    .font(.caption)
-                    .foregroundColor(.blue)
                 Spacer()
-                Image(systemName: "chevron.right")
+                Text("Add widget to configure")
                     .font(.caption2)
-                    .foregroundColor(.blue)
+                    .foregroundStyle(.tertiary)
+                Spacer()
             }
         }
-        .padding()
+        .padding(14)
         .containerBackground(.fill.tertiary, for: .widget)
+    }
+
+    @ViewBuilder
+    private func usageBar(percent: Double, color: Color) -> some View {
+        let clampedPercent = max(0, min(100, percent))
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(Color.white.opacity(0.2))
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(color)
+                    .frame(width: geo.size.width * (clampedPercent / 100))
+            }
+        }
+        .frame(height: 8)
     }
 }
 
-struct SnippetRowView: View {
-    let language: String
-    let title: String
-    let lines: String
+// MARK: - Lock Screen Views
+
+struct LockScreenCircularView: View {
+    let entry: iCodexBarEntry
 
     var body: some View {
-        HStack {
-            Circle()
-                .fill(languageColor(for: language))
-                .frame(width: 8, height: 8)
-            Text(title)
-                .font(.caption)
-                .lineLimit(1)
-            Spacer()
-            Text(lines)
-                .font(.caption2)
-                .foregroundColor(.secondary)
-        }
-    }
+        let snapshot = entry.snapshots[entry.provider]
+        let percent = snapshot?.primary?.usedPercent ?? 0
 
-    func languageColor(for language: String) -> Color {
-        switch language {
-        case "Swift": return .orange
-        case "Python": return .green
-        case "JavaScript": return .yellow
-        default: return .gray
+        Gauge(value: min(100, percent), in: 0...100) {
+            Image(systemName: entry.provider.iconName)
+                .font(.caption2)
+        } currentValueLabel: {
+            Text("\(Int(percent))")
+                .font(.caption2)
+        }
+        .gaugeStyle(.accessoryCircular)
+        .tint(entry.provider.accentColor)
+    }
+}
+
+struct LockScreenInlineView: View {
+    let entry: iCodexBarEntry
+
+    var body: some View {
+        let snapshot = entry.snapshots[entry.provider]
+        HStack {
+            Image(systemName: entry.provider.iconName)
+            Text("\(entry.provider.displayName): \(snapshot?.formattedCost ?? "—")")
         }
     }
 }
@@ -202,30 +294,45 @@ struct SnippetRowView: View {
 // MARK: - Widget Bundle
 
 @main
-struct iCodexBarWidgetBundle: WidgetBundle {
+struct iCodexBarWidget: WidgetBundle {
     var body: some Widget {
-        iCodexBarWidget()
+        iCodexBarHomeWidget()
+        if #available(iOSApplicationExtension 17.0, *) {
+            iCodexBarLockScreenWidget()
+        }
     }
 }
 
-// MARK: - Widget
-
-struct iCodexBarWidget: Widget {
-    let kind: String = "iCodexBarWidget"
+struct iCodexBarHomeWidget: Widget {
+    let kind: String = "iCodexBarHomeWidget"
 
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: iCodexBarProvider()) { entry in
-            iCodexBarWidgetEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: iCodexBarProvider()) { entry in
+            WidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("iCodexBar")
-        .description("View your code snippets at a glance.")
+        .configurationDisplayName("AI Usage")
+        .description("Track your AI provider usage.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
-struct iCodexBarWidgetEntryView: View {
+@available(iOSApplicationExtension 17.0, *)
+struct iCodexBarLockScreenWidget: Widget {
+    let kind: String = "iCodexBarLockScreenWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: iCodexBarProvider()) { entry in
+            LockScreenCircularView(entry: entry)
+        }
+        .configurationDisplayName("AI Usage")
+        .description("Track your AI usage at a glance.")
+        .supportedFamilies([.accessoryCircular, .accessoryInline])
+    }
+}
+
+struct WidgetEntryView: View {
     @Environment(\.widgetFamily) var family
-    let entry: iCodexBarProvider.Entry
+    let entry: iCodexBarEntry
 
     var body: some View {
         switch family {
@@ -233,30 +340,28 @@ struct iCodexBarWidgetEntryView: View {
             SmallWidgetView(entry: entry)
         case .systemMedium:
             MediumWidgetView(entry: entry)
-        case .systemLarge:
-            LargeWidgetView(entry: entry)
         default:
-            SmallWidgetView(entry: entry)
+            LargeWidgetView(entry: entry)
         }
     }
 }
 
 // MARK: - Previews
 
-#Preview(as: .systemSmall) {
-    iCodexBarWidget()
+#Preview("Small", as: .systemSmall) {
+    iCodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry(date: .now, configuration: ConfigurationAppIntent())
+    iCodexBarEntry.placeholder
 }
 
-#Preview(as: .systemMedium) {
-    iCodexBarWidget()
+#Preview("Medium", as: .systemMedium) {
+    iCodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry(date: .now, configuration: ConfigurationAppIntent())
+    iCodexBarEntry.placeholder
 }
 
-#Preview(as: .systemLarge) {
-    iCodexBarWidget()
+#Preview("Large", as: .systemLarge) {
+    iCodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry(date: .now, configuration: ConfigurationAppIntent())
+    iCodexBarEntry.placeholder
 }
