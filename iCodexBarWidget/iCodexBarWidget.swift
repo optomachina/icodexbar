@@ -3,12 +3,12 @@ import SwiftUI
 
 // MARK: - Widget Entry
 
-struct iCodexBarEntry: TimelineEntry {
+struct ICodexBarEntry: TimelineEntry {
     let date: Date
     let snapshots: [Provider: ProviderUsageSnapshot]
     let provider: Provider
 
-    static let placeholder = iCodexBarEntry(
+    static let placeholder = ICodexBarEntry(
         date: Date(),
         snapshots: [:],
         provider: .openAI
@@ -17,9 +17,9 @@ struct iCodexBarEntry: TimelineEntry {
 
 // MARK: - Timeline Provider
 
-struct iCodexBarProvider: TimelineProvider {
+struct ICodexBarProvider: TimelineProvider {
 
-    typealias Entry = iCodexBarEntry
+    typealias Entry = ICodexBarEntry
 
     private let appGroupID = "group.com.icodexbar.shared"
     private let snapshotsKey = "provider_usage_snapshots"
@@ -58,14 +58,14 @@ struct iCodexBarProvider: TimelineProvider {
         // Default to first configured provider, or OpenAI
         let provider = snapshots.keys.first ?? .openAI
 
-        return iCodexBarEntry(date: Date(), snapshots: snapshots, provider: provider)
+        return ICodexBarEntry(date: Date(), snapshots: snapshots, provider: provider)
     }
 }
 
 // MARK: - Widget Views
 
 struct SmallWidgetView: View {
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     var body: some View {
         let snapshot = entry.snapshots[entry.provider]
@@ -120,7 +120,7 @@ struct SmallWidgetView: View {
 }
 
 struct MediumWidgetView: View {
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     private var providers: [Provider] {
         let configured = entry.snapshots.keys.sorted { $0.rawValue < $1.rawValue }
@@ -178,7 +178,7 @@ struct MediumWidgetView: View {
 }
 
 struct LargeWidgetView: View {
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     private var providers: [Provider] {
         let configured = entry.snapshots.keys.sorted { $0.rawValue < $1.rawValue }
@@ -261,7 +261,7 @@ struct LargeWidgetView: View {
 // MARK: - Lock Screen Views
 
 struct LockScreenCircularView: View {
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     var body: some View {
         let snapshot = entry.snapshots[entry.provider]
@@ -280,7 +280,7 @@ struct LockScreenCircularView: View {
 }
 
 struct LockScreenInlineView: View {
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     var body: some View {
         let snapshot = entry.snapshots[entry.provider]
@@ -294,20 +294,20 @@ struct LockScreenInlineView: View {
 // MARK: - Widget Bundle
 
 @main
-struct iCodexBarWidget: WidgetBundle {
+struct ICodexBarWidget: WidgetBundle {
     var body: some Widget {
-        iCodexBarHomeWidget()
+        ICodexBarHomeWidget()
         if #available(iOSApplicationExtension 17.0, *) {
-            iCodexBarLockScreenWidget()
+            ICodexBarLockScreenWidget()
         }
     }
 }
 
-struct iCodexBarHomeWidget: Widget {
-    let kind: String = "iCodexBarHomeWidget"
+struct ICodexBarHomeWidget: Widget {
+    let kind: String = "ICodexBarHomeWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: iCodexBarProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: ICodexBarProvider()) { entry in
             WidgetEntryView(entry: entry)
         }
         .configurationDisplayName("AI Usage")
@@ -317,11 +317,11 @@ struct iCodexBarHomeWidget: Widget {
 }
 
 @available(iOSApplicationExtension 17.0, *)
-struct iCodexBarLockScreenWidget: Widget {
-    let kind: String = "iCodexBarLockScreenWidget"
+struct ICodexBarLockScreenWidget: Widget {
+    let kind: String = "ICodexBarLockScreenWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: iCodexBarProvider()) { entry in
+        StaticConfiguration(kind: kind, provider: ICodexBarProvider()) { entry in
             LockScreenCircularView(entry: entry)
         }
         .configurationDisplayName("AI Usage")
@@ -332,7 +332,7 @@ struct iCodexBarLockScreenWidget: Widget {
 
 struct WidgetEntryView: View {
     @Environment(\.widgetFamily) var family
-    let entry: iCodexBarEntry
+    let entry: ICodexBarEntry
 
     var body: some View {
         switch family {
@@ -349,19 +349,19 @@ struct WidgetEntryView: View {
 // MARK: - Previews
 
 #Preview("Small", as: .systemSmall) {
-    iCodexBarHomeWidget()
+    ICodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry.placeholder
+    ICodexBarEntry.placeholder
 }
 
 #Preview("Medium", as: .systemMedium) {
-    iCodexBarHomeWidget()
+    ICodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry.placeholder
+    ICodexBarEntry.placeholder
 }
 
 #Preview("Large", as: .systemLarge) {
-    iCodexBarHomeWidget()
+    ICodexBarHomeWidget()
 } timeline: {
-    iCodexBarEntry.placeholder
+    ICodexBarEntry.placeholder
 }

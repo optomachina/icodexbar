@@ -45,7 +45,7 @@ excluded:
 
 identifier_name:
   min_length:
-    error: 2
+    error: 3
   excluded:
     - id
     - URL

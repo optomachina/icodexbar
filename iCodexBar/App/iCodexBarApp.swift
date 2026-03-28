@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct iCodexBarApp: App {
+struct ICodexBarApp: App {
 
     init() {
         requestNotificationPermission()
