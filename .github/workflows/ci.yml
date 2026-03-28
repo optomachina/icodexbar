@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+
+jobs:
+  lint:
+    name: Code Quality
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Install tools
+        run: |
+          brew install xcodegen swiftlint swiftformat
+          gem install fastlane
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: SwiftLint
+        run: swiftlint --reporter github-actions-logging
+
+      - name: SwiftFormat (check)
+        run: swiftformat --lint . 2>&1 | true
+
+  build:
+    name: Build (${{ matrix.configuration }})
+    runs-on: macos-14
+    needs: lint
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install tools
+        run: |
+          brew install xcodegen
+          gem install fastlane
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          fastlane build_${{ matrix.configuration == 'Debug' && 'debug' || 'release' }}
+        env:
+          CI: true
+
+  test:
+    name: Test
+    runs-on: macos-14
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install tools
+        run: |
+          brew install xcodegen
+          gem install fastlane
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Run tests
+        run: fastlane test
+        env:
+          CI: true
+
+  beta:
+    name: Upload to TestFlight
+    runs-on: macos-14
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install tools
+        run: |
+          brew install xcodegen
+          gem install fastlane
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build & Upload
+        run: fastlane beta
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}

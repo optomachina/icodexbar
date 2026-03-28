@@ -152,10 +152,10 @@ private struct OpenAIDailyEntry: Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case date
-        case totalTokens = "total_tokens"
+        case totalTokens = "n_tokens_total"
         case costUSD = "cost"
-        case inputTokens = "input_tokens"
-        case outputTokens = "output_tokens"
+        case inputTokens = "n_context_tokens_total"
+        case outputTokens = "n_generated_tokens_total"
     }
 }
 

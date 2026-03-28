@@ -14,6 +14,13 @@ settings:
     CODE_SIGNING_REQUIRED: "NO"
     CODE_SIGN_ENTITLEMENTS: ""
 
+# Run SwiftLint and SwiftFormat on build (optional, can be disabled)
+# postCompileScripts:
+#   - name: SwiftLint
+#     script: swiftlint
+#   - name: SwiftFormat
+#     script: swiftformat .
+
 configs:
   Debug:
     DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
@@ -74,19 +81,60 @@ targets:
         com.apple.security.application-groups:
           - group.com.icodexbar.shared
 
+  iCodexBarTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: iCodexBarTests
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.tests
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+    dependencies:
+      - target: iCodexBar
+
+  iCodexBarUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: iCodexBarUITests
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.uitests
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+    dependencies:
+      - target: iCodexBar
+
 schemes:
   iCodexBar:
     build:
       targets:
         iCodexBar: all
         iCodexBarWidgetExtension: all
+        iCodexBarTests: all
     run:
       config: Debug
     test:
       config: Debug
+      targets:
+        - iCodexBarTests
+        - iCodexBarUITests
     profile:
       config: Release
     analyze:
       config: Debug
     archive:
       config: Release
+
+  iCodexBarTests:
+    build:
+      targets:
+        iCodexBarTests: all
+    test:
+      config: Debug

@@ -16,9 +16,15 @@ public final class UsageStore {
     private let appGroupID = "group.com.icodexbar.shared"
     private let snapshotsKey = "provider_usage_snapshots"
     private let lastFetchedKey = "last_fetched_at"
+    private let thresholdsKey = "alert_thresholds"
+    private let lastNotifiedKey = "last_notified_percent"
+
+    /// Track last notified percentage per provider to avoid duplicate alerts
+    private var lastNotifiedPercent: [Provider: Int] = [:]
 
     private init() {
         loadFromAppGroup()
+        loadLastNotifiedState()
     }
 
     // MARK: - Public API
@@ -45,10 +51,13 @@ public final class UsageStore {
         isLoading = false
         saveToAppGroup()
         reloadWidgets()
+        
+        // Check thresholds and trigger notifications
+        await checkThresholdsAndNotify()
     }
 
     public func fetchProvider(_ provider: Provider) async -> ProviderUsageSnapshot? {
-        guard let apiKey = try? await KeychainService.shared.get(key: provider.rawValue) else {
+        guard let apiKey = try? await KeychainService.shared.get(key: provider.rawValue), !apiKey.isEmpty else {
             errors[provider] = "No API key configured"
             return nil
         }
@@ -124,5 +133,83 @@ public final class UsageStore {
 
     private func reloadWidgets() {
         WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    // MARK: - Threshold Checking & Notifications
+
+    private func checkThresholdsAndNotify() async {
+        let thresholds = loadThresholds()
+        guard !thresholds.isEmpty else { return }
+        
+        for threshold in thresholds where threshold.isEnabled {
+            guard let snapshot = snapshots[threshold.provider],
+                  let primary = snapshot.primary else { continue }
+            
+            let usedPercent = Int(primary.usedPercent)
+            let thresholdPercent = threshold.thresholdPercent
+            
+            // Only notify if threshold is crossed and we haven't already notified for this level
+            if usedPercent >= thresholdPercent {
+                let lastNotified = lastNotifiedPercent[threshold.provider] ?? 0
+                
+                // Notify if we haven't already notified for this or higher percentage
+                if lastNotified < thresholdPercent {
+                    await NotificationService.shared.sendAlert(
+                        provider: threshold.provider,
+                        percent: usedPercent,
+                        threshold: thresholdPercent
+                    )
+                    
+                    // Update last notified state
+                    lastNotifiedPercent[threshold.provider] = usedPercent
+                    saveLastNotifiedState()
+                }
+            } else if usedPercent < thresholdPercent {
+                // Reset notification tracking when usage drops below threshold
+                // This allows re-notification if usage rises again
+                if lastNotifiedPercent[threshold.provider] != nil {
+                    lastNotifiedPercent[threshold.provider] = nil
+                    saveLastNotifiedState()
+                }
+            }
+        }
+    }
+
+    private func loadThresholds() -> [AlertThreshold] {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else {
+            return Provider.allCases.map { AlertThreshold(provider: $0) }
+        }
+        
+        if let data = defaults.data(forKey: thresholdsKey),
+           let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data) {
+            return decoded
+        }
+        
+        return Provider.allCases.map { AlertThreshold(provider: $0) }
+    }
+
+    private func loadLastNotifiedState() {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
+        
+        if let data = defaults.data(forKey: lastNotifiedKey),
+           let decoded = try? JSONDecoder().decode([String: Int].self, from: data) {
+            lastNotifiedPercent = [:]
+            for (key, value) in decoded {
+                if let provider = Provider(rawValue: key) {
+                    lastNotifiedPercent[provider] = value
+                }
+            }
+        }
+    }
+
+    private func saveLastNotifiedState() {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
+        
+        let dict = Dictionary(uniqueKeysWithValues: lastNotifiedPercent.map { ($0.key.rawValue, $0.value) })
+        
+        if let data = try? JSONEncoder().encode(dict) {
+            defaults.set(data, forKey: lastNotifiedKey)
+            defaults.synchronize()
+        }
     }
 }

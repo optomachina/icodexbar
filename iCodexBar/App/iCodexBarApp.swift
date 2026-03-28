@@ -5,6 +5,7 @@ struct iCodexBarApp: App {
 
     init() {
         requestNotificationPermission()
+        registerBackgroundTask()
     }
 
     var body: some Scene {
@@ -17,6 +18,10 @@ struct iCodexBarApp: App {
         Task {
             try? await NotificationService.shared.requestAuthorization()
         }
+    }
+
+    private func registerBackgroundTask() {
+        BackgroundRefreshService.shared.registerBackgroundTask()
     }
 }
 

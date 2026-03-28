@@ -1,14 +1,14 @@
 import Foundation
 import SwiftUI
 
-enum Provider: String, Codable, CaseIterable, Identifiable {
+public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
     case openAI = "openai"
     case anthropic = "anthropic"
     case openRouter = "openrouter"
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var displayName: String {
+    public var displayName: String {
         switch self {
         case .openAI:      return "OpenAI"
         case .anthropic:  return "Anthropic"
@@ -16,7 +16,7 @@ enum Provider: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    var accentColor: Color {
+    public var accentColor: Color {
         switch self {
         case .openAI:     return Color(hex: "10A37F")
         case .anthropic: return Color(hex: "CC785C")
@@ -24,7 +24,7 @@ enum Provider: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    var iconName: String {
+    public var iconName: String {
         switch self {
         case .openAI:     return "brain"
         case .anthropic: return "cpu"
@@ -32,7 +32,7 @@ enum Provider: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    var keychainService: String {
+    public var keychainService: String {
         return "com.icodexbar.keychain.\(rawValue)"
     }
 }

@@ -29,6 +29,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EB1709411C43615752611D7F"
+               BuildableName = "iCodexBarTests.xctest"
+               BlueprintName = "iCodexBarTests"
+               ReferencedContainer = "container:iCodexBar.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "E7ADC1085F871A71FDF6589B"
                BuildableName = "iCodexBarWidgetExtension.appex"
                BlueprintName = "iCodexBarWidgetExtension"
@@ -53,6 +67,28 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EB1709411C43615752611D7F"
+               BuildableName = "iCodexBarTests.xctest"
+               BlueprintName = "iCodexBarTests"
+               ReferencedContainer = "container:iCodexBar.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4ACC3B0D6D3856C37D0CC236"
+               BuildableName = "iCodexBarUITests.xctest"
+               BlueprintName = "iCodexBarUITests"
+               ReferencedContainer = "container:iCodexBar.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

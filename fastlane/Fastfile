@@ -1,0 +1,109 @@
+# Fastfile for iCodexBar
+
+default_platform(:ios)
+
+platform :ios do
+  # Project configuration
+  project_name = "iCodexBar"
+  scheme = "iCodexBar"
+  workspace = "#{project_name}.xcworkspace"
+  
+  # Derived paths
+  build_path = "./build"
+  output_path = "./output"
+  
+  desc "Generate Xcode project from project.yml"
+  lane :generate do
+    sh("xcodegen generate")
+  end
+  
+  desc "Run SwiftLint"
+  lane :lint do
+    swiftlint(
+      mode: :lint,
+      config_file: ".swiftlint.yml",
+      raise_if_swiftlint_error: true
+    )
+  end
+  
+  desc "Run SwiftFormat (check mode)"
+  lane :format_check do
+    sh("swiftformat --lint .")
+  end
+  
+  desc "Run SwiftFormat (apply changes)"
+  lane :format do
+    sh("swiftformat .")
+  end
+  
+  desc "Run all code quality checks"
+  lane :check do
+    lint
+    format_check
+  end
+  
+  desc "Build Debug configuration"
+  lane :build_debug do
+    build_app(
+      scheme: scheme,
+      configuration: "Debug",
+      derived_data_path: build_path,
+      clean: true
+    )
+  end
+  
+  desc "Build Release configuration"
+  lane :build_release do
+    build_app(
+      scheme: scheme,
+      configuration: "Release",
+      derived_data_path: build_path,
+      clean: true
+    )
+  end
+  
+  desc "Run unit tests"
+  lane :test do
+    run_tests(
+      scheme: "iCodexBarTests",
+      configuration: "Debug",
+      devices: ["iPhone 15 Pro (17.0)"],
+      code_coverage: true
+    )
+  end
+
+  desc "Run UI tests"
+  lane :ui_test do
+    run_tests(
+      scheme: "iCodexBar",
+      configuration: "Debug",
+      devices: ["iPhone 15 Pro (17.0)"],
+      code_coverage: false
+    )
+  end
+  
+  desc "Build and test"
+  lane :ci do
+    generate
+    check
+    build_debug
+    test
+  end
+  
+  desc "Upload to TestFlight"
+  lane :beta do
+    build_release
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+  
+  desc "Submit to App Store"
+  lane :release do
+    build_release
+    upload_to_app_store(
+      force: true,
+      submit_for_review: true
+    )
+  end
+end

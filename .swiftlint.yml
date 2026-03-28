@@ -1,0 +1,62 @@
+# SwiftLint Configuration for iCodexBar
+
+disabled_rules:
+  - trailing_whitespace
+  - line_length
+  - function_body_length
+  - file_length
+  - type_body_length
+  - cyclomatic_complexity
+  - large_tuple
+
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - closure_end_indentation
+  - explicit_init
+  - first_where
+  - implicit_return
+  - joined_default_parameter
+  - literal_expression_end_indentation
+  - nimble_operator
+  - number_separator
+  - operator_usage_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - private_action
+  - private_outlet
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - single_test_class
+  - sorted_first_last
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+
+included:
+  - iCodexBar
+  - iCodexBarWidget
+
+excluded:
+  - Pods
+  - build
+  - DerivedData
+  - .build
+
+identifier_name:
+  min_length:
+    error: 2
+  excluded:
+    - id
+    - URL
+    - x
+    - y
+
+type_name:
+  min_length: 3
+  max_length: 50
+
+force_cast: warning
+force_try: warning
+
+reporter: "github-actions-logging"

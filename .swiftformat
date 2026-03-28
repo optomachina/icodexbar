@@ -1,0 +1,47 @@
+# SwiftFormat Configuration for iCodexBar
+
+# Indent with 4 spaces
+indent: 4
+
+# Use spaces for indentation, not tabs
+tabWidth: 4
+
+# Maximum line length
+maxWidth: 120
+
+# Wrap enum cases
+wrapEnumCases: beforeFirst
+
+# Preserve blank lines
+stripBlankLinesAtStartOfScope: false
+stripBlankLinesAtEndOfScope: false
+
+# Remove semicolons
+semicolons: never
+
+# Multiline function arguments
+indentMultiLineFunctionDefinition: true
+
+# Guard clause spacing
+indentGuardClause: true
+
+# Make internal access explicit
+modifierOrder: [override, ACL, setterACL, dynamic, mutators, lazy, final, required]
+
+# Sort imports
+sortedImports: true
+
+# Xcode version for generated headers
+xcodeIndentation: true
+
+# Swift version
+swiftVersion: "5.9"
+
+# Remove redundant self
+redundantSelf: remove
+
+# Void return type style
+void: void
+
+# Closure arguments
+redundantVoidReturnType: remove
