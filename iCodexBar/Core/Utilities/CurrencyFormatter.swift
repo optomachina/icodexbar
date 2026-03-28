@@ -5,13 +5,13 @@ public enum CurrencyFormatter {
 
     /// Format a Double as USD: 4.32 -> "$4.32", 1234.56 -> "$1,234.56"
     private static let formatter: NumberFormatter = {
-        let f = NumberFormatter()
-        f.numberStyle = .currency
-        f.currencyCode = "USD"
-        f.currencySymbol = "$"
-        f.minimumFractionDigits = 2
-        f.maximumFractionDigits = 2
-        return f
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.currencyCode = "USD"
+        numberFormatter.currencySymbol = "$"
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 2
+        return numberFormatter
     }()
 
     /// Format a value as USD string
