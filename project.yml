@@ -63,6 +63,12 @@ targets:
     type: app-extension
     platform: iOS
     sources:
+      - path: iCodexBar/Core/Models
+        excludes:
+          - "**/.DS_Store"
+      - path: iCodexBar/Core/Utilities
+        excludes:
+          - "**/.DS_Store"
       - path: iCodexBarWidget
         excludes:
           - "**/.DS_Store"
@@ -90,6 +96,7 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
+        GENERATE_INFOPLIST_FILE: "YES"
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.tests
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
@@ -105,6 +112,7 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
+        GENERATE_INFOPLIST_FILE: "YES"
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.uitests
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
