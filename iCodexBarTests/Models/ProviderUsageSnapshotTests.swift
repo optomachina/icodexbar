@@ -21,7 +21,7 @@ final class ProviderUsageSnapshotTests: XCTestCase {
         let primary = RateWindow(usedPercent: 40.0)
         let secondary = RateWindow(usedPercent: 20.0, windowMinutes: 60)
         let daily = [
-            DailyUsageEntry(date: Date(), tokens: 1000, cost: 0.05)
+            DailyUsageEntry(date: "2026-03-29", totalTokens: 1000, costUSD: 0.05)
         ]
 
         let snapshot = ProviderUsageSnapshot(
@@ -34,7 +34,7 @@ final class ProviderUsageSnapshotTests: XCTestCase {
             dailyUsage: daily
         )
 
-        XCTAssertEqual(snapshot.provider, .anthropic)
+        XCTAssertEqual(snapshot.provider, Provider.anthropic)
         XCTAssertNotNil(snapshot.primary)
         XCTAssertNotNil(snapshot.secondary)
         XCTAssertEqual(snapshot.totalTokens, 50000)

@@ -79,7 +79,7 @@ final class BackgroundRefreshService {
     
     /// Cancel any pending background refresh
     func cancelScheduledRefresh() {
-        BGTaskScheduler.shared.cancel(taskIdentifier: taskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: taskIdentifier)
         print("[BackgroundRefresh] Cancelled scheduled refresh")
     }
     
@@ -118,16 +118,13 @@ final class BackgroundRefreshService {
         
         // Wait for fetch to complete
         Task {
-            do {
-                _ = try await fetchTask.value
-                task.setTaskCompleted(success: true)
-                print("[BackgroundRefresh] Task completed successfully")
-            } catch is CancellationError {
+            await fetchTask.value
+            if fetchTask.isCancelled {
                 task.setTaskCompleted(success: false)
                 print("[BackgroundRefresh] Task was cancelled")
-            } catch {
-                task.setTaskCompleted(success: false)
-                print("[BackgroundRefresh] Task failed: \(error)")
+            } else {
+                task.setTaskCompleted(success: true)
+                print("[BackgroundRefresh] Task completed successfully")
             }
         }
     }

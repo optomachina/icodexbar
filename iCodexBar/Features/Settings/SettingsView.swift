@@ -39,7 +39,9 @@ struct SettingsView: View {
                 // Alerts Section
                 Section("Alert Thresholds") {
                     ForEach($thresholds) { $threshold in
-                        AlertRowView(threshold: $threshold)
+                        AlertRowView(threshold: $threshold) {
+                            saveThresholds()
+                        }
                     }
                 }
 
@@ -75,7 +77,9 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .onAppear {
                 loadThresholds()
-                loadConfiguredProviders()
+                Task {
+                    await loadConfiguredProviders()
+                }
             }
         }
     }
@@ -90,14 +94,25 @@ struct SettingsView: View {
         }
     }
 
-    private func loadConfiguredProviders() {
-        configuredProviders = Provider.allCases.filter { provider in
+    private func loadConfiguredProviders() async {
+        var providers: [Provider] = []
+        for provider in Provider.allCases {
             do {
-                let key = try KeychainService.shared.get(key: provider.rawValue)
-                return !key.isEmpty
+                let key = try await KeychainService.shared.get(key: provider.rawValue)
+                if !key.isEmpty {
+                    providers.append(provider)
+                }
             } catch {
-                return false
+                continue
             }
+        }
+        configuredProviders = providers
+    }
+
+    private func saveThresholds() {
+        let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
+        if let encoded = try? JSONEncoder().encode(thresholds) {
+            defaults.set(encoded, forKey: "alert_thresholds")
         }
     }
 }
@@ -106,6 +121,7 @@ struct SettingsView: View {
 
 struct AlertRowView: View {
     @Binding var threshold: AlertThreshold
+    let onSave: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -143,15 +159,8 @@ struct AlertRowView: View {
                 }
             }
         }
-        .onChange(of: threshold.isEnabled) { _, _ in saveThresholds() }
-        .onChange(of: threshold.thresholdPercent) { _, _ in saveThresholds() }
-    }
-
-    private func saveThresholds() {
-        let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
-        if let encoded = try? JSONEncoder().encode(thresholds) {
-            defaults.set(encoded, forKey: "alert_thresholds")
-        }
+        .onChange(of: threshold.isEnabled) { _, _ in onSave() }
+        .onChange(of: threshold.thresholdPercent) { _, _ in onSave() }
     }
 }
 

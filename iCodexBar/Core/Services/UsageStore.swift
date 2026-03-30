@@ -36,7 +36,8 @@ public final class UsageStore {
         await withTaskGroup(of: (Provider, ProviderUsageSnapshot?).self) { group in
             for provider in Provider.allCases {
                 group.addTask {
-                    await self.fetchProvider(provider)
+                    let snapshot = await self.fetchProvider(provider)
+                    return (provider, snapshot)
                 }
             }
 
@@ -87,17 +88,23 @@ public final class UsageStore {
         errors[provider] = nil
     }
 
-    public func isConfigured(_ provider: Provider) -> Bool {
+    public func isConfigured(_ provider: Provider) async -> Bool {
         do {
-            let key = try KeychainService.shared.get(key: provider.rawValue)
+            let key = try await KeychainService.shared.get(key: provider.rawValue)
             return !key.isEmpty
         } catch {
             return false
         }
     }
 
-    public func configuredProviders() -> [Provider] {
-        Provider.allCases.filter { isConfigured($0) }
+    public func configuredProviders() async -> [Provider] {
+        var providers: [Provider] = []
+        for provider in Provider.allCases {
+            if await isConfigured(provider) {
+                providers.append(provider)
+            }
+        }
+        return providers
     }
 
     // MARK: - App Group Persistence (for Widget)

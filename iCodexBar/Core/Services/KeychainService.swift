@@ -3,7 +3,7 @@ import Security
 
 // MARK: - Keychain Error
 
-public enum KeychainError: Error, LocalizedError {
+public enum KeychainError: Error, LocalizedError, Equatable {
     case duplicate
     case notFound
     case unexpectedStatus(OSStatus)
@@ -92,7 +92,7 @@ public actor KeychainService {
         }
 
         // Try to delete existing item first
-        try? delete(key: key, service: service)
+        try? delete(for: key, in: service)
 
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
