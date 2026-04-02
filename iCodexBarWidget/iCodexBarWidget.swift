@@ -55,8 +55,8 @@ struct ICodexBarProvider: TimelineProvider {
             snapshots = decoded
         }
 
-        // Default to first configured provider, or OpenAI
-        let provider = snapshots.keys.first ?? .openAI
+        // Default to first configured provider (sorted for deterministic ordering), or OpenAI
+        let provider = snapshots.keys.sorted { $0.rawValue < $1.rawValue }.first ?? .openAI
 
         return ICodexBarEntry(date: Date(), snapshots: snapshots, provider: provider)
     }
@@ -78,6 +78,10 @@ struct SmallWidgetView: View {
                 Text(entry.provider.displayName)
                     .font(.caption)
                     .fontWeight(.medium)
+                Spacer()
+                Text(entry.date, style: .time)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
             }
 
             Spacer()
@@ -88,7 +92,7 @@ struct SmallWidgetView: View {
                     .fontWeight(.semibold)
                     .minimumScaleFactor(0.5)
 
-                usageBar(percent: snapshot.primary?.usedPercent ?? 0)
+                UsageBarView(percent: snapshot.primary?.usedPercent ?? 0, color: entry.provider.accentColor)
 
                 Text(snapshot.formattedTokens)
                     .font(.caption2)
@@ -101,21 +105,6 @@ struct SmallWidgetView: View {
         }
         .padding(12)
         .containerBackground(.fill.tertiary, for: .widget)
-    }
-
-    @ViewBuilder
-    private func usageBar(percent: Double) -> some View {
-        let clampedPercent = max(0, min(100, percent))
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(Color.white.opacity(0.2))
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(entry.provider.accentColor)
-                    .frame(width: geo.size.width * (clampedPercent / 100))
-            }
-        }
-        .frame(height: 6)
     }
 }
 
@@ -139,6 +128,10 @@ struct MediumWidgetView: View {
                         Text(provider.displayName)
                             .font(.caption2)
                             .fontWeight(.medium)
+                        Spacer()
+                        Text(entry.date, style: .time)
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
                     }
 
                     Spacer()
@@ -147,7 +140,7 @@ struct MediumWidgetView: View {
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    usageBar(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor)
+                    UsageBarView(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor)
 
                     Text(snapshot?.formattedTokens ?? "—")
                         .font(.caption2)
@@ -159,21 +152,6 @@ struct MediumWidgetView: View {
         }
         .padding(12)
         .containerBackground(.fill.tertiary, for: .widget)
-    }
-
-    @ViewBuilder
-    private func usageBar(percent: Double, color: Color) -> some View {
-        let clampedPercent = max(0, min(100, percent))
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(Color.white.opacity(0.2))
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(color)
-                    .frame(width: geo.size.width * (clampedPercent / 100))
-            }
-        }
-        .frame(height: 6)
     }
 }
 
@@ -213,7 +191,7 @@ struct LargeWidgetView: View {
                         .font(.caption)
                         .frame(width: 70, alignment: .leading)
 
-                    usageBar(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor)
+                    UsageBarView(percent: snapshot?.primary?.usedPercent ?? 0, color: provider.accentColor, height: 8)
 
                     VStack(alignment: .trailing, spacing: 2) {
                         Text(snapshot?.formattedCost ?? "—")
@@ -228,33 +206,31 @@ struct LargeWidgetView: View {
             }
 
             Spacer()
-
-            // Footer
-            HStack {
-                Spacer()
-                Text("Add widget to configure")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                Spacer()
-            }
         }
         .padding(14)
         .containerBackground(.fill.tertiary, for: .widget)
     }
+}
 
-    @ViewBuilder
-    private func usageBar(percent: Double, color: Color) -> some View {
-        let clampedPercent = max(0, min(100, percent))
+// MARK: - Shared Components
+
+private struct UsageBarView: View {
+    let percent: Double
+    let color: Color
+    var height: CGFloat = 6
+
+    var body: some View {
+        let clamped = max(0, min(100, percent))
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Color.white.opacity(0.2))
                 RoundedRectangle(cornerRadius: 3)
                     .fill(color)
-                    .frame(width: geo.size.width * (clampedPercent / 100))
+                    .frame(width: geo.size.width * (clamped / 100))
             }
         }
-        .frame(height: 8)
+        .frame(height: height)
     }
 }
 
