@@ -73,6 +73,9 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             throw ProviderAPIError.invalidCredentials
         case 429:
             throw ProviderAPIError.rateLimited
+        case 404:
+            throw ProviderAPIError.apiError(404,
+                "OpenAI billing API unavailable — use a legacy org API key (not a project key)")
         default:
             let body = String(data: data, encoding: .utf8) ?? "unknown"
             throw ProviderAPIError.apiError(httpResponse.statusCode, body.prefix(200).description)
@@ -320,126 +323,73 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         self.session = session
     }
 
-    /// Anthropic does not have a public billing API. This implementation makes
-    /// a minimal /v1/messages call and extracts token usage from response headers.
-    /// Running totals are persisted to UserDefaults for the current billing period.
+    /// Fetches Claude Code usage via the OAuth usage endpoint.
+    /// Requires a Claude Code OAuth token (not a standard sk-ant- API key).
+    /// Returns 7-day rolling token count and rate limit tier — no cost data available.
     public func fetchUsage(apiKey: String) async throws -> ProviderUsageSnapshot {
         guard !apiKey.isEmpty else { throw ProviderAPIError.notConfigured }
 
-        // Make a minimal API call to get usage from headers
-        let url = URL(string: "https://api.anthropic.com/v1/messages")!
+        let url = URL(string: "https://api.anthropic.com/api/oauth/usage")!
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "GET"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("anthropic-version: 2023-06-01", forHTTPHeaderField: "anthropic-version")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("oauth-2025-04-20", forHTTPHeaderField: "anthropic-beta")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 20
 
-        let body: [String: Any] = [
-            "model": "claude-haiku-4-20250514",
-            "max_tokens": 10,
-            "messages": [["role": "user", "content": "ping"]]
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        let (_, response) = try await session.data(for: request)
+        let (data, response) = try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ProviderAPIError.networkError("Invalid response")
         }
 
         switch httpResponse.statusCode {
-        case 200, 201:
+        case 200:
             break
         case 401, 403:
-            throw ProviderAPIError.invalidCredentials
+            throw ProviderAPIError.apiError(httpResponse.statusCode,
+                "Claude Code OAuth token required — get it from claude.ai after logging in with Claude Code")
+        case 404:
+            throw ProviderAPIError.apiError(404,
+                "Anthropic usage endpoint unavailable — enable Demo Mode in Settings for offline demo")
         case 429:
             throw ProviderAPIError.rateLimited
         default:
-            throw ProviderAPIError.apiError(httpResponse.statusCode, "Anthropic fetch failed")
+            let body = String(data: data, encoding: .utf8) ?? "unknown"
+            throw ProviderAPIError.apiError(httpResponse.statusCode, body.prefix(200).description)
         }
 
-        // Extract usage from response headers (anthropic-usage contains token counts)
-        let usageHeader = httpResponse.value(forHTTPHeaderField: "anthropic-usage")
-        let billingPeriod = currentBillingPeriod()
-
-        var inputTokens = 0
-        var outputTokens = 0
-
-        if let usageHeader, let data = usageHeader.data(using: .utf8),
-           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-            inputTokens = json["input_tokens"] as? Int ?? 0
-            outputTokens = json["output_tokens"] as? Int ?? 0
-        }
-
-        let totalTokens = inputTokens + outputTokens
-
-        // Load persisted cumulative totals from UserDefaults
-        let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
-        let key = "anthropic_usage_\(billingPeriod)"
-        var cumulative = CumulativeAnthropicUsage(
-            inputTokens: inputTokens,
-            outputTokens: outputTokens,
-            apiCalls: 1
-        )
-
-        if let saved = defaults.data(forKey: key),
-           let decoded = try? JSONDecoder().decode(CumulativeAnthropicUsage.self, from: saved) {
-            // If it's a new hour, we've made a fresh API call so add to cumulative
-            cumulative = CumulativeAnthropicUsage(
-                inputTokens: decoded.inputTokens + inputTokens,
-                outputTokens: decoded.outputTokens + outputTokens,
-                apiCalls: decoded.apiCalls + 1
+        do {
+            let usage = try JSONDecoder().decode(AnthropicOAuthUsageResponse.self, from: data)
+            let tier = usage.rateLimitTier ?? "unknown"
+            let primary = RateWindow(
+                usedPercent: 0,  // no usage limit returned from this endpoint
+                windowMinutes: nil,
+                resetsAt: nil,
+                resetDescription: "Rate limit tier: \(tier)"
             )
+            return ProviderUsageSnapshot(
+                provider: .anthropic,
+                primary: primary,
+                secondary: nil,
+                totalTokens: usage.sevenDay,
+                totalCostUSD: 0.0,
+                balance: nil,
+                dailyUsage: [],
+                updatedAt: Date()
+            )
+        } catch {
+            throw ProviderAPIError.parseError("Anthropic OAuth response: \(error.localizedDescription)")
         }
-
-        if let encoded = try? JSONEncoder().encode(cumulative) {
-            defaults.set(encoded, forKey: key)
-        }
-
-        // Estimate cost using Anthropic's published pricing
-        // Haiku: $0.25/M input, $1.25/M output (approximate)
-        let estimatedCost = (Double(cumulative.inputTokens) * 0.25 / 1_000_000)
-            + (Double(cumulative.outputTokens) * 1.25 / 1_000_000)
-
-        let now = Date()
-        let calendar = Calendar.current
-        let periodStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-        let daysInMonth = calendar.range(of: .day, in: .month, for: now)?.count ?? 30
-        let daysPassed = calendar.dateComponents([.day], from: periodStart, to: now).day ?? 1
-        let dailyAvgCost = daysPassed > 0 ? estimatedCost / Double(daysPassed) : 0
-        let projectedCost = dailyAvgCost * Double(daysInMonth)
-        let costPercent = projectedCost > 0 ? min(200, (estimatedCost / projectedCost) * 100) : 0
-
-        let primary = RateWindow(
-            usedPercent: costPercent,
-            windowMinutes: nil,
-            resetsAt: calendar.date(byAdding: .month, value: 1, to: periodStart),
-            resetDescription: "Projected — no billing API available"
-        )
-
-        return ProviderUsageSnapshot(
-            provider: .anthropic,
-            primary: primary,
-            secondary: nil,
-            totalTokens: cumulative.inputTokens + cumulative.outputTokens,
-            totalCostUSD: estimatedCost,
-            balance: nil,
-            dailyUsage: [],
-            updatedAt: now
-        )
-    }
-
-    private func currentBillingPeriod() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM"
-        return formatter.string(from: Date())
     }
 }
 
-private struct CumulativeAnthropicUsage: Codable {
-    var inputTokens: Int
-    var outputTokens: Int
-    var apiCalls: Int
+private struct AnthropicOAuthUsageResponse: Decodable {
+    let sevenDay: Int
+    let rateLimitTier: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case sevenDay = "seven_day"
+        case rateLimitTier = "rate_limit_tier"
+    }
 }

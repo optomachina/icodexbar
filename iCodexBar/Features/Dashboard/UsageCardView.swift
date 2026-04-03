@@ -7,6 +7,8 @@ struct UsageCardView: View {
     let error: String?
     let isLoading: Bool
 
+    @AppStorage("isDemoMode") private var isDemoMode = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
@@ -19,6 +21,16 @@ struct UsageCardView: View {
                 Text(provider.displayName)
                     .font(.headline)
                     .foregroundStyle(.primary)
+
+                if isDemoMode {
+                    Text("DEMO")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.orange)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .overlay(RoundedRectangle(cornerRadius: 3).strokeBorder(.orange.opacity(0.5), lineWidth: 1))
+                }
 
                 Spacer()
 
