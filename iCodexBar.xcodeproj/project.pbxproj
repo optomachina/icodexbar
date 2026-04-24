@@ -146,18 +146,10 @@
 		2E8BC54164351CA657E8FA60 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				3509D27986E67DD24F3AE2D1 /* AddAccount */,
 				7C1359E6EC37DA2850E27553 /* Dashboard */,
 				3AB8E8EE8F6241E3550725CC /* Settings */,
 			);
 			path = Features;
-			sourceTree = "<group>";
-		};
-		3509D27986E67DD24F3AE2D1 /* AddAccount */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = AddAccount;
 			sourceTree = "<group>";
 		};
 		3AB8E8EE8F6241E3550725CC /* Settings */ = {
