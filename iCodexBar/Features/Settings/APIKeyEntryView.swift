@@ -160,7 +160,7 @@ struct APIKeyEntryView: View {
 
         // Save to Keychain
         do {
-            try await KeychainService.shared.save(key: provider.rawValue, value: trimmedKey)
+            try KeychainService.shared.save(key: provider.rawValue, value: trimmedKey)
         } catch {
             errorMessage = "Failed to save: \(error.localizedDescription)"
             isSaving = false
@@ -202,7 +202,7 @@ struct APIKeyEntryView: View {
 
     private func deleteKey() async {
         do {
-            try await KeychainService.shared.delete(key: provider.rawValue)
+            try KeychainService.shared.delete(key: provider.rawValue)
             dismiss()
         } catch {
             errorMessage = "Failed to delete: \(error.localizedDescription)"

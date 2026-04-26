@@ -79,7 +79,7 @@ final class BackgroundRefreshService {
     
     /// Cancel any pending background refresh
     func cancelScheduledRefresh() {
-        BGTaskScheduler.shared.cancel(taskIdentifier: taskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: taskIdentifier)
         print("[BackgroundRefresh] Cancelled scheduled refresh")
     }
     

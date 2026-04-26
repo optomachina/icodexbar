@@ -66,6 +66,12 @@ targets:
       - path: iCodexBarWidget
         excludes:
           - "**/.DS_Store"
+      - path: iCodexBar/Core/Models/Provider.swift
+      - path: iCodexBar/Core/Models/ProviderUsageSnapshot.swift
+      - path: iCodexBar/Core/Models/RateWindow.swift
+      - path: iCodexBar/Core/Models/DailyUsageEntry.swift
+      - path: iCodexBar/Core/Utilities/CurrencyFormatter.swift
+      - path: iCodexBar/Core/Utilities/UsageFormatter.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.widget
@@ -91,6 +97,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.tests
+        GENERATE_INFOPLIST_FILE: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
     dependencies:
@@ -106,6 +113,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.uitests
+        GENERATE_INFOPLIST_FILE: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
     dependencies:
