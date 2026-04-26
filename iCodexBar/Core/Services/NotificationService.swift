@@ -2,7 +2,6 @@ import Foundation
 import UserNotifications
 
 public actor NotificationService {
-
     public static let shared = NotificationService()
 
     private init() {}
@@ -34,13 +33,13 @@ public actor NotificationService {
         content.userInfo = [
             "provider": provider.rawValue,
             "percent": percent,
-            "threshold": threshold
+            "threshold": threshold,
         ]
 
         let request = UNNotificationRequest(
             identifier: "alert-\(provider.rawValue)-\(Date().timeIntervalSince1970)",
             content: content,
-            trigger: nil  // deliver immediately
+            trigger: nil // deliver immediately
         )
 
         do {
@@ -78,7 +77,11 @@ public actor NotificationService {
             guard let snapshot = snapshots[threshold.provider] else { continue }
             let usedPercent = Int(snapshot.primary?.usedPercent ?? 0)
             if usedPercent >= threshold.thresholdPercent {
-                await sendAlert(provider: threshold.provider, percent: usedPercent, threshold: threshold.thresholdPercent)
+                await sendAlert(
+                    provider: threshold.provider,
+                    percent: usedPercent,
+                    threshold: threshold.thresholdPercent
+                )
             }
         }
     }
@@ -90,7 +93,7 @@ public enum NotificationError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .authorizationDenied:
-            return "Notification permission denied. Enable in Settings."
+            "Notification permission denied. Enable in Settings."
         }
     }
 }

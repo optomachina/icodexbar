@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBar
+import XCTest
 
 final class KeychainServiceTests: XCTestCase {
-
     private var keychain: KeychainService!
 
     override func setUp() async throws {
@@ -74,7 +73,7 @@ final class KeychainServiceTests: XCTestCase {
         try await keychain.delete(key: testKey)
     }
 
-    func testExistsFalse() async throws {
+    func testExistsFalse() async {
         let exists = await keychain.exists(key: "nonexistent_key")
         XCTAssertFalse(exists)
     }

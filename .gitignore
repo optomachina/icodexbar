@@ -63,3 +63,4 @@ fastlane/.env*
 *.gcov
 *.gcno
 *.gcda
+.claude/

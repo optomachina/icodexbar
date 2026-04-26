@@ -41,8 +41,8 @@ extension UsageData {
     static func placeholder(for provider: Provider) -> UsageData {
         UsageData(
             provider: provider,
-            totalTokens: Int.random(in: 500_000...5_000_000),
-            costUSD: Double.random(in: 1.0...25.0),
+            totalTokens: Int.random(in: 500_000 ... 5_000_000),
+            costUSD: Double.random(in: 1.0 ... 25.0),
             periodStart: Calendar.current.date(byAdding: .day, value: -15, to: Date())!,
             periodEnd: Calendar.current.date(byAdding: .day, value: 15, to: Date())!,
             fetchedAt: Date()

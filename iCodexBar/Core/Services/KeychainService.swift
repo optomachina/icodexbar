@@ -13,15 +13,15 @@ public enum KeychainError: Error, LocalizedError, Equatable {
     public var errorDescription: String? {
         switch self {
         case .duplicate:
-            return "An item with this key already exists"
+            "An item with this key already exists"
         case .notFound:
-            return "Item not found in Keychain"
+            "Item not found in Keychain"
         case let .unexpectedStatus(status):
-            return "Keychain error: \(status)"
+            "Keychain error: \(status)"
         case .encodingError:
-            return "Failed to encode or decode data"
+            "Failed to encode or decode data"
         case .invalidInput:
-            return "Invalid input"
+            "Invalid input"
         }
     }
 }
@@ -30,10 +30,9 @@ public enum KeychainError: Error, LocalizedError, Equatable {
 
 /// Secure storage for API keys using iOS Keychain
 public actor KeychainService {
-
     public static let shared = KeychainService()
 
-    private let accessGroup: String? = nil  // Set to App Group keychain group if sharing between app + widget
+    private let accessGroup: String? = nil // Set to App Group keychain group if sharing between app + widget
 
     private init() {}
 
@@ -99,7 +98,7 @@ public actor KeychainService {
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
             kSecValueData as String: data,
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
         ]
 
         if let group = accessGroup {
@@ -122,7 +121,7 @@ public actor KeychainService {
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
             kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecMatchLimit as String: kSecMatchLimitOne,
         ]
 
         if let group = accessGroup {
@@ -140,7 +139,8 @@ public actor KeychainService {
         }
 
         guard let data = result as? Data,
-              let string = String(data: data, encoding: .utf8) else {
+              let string = String(data: data, encoding: .utf8)
+        else {
             throw KeychainError.encodingError
         }
 
@@ -151,7 +151,7 @@ public actor KeychainService {
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: key
+            kSecAttrAccount as String: key,
         ]
 
         if let group = accessGroup {

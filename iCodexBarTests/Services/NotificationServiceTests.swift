@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBar
+import XCTest
 
 final class NotificationServiceTests: XCTestCase {
-
     private var service: NotificationService!
 
     override func setUp() async throws {
@@ -22,7 +21,7 @@ final class NotificationServiceTests: XCTestCase {
 
     // MARK: - Notification Sending Tests
 
-    func testSendUsageAlert() async throws {
+    func testSendUsageAlert() async {
         // Request authorization first
         _ = try? await service.requestAuthorization()
 

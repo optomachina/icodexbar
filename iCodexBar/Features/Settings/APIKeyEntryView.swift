@@ -112,11 +112,11 @@ struct APIKeyEntryView: View {
     private var providerKeyHint: String {
         switch provider {
         case .openAI:
-            return "Find your API key at platform.openai.com/api-keys"
+            "Find your API key at platform.openai.com/api-keys"
         case .anthropic:
-            return "Find your API key at console.anthropic.com/settings/keys"
+            "Find your API key at console.anthropic.com/settings/keys"
         case .openRouter:
-            return "Find your API key at openrouter.ai/settings/keys"
+            "Find your API key at openrouter.ai/settings/keys"
         }
     }
 
@@ -212,11 +212,11 @@ struct APIKeyEntryView: View {
     private func isValidKeyFormat(_ key: String) -> Bool {
         switch provider {
         case .openAI:
-            return key.hasPrefix("sk-") && key.count > 10
+            key.hasPrefix("sk-") && key.count > 10
         case .anthropic:
-            return key.hasPrefix("sk-ant-") && key.count > 10
+            key.hasPrefix("sk-ant-") && key.count > 10
         case .openRouter:
-            return key.hasPrefix("sk-or-") && key.count > 10
+            key.hasPrefix("sk-or-") && key.count > 10
         }
     }
 }

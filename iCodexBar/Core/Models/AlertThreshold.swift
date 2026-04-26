@@ -7,7 +7,7 @@ struct AlertThreshold: Codable, Identifiable, Equatable {
     var isEnabled: Bool
 
     init(provider: Provider, thresholdPercent: Int = 80, isEnabled: Bool = true) {
-        self.id = UUID()
+        id = UUID()
         self.provider = provider
         self.thresholdPercent = thresholdPercent
         self.isEnabled = isEnabled

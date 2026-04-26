@@ -131,7 +131,6 @@ struct UsageCardView: View {
         }
     }
 
-    @ViewBuilder
     private func statItem(label: String, value: String, accent: Color) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)

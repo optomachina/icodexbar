@@ -12,12 +12,12 @@ public enum ProviderAPIError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidCredentials: return "Invalid API key"
-        case let .networkError(msg): return "Network error: \(msg)"
-        case let .apiError(code, msg): return "API error \(code): \(msg)"
-        case let .parseError(msg): return "Parse error: \(msg)"
-        case .rateLimited: return "Rate limited. Try again later."
-        case .notConfigured: return "API key not configured"
+        case .invalidCredentials: "Invalid API key"
+        case let .networkError(msg): "Network error: \(msg)"
+        case let .apiError(code, msg): "API error \(code): \(msg)"
+        case let .parseError(msg): "Parse error: \(msg)"
+        case .rateLimited: "Rate limited. Try again later."
+        case .notConfigured: "API key not configured"
         }
     }
 }
@@ -31,7 +31,6 @@ public protocol UsageAPIFetching: Sendable {
 // MARK: - OpenAI Usage API
 
 public struct OpenAIUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenAIUsageAPI()
 
     private let session: URLSession
@@ -162,7 +161,6 @@ private struct OpenAIDailyEntry: Decodable {
 // MARK: - OpenRouter Usage API
 
 public struct OpenRouterUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenRouterUsageAPI()
 
     private let session: URLSession
@@ -243,7 +241,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
     private func fetchKeyInfo(apiKey: String) async -> OpenRouterKeyInfo? {
         await withTaskGroup(of: OpenRouterKeyInfo?.self) { group in
             group.addTask {
-                await self.fetchKeyInfoRequest(apiKey: apiKey)
+                await fetchKeyInfoRequest(apiKey: apiKey)
             }
             group.addTask {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -311,7 +309,6 @@ private struct OpenRouterRateLimit: Codable {
 // MARK: - Anthropic Usage API
 
 public struct AnthropicUsageAPI: UsageAPIFetching {
-
     public static let shared = AnthropicUsageAPI()
 
     private let session: URLSession
@@ -339,7 +336,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         let body: [String: Any] = [
             "model": "claude-haiku-4-20250514",
             "max_tokens": 10,
-            "messages": [["role": "user", "content": "ping"]]
+            "messages": [["role": "user", "content": "ping"]],
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
@@ -368,7 +365,8 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         var outputTokens = 0
 
         if let usageHeader, let data = usageHeader.data(using: .utf8),
-           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        {
             inputTokens = json["input_tokens"] as? Int ?? 0
             outputTokens = json["output_tokens"] as? Int ?? 0
         }
@@ -385,7 +383,8 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         )
 
         if let saved = defaults.data(forKey: key),
-           let decoded = try? JSONDecoder().decode(CumulativeAnthropicUsage.self, from: saved) {
+           let decoded = try? JSONDecoder().decode(CumulativeAnthropicUsage.self, from: saved)
+        {
             // If it's a new hour, we've made a fresh API call so add to cumulative
             cumulative = CumulativeAnthropicUsage(
                 inputTokens: decoded.inputTokens + inputTokens,

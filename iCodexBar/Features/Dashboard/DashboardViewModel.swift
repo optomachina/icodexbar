@@ -3,7 +3,6 @@ import SwiftUI
 
 @Observable
 public final class DashboardViewModel {
-
     public var snapshots: [Provider: ProviderUsageSnapshot?] = [:]
     public var errors: [Provider: String?] = [:]
     public var isLoading: Bool = false

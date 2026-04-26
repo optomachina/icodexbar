@@ -2,7 +2,6 @@ import SwiftUI
 
 @main
 struct ICodexBarApp: App {
-
     init() {
         requestNotificationPermission()
         registerBackgroundTask()
