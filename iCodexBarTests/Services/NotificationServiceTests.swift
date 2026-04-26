@@ -21,7 +21,7 @@ final class NotificationServiceTests: XCTestCase {
                 .notDetermined,
                 .denied,
                 .authorized,
-                .provisional,
+                .provisional
             ]
             #if os(iOS)
                 expectedStatuses.append(.ephemeral)
@@ -32,19 +32,20 @@ final class NotificationServiceTests: XCTestCase {
 
     // MARK: - Notification Sending Tests
 
-    func testSendUsageAlert() async throws {
+    /// Smoke test: `sendAlert` must not throw or crash on iOS even when no
+    /// authorization has been granted (it should fail silently, by design).
+    /// Doesn't validate the constructed `UNNotificationRequest` — that needs
+    /// dependency injection of a `UNUserNotificationCenter`-like spy, which
+    /// `NotificationService` doesn't currently support.
+    func testSendUsageAlertDoesNotThrow() async throws {
         #if os(macOS)
             throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
         #else
-            // Send test notification
             await service.sendAlert(
                 provider: .openAI,
                 percent: 85,
                 threshold: 80
             )
-
-            // Verify no crash - actual notification delivery is system-dependent
-            XCTAssertTrue(true)
         #endif
     }
 }

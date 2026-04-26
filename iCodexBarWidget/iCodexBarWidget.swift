@@ -50,8 +50,7 @@ struct ICodexBarProvider: TimelineProvider {
 
         var snapshots: [Provider: ProviderUsageSnapshot] = [:]
         if let data = defaults.data(forKey: snapshotsKey),
-           let decoded = try? decoder.decode([Provider: ProviderUsageSnapshot].self, from: data)
-        {
+           let decoded = try? decoder.decode([Provider: ProviderUsageSnapshot].self, from: data) {
             snapshots = decoded
         }
 

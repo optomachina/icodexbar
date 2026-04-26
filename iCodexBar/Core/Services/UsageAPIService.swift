@@ -55,7 +55,7 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         components.queryItems = [
             URLQueryItem(name: "start_time", value: "\(startUnix)"),
             URLQueryItem(name: "end_time", value: "\(endUnix)"),
-            URLQueryItem(name: "bucket_width", value: "1d"),
+            URLQueryItem(name: "bucket_width", value: "1d")
         ]
         let url = components.url!
 
@@ -229,7 +229,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             resetDescription: balance > 0 ? "Credit: \(CurrencyFormatter.format(balance))" : nil
         )
 
-        var secondary: RateWindow? = nil
+        var secondary: RateWindow?
         if let keyLimit = keyInfo?.limit, let keyUsage = keyInfo?.usage, keyLimit > 0 {
             let keyPercent = (keyUsage / keyLimit) * 100
             secondary = RateWindow(
@@ -263,7 +263,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             }
             let result = await group.next()
             group.cancelAll()
-            return result ?? nil
+            return result.flatMap { $0 }
         }
     }
 
@@ -351,7 +351,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         let body: [String: Any] = [
             "model": "claude-haiku-4-5-20251001",
             "max_tokens": 10,
-            "messages": [["role": "user", "content": "ping"]],
+            "messages": [["role": "user", "content": "ping"]]
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
@@ -395,8 +395,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         )
 
         if let saved = defaults.data(forKey: key),
-           let decoded = try? JSONDecoder().decode(CumulativeAnthropicUsage.self, from: saved)
-        {
+           let decoded = try? JSONDecoder().decode(CumulativeAnthropicUsage.self, from: saved) {
             // If it's a new hour, we've made a fresh API call so add to cumulative
             cumulative = CumulativeAnthropicUsage(
                 inputTokens: decoded.inputTokens + inputTokens,

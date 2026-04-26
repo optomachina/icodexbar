@@ -56,7 +56,11 @@ final class BackgroundRefreshService {
             forTaskWithIdentifier: taskIdentifier,
             using: nil
         ) { task in
-            self.handleBackgroundRefresh(task: task as! BGAppRefreshTask)
+            guard let refreshTask = task as? BGAppRefreshTask else {
+                task.setTaskCompleted(success: false)
+                return
+            }
+            self.handleBackgroundRefresh(task: refreshTask)
         }
     }
 
@@ -135,8 +139,7 @@ final class BackgroundRefreshService {
 
 extension BackgroundRefreshService.RefreshInterval: Comparable {
     static func < (lhs: BackgroundRefreshService.RefreshInterval,
-                   rhs: BackgroundRefreshService.RefreshInterval) -> Bool
-    {
+                   rhs: BackgroundRefreshService.RefreshInterval) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
 }

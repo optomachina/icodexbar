@@ -35,7 +35,7 @@ public actor NotificationService {
         content.userInfo = [
             "provider": provider.rawValue,
             "percent": percent,
-            "threshold": threshold,
+            "threshold": threshold
         ]
 
         let request = UNNotificationRequest(

@@ -20,7 +20,7 @@ final class ProviderUsageSnapshotTests: XCTestCase {
         let primary = RateWindow(usedPercent: 40.0)
         let secondary = RateWindow(usedPercent: 20.0, windowMinutes: 60)
         let daily = [
-            DailyUsageEntry(date: "2026-04-25", totalTokens: 1000, costUSD: 0.05),
+            DailyUsageEntry(date: "2026-04-25", totalTokens: 1000, costUSD: 0.05)
         ]
 
         let snapshot = ProviderUsageSnapshot(

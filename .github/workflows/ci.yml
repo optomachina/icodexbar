@@ -117,11 +117,17 @@ jobs:
         env:
           CI: true
 
+  # Gated behind workflow_dispatch until signing is provisioned (see
+  # archive_release in fastlane/Fastfile). The DEVELOPMENT_TEAM secret alone
+  # isn't enough — `build_app` with automatic signing also needs a certificate
+  # in the keychain and a matching provisioning profile. Run manually from
+  # Actions UI when those are wired up (e.g. via `match` or
+  # `import_certificate` + `app_store_connect_api_key`).
   beta:
     name: Upload to TestFlight
     runs-on: macos-15
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -89,19 +89,30 @@ platform :ios do
     )
   end
 
-  # Picks the latest available iPhone simulator for the installed Xcode toolchain.
+  # Picks the newest available iPhone simulator for the installed Xcode toolchain.
   # Avoids hardcoding a specific runtime (e.g. "iPhone 15 Pro (17.0)") that breaks
   # whenever the runner image bumps Xcode.
+  #
+  # Sorts numerically — naive string sort would put "iOS-9-0" after "iOS-18-2"
+  # because '9' > '1'. Same for device names: "iPhone 9" must rank below
+  # "iPhone 16". Non-numeric models like "iPhone SE" are ranked last.
   def latest_iphone_simulator
     require "json"
     output = `xcrun simctl list devices available --json`
     devices = JSON.parse(output)["devices"]
+
     runtime = devices.keys
       .select { |k| k.include?("iOS") }
-      .sort
-      .last
-    iphone = devices[runtime].find { |d| d["name"].start_with?("iPhone") && d["isAvailable"] }
-    UI.user_error!("No available iPhone simulator found in #{runtime}") unless iphone
+      .max_by { |k| (k[/iOS-(\d+)-(\d+)/, 1].to_i * 1_000) + k[/iOS-(\d+)-(\d+)/, 2].to_i }
+    UI.user_error!("No available iOS simulator runtime found") unless runtime
+
+    available = devices[runtime].select { |d| d["name"].start_with?("iPhone") && d["isAvailable"] }
+    UI.user_error!("No available iPhone simulator found in #{runtime}") if available.empty?
+
+    iphone = available.max_by do |d|
+      model = d["name"][/iPhone\s+(\d+)/, 1]
+      model ? model.to_i : -1 # SE / mini / non-numeric ranked below numbered models
+    end
     iphone["name"]
   end
 

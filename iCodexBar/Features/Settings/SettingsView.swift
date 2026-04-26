@@ -83,8 +83,7 @@ struct SettingsView: View {
     private func loadThresholds() {
         let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
         if let data = defaults.data(forKey: "alert_thresholds"),
-           let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data)
-        {
+           let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data) {
             thresholds = decoded
         } else {
             thresholds = Provider.allCases.map { AlertThreshold(provider: $0) }

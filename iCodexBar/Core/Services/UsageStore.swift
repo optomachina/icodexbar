@@ -123,8 +123,7 @@ public final class UsageStore {
         decoder.dateDecodingStrategy = .iso8601
 
         if let data = defaults.data(forKey: snapshotsKey),
-           let decoded = try? decoder.decode([Provider: ProviderUsageSnapshot].self, from: data)
-        {
+           let decoded = try? decoder.decode([Provider: ProviderUsageSnapshot].self, from: data) {
             snapshots = decoded
         }
         lastFetchedAt = defaults.object(forKey: lastFetchedKey) as? Date
@@ -180,8 +179,7 @@ public final class UsageStore {
         }
 
         if let data = defaults.data(forKey: thresholdsKey),
-           let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data)
-        {
+           let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data) {
             return decoded
         }
 
@@ -192,8 +190,7 @@ public final class UsageStore {
         guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
 
         if let data = defaults.data(forKey: lastNotifiedKey),
-           let decoded = try? JSONDecoder().decode([String: Int].self, from: data)
-        {
+           let decoded = try? JSONDecoder().decode([String: Int].self, from: data) {
             lastNotifiedPercent = [:]
             for (key, value) in decoded {
                 if let provider = Provider(rawValue: key) {
