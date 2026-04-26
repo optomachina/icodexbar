@@ -14,3 +14,5 @@
 --xcodeindentation enabled
 --importgrouping alpha
 --modifierorder override,acl,setteracl,dynamic,mutators,lazy,final,required
+
+--exclude vendor,Pods,build,.build,DerivedData,.swiftpm
