@@ -29,20 +29,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EB1709411C43615752611D7F"
-               BuildableName = "iCodexBarTests.xctest"
-               BlueprintName = "iCodexBarTests"
-               ReferencedContainer = "container:iCodexBar.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "E7ADC1085F871A71FDF6589B"
                BuildableName = "iCodexBarWidgetExtension.appex"
                BlueprintName = "iCodexBarWidgetExtension"

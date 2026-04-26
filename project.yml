@@ -178,7 +178,6 @@ schemes:
       targets:
         iCodexBar: all
         iCodexBarWidgetExtension: all
-        iCodexBarTests: all
     run:
       config: Debug
     test:
