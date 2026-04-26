@@ -42,43 +42,73 @@ platform :ios do
     format_check
   end
   
-  desc "Build Debug configuration"
+  desc "Build Debug configuration (CI sanity build, no archive, no signing)"
   lane :build_debug do
-    build_app(
-      scheme: scheme,
-      configuration: "Debug",
-      derived_data_path: build_path,
-      clean: true
+    sh(
+      "set -o pipefail && xcodebuild " \
+      "-project ../#{project_name}.xcodeproj " \
+      "-scheme #{scheme} " \
+      "-configuration Debug " \
+      "-destination 'generic/platform=iOS Simulator' " \
+      "-derivedDataPath ../#{build_path} " \
+      "CODE_SIGNING_ALLOWED=NO " \
+      "CODE_SIGNING_REQUIRED=NO " \
+      "CODE_SIGN_IDENTITY='' " \
+      "clean build | xcbeautify"
     )
   end
-  
-  desc "Build Release configuration"
+
+  desc "Build Release configuration (CI sanity build, no archive, no signing)"
   lane :build_release do
-    build_app(
-      scheme: scheme,
-      configuration: "Release",
-      derived_data_path: build_path,
-      clean: true
+    sh(
+      "set -o pipefail && xcodebuild " \
+      "-project ../#{project_name}.xcodeproj " \
+      "-scheme #{scheme} " \
+      "-configuration Release " \
+      "-destination 'generic/platform=iOS Simulator' " \
+      "-derivedDataPath ../#{build_path} " \
+      "CODE_SIGNING_ALLOWED=NO " \
+      "CODE_SIGNING_REQUIRED=NO " \
+      "CODE_SIGN_IDENTITY='' " \
+      "clean build | xcbeautify"
     )
   end
   
+  # Picks the latest available iPhone simulator for the installed Xcode toolchain.
+  # Avoids hardcoding a specific runtime (e.g. "iPhone 15 Pro (17.0)") that breaks
+  # whenever the runner image bumps Xcode.
+  def latest_iphone_simulator
+    require "json"
+    output = `xcrun simctl list devices available --json`
+    devices = JSON.parse(output)["devices"]
+    runtime = devices.keys
+      .select { |k| k.include?("iOS") }
+      .sort
+      .last
+    iphone = devices[runtime].find { |d| d["name"].start_with?("iPhone") && d["isAvailable"] }
+    UI.user_error!("No available iPhone simulator found in #{runtime}") unless iphone
+    iphone["name"]
+  end
+
   desc "Run unit tests"
   lane :test do
     run_tests(
-      scheme: "iCodexBarTests",
+      scheme: scheme,
       configuration: "Debug",
-      devices: ["iPhone 15 Pro (17.0)"],
-      code_coverage: true
+      device: latest_iphone_simulator,
+      code_coverage: true,
+      only_testing: ["iCodexBarTests"]
     )
   end
 
   desc "Run UI tests"
   lane :ui_test do
     run_tests(
-      scheme: "iCodexBar",
+      scheme: scheme,
       configuration: "Debug",
-      devices: ["iPhone 15 Pro (17.0)"],
-      code_coverage: false
+      device: latest_iphone_simulator,
+      code_coverage: false,
+      only_testing: ["iCodexBarUITests"]
     )
   end
   
@@ -90,17 +120,29 @@ platform :ios do
     test
   end
   
+  # Real signed archive for TestFlight/App Store. Requires DEVELOPMENT_TEAM
+  # and an App Store Connect API key in the environment (see ci.yml beta job).
+  desc "Archive Release for distribution"
+  lane :archive_release do
+    build_app(
+      scheme: scheme,
+      configuration: "Release",
+      derived_data_path: build_path,
+      clean: true
+    )
+  end
+
   desc "Upload to TestFlight"
   lane :beta do
-    build_release
+    archive_release
     upload_to_testflight(
       skip_waiting_for_build_processing: true
     )
   end
-  
+
   desc "Submit to App Store"
   lane :release do
-    build_release
+    archive_release
     upload_to_app_store(
       force: true,
       submit_for_review: true
