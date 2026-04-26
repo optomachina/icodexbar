@@ -453,7 +453,6 @@ One record per provider, overwritten on each Mac-side refresh.
 *Plan version: 2.0*
 *Created: 2026-03-27*
 *Restructured: 2026-04-24*
-
 ---
 
 ## /autoplan Review Report
