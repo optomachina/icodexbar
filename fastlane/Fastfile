@@ -42,6 +42,12 @@ platform :ios do
     format_check
   end
   
+  # ENABLE_TESTABILITY=YES is required because the iCodexBar scheme builds
+  # the iCodexBarTests target as a dependency, and the tests use
+  # `@testable import iCodexBar` — which requires the app module to be
+  # compiled with testability enabled. Debug configs default to YES; Release
+  # defaults to NO, so Release builds otherwise fail with
+  # "module 'iCodexBar' was not compiled for testing".
   desc "Build Debug configuration (CI sanity build, no archive, no signing)"
   lane :build_debug do
     sh(
@@ -50,10 +56,11 @@ platform :ios do
       "-scheme #{scheme} " \
       "-configuration Debug " \
       "-destination 'generic/platform=iOS Simulator' " \
-      "-derivedDataPath ../#{build_path} " \
+      "-derivedDataPath ../build " \
       "CODE_SIGNING_ALLOWED=NO " \
       "CODE_SIGNING_REQUIRED=NO " \
       "CODE_SIGN_IDENTITY='' " \
+      "ENABLE_TESTABILITY=YES " \
       "clean build | xcbeautify"
     )
   end
@@ -66,10 +73,11 @@ platform :ios do
       "-scheme #{scheme} " \
       "-configuration Release " \
       "-destination 'generic/platform=iOS Simulator' " \
-      "-derivedDataPath ../#{build_path} " \
+      "-derivedDataPath ../build " \
       "CODE_SIGNING_ALLOWED=NO " \
       "CODE_SIGNING_REQUIRED=NO " \
       "CODE_SIGN_IDENTITY='' " \
+      "ENABLE_TESTABILITY=YES " \
       "clean build | xcbeautify"
     )
   end
