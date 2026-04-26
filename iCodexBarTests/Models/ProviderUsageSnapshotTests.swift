@@ -1,5 +1,5 @@
 import XCTest
-@testable import iCodexBar
+@testable import iCodexBarCore
 
 final class ProviderUsageSnapshotTests: XCTestCase {
 
@@ -123,9 +123,10 @@ final class ProviderUsageSnapshotTests: XCTestCase {
     // MARK: - Equatable Tests
 
     func testSnapshotEquatable() {
-        let snapshot1 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 1000)
-        let snapshot2 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 1000)
-        let snapshot3 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 2000)
+        let updatedAt = Date(timeIntervalSince1970: 0)
+        let snapshot1 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 1000, updatedAt: updatedAt)
+        let snapshot2 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 1000, updatedAt: updatedAt)
+        let snapshot3 = ProviderUsageSnapshot(provider: .openAI, totalTokens: 2000, updatedAt: updatedAt)
 
         XCTAssertEqual(snapshot1, snapshot2)
         XCTAssertNotEqual(snapshot1, snapshot3)

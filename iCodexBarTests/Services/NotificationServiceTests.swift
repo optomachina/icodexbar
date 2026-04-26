@@ -1,6 +1,6 @@
 import XCTest
 import UserNotifications
-@testable import iCodexBar
+@testable import iCodexBarCore
 
 final class NotificationServiceTests: XCTestCase {
 
@@ -14,19 +14,29 @@ final class NotificationServiceTests: XCTestCase {
     // MARK: - Permission Tests
 
     func testCheckAuthorizationStatus() async throws {
+        #if os(macOS)
+        throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
         let status = await service.checkAuthorizationStatus()
-        XCTAssertTrue([
+        var expectedStatuses: [UNAuthorizationStatus] = [
             .notDetermined,
             .denied,
             .authorized,
-            .provisional,
-            .ephemeral
-        ].contains(status))
+            .provisional
+        ]
+        #if os(iOS)
+        expectedStatuses.append(.ephemeral)
+        #endif
+        XCTAssertTrue(expectedStatuses.contains(status))
+        #endif
     }
 
     // MARK: - Notification Sending Tests
 
     func testSendUsageAlert() async throws {
+        #if os(macOS)
+        throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
         // Send test notification
         await service.sendAlert(
             provider: .openAI,
@@ -36,5 +46,6 @@ final class NotificationServiceTests: XCTestCase {
 
         // Verify no crash - actual notification delivery is system-dependent
         XCTAssertTrue(true)
+        #endif
     }
 }

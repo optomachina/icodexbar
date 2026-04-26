@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A2918E01B1927C99353E717A"
-               BuildableName = "iCodexBarCore.framework"
-               BlueprintName = "iCodexBarCore"
+               BlueprintIdentifier = "806E3A334054862C3F98EDEE"
+               BuildableName = "iCodexBarCoreMac.framework"
+               BlueprintName = "iCodexBarCoreMac"
                ReferencedContainer = "container:iCodexBar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,9 +29,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EB1709411C43615752611D7F"
-               BuildableName = "iCodexBarTests.xctest"
-               BlueprintName = "iCodexBarTests"
+               BlueprintIdentifier = "7712CD87AA553F09D0E9CA47"
+               BuildableName = "iCodexBarMacTests.xctest"
+               BlueprintName = "iCodexBarMacTests"
                ReferencedContainer = "container:iCodexBar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,9 +46,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A2918E01B1927C99353E717A"
-            BuildableName = "iCodexBarCore.framework"
-            BlueprintName = "iCodexBarCore"
+            BlueprintIdentifier = "806E3A334054862C3F98EDEE"
+            BuildableName = "iCodexBarCoreMac.framework"
+            BlueprintName = "iCodexBarCoreMac"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -58,9 +58,9 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EB1709411C43615752611D7F"
-               BuildableName = "iCodexBarTests.xctest"
-               BlueprintName = "iCodexBarTests"
+               BlueprintIdentifier = "7712CD87AA553F09D0E9CA47"
+               BuildableName = "iCodexBarMacTests.xctest"
+               BlueprintName = "iCodexBarMacTests"
                ReferencedContainer = "container:iCodexBar.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -81,9 +81,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A2918E01B1927C99353E717A"
-            BuildableName = "iCodexBarCore.framework"
-            BlueprintName = "iCodexBarCore"
+            BlueprintIdentifier = "806E3A334054862C3F98EDEE"
+            BuildableName = "iCodexBarCoreMac.framework"
+            BlueprintName = "iCodexBarCoreMac"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -97,9 +97,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A2918E01B1927C99353E717A"
-            BuildableName = "iCodexBarCore.framework"
-            BlueprintName = "iCodexBarCore"
+            BlueprintIdentifier = "806E3A334054862C3F98EDEE"
+            BuildableName = "iCodexBarCoreMac.framework"
+            BlueprintName = "iCodexBarCoreMac"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

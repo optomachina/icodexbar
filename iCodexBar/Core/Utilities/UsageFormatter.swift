@@ -8,7 +8,7 @@ public enum UsageFormatter {
         if tokens >= 1_000_000 {
             return String(format: "%.2fM", Double(tokens) / 1_000_000).replacingOccurrences(of: ".00", with: "")
         } else if tokens >= 1_000 {
-            return String(format: "%.1fK", Double(tokens) / 1_000).replacingOccurrences(of: ".0", with: "")
+            return String(format: "%.0fK", Double(tokens) / 1_000)
         } else {
             return NumberFormatter.localizedString(from: NSNumber(value: tokens), number: .decimal)
         }
@@ -46,7 +46,12 @@ public enum UsageFormatter {
 
     /// Days remaining in a period ending at the given date
     public static func daysRemaining(in periodEnd: Date) -> Int {
-        Calendar.current.dateComponents([.day], from: Date(), to: periodEnd).day ?? 0
+        let calendar = Calendar.current
+        return calendar.dateComponents(
+            [.day],
+            from: calendar.startOfDay(for: Date()),
+            to: calendar.startOfDay(for: periodEnd)
+        ).day ?? 0
     }
 
     /// Format days remaining as string

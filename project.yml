@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: com.icodexbar
   deploymentTarget:
     iOS: "17.0"
+    macOS: "14.0"
   xcodeVersion: "15.0"
   generateEmptyDirectories: true
 
@@ -28,6 +29,43 @@ configs:
     DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
 
 targets:
+  iCodexBarCoreMac:
+    type: framework
+    platform: macOS
+    sources:
+      - path: iCodexBar/Core/Models
+        excludes:
+          - "**/.DS_Store"
+      - path: iCodexBar/Core/Utilities
+        excludes:
+          - "**/.DS_Store"
+      - path: iCodexBar/Core/Services/KeychainService.swift
+      - path: iCodexBar/Core/Services/NotificationService.swift
+      - path: iCodexBar/Core/Services/UsageAPIService.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.core.mac
+        PRODUCT_NAME: iCodexBarCore
+        PRODUCT_MODULE_NAME: iCodexBarCore
+        GENERATE_INFOPLIST_FILE: "YES"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks"
+        SKIP_INSTALL: "YES"
+
+  iCodexBarCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: iCodexBar/Core
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.core
+        GENERATE_INFOPLIST_FILE: "YES"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+        SKIP_INSTALL: "YES"
+
   iCodexBar:
     type: application
     platform: iOS
@@ -101,7 +139,22 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
     dependencies:
-      - target: iCodexBar
+      - target: iCodexBarCore
+
+  iCodexBarMacTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: iCodexBarTests
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.mactests
+        GENERATE_INFOPLIST_FILE: "YES"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks"
+    dependencies:
+      - target: iCodexBarCoreMac
 
   iCodexBarUITests:
     type: bundle.ui-testing
@@ -143,6 +196,21 @@ schemes:
   iCodexBarTests:
     build:
       targets:
+        iCodexBarCore: test
         iCodexBarTests: all
     test:
       config: Debug
+      debugEnabled: false
+      targets:
+        - iCodexBarTests
+
+  iCodexBarMacTests:
+    build:
+      targets:
+        iCodexBarCoreMac: test
+        iCodexBarMacTests: all
+    test:
+      config: Debug
+      debugEnabled: false
+      targets:
+        - iCodexBarMacTests

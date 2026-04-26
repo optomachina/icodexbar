@@ -1,5 +1,5 @@
 import XCTest
-@testable import iCodexBar
+@testable import iCodexBarCore
 
 final class ProviderTests: XCTestCase {
 

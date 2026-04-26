@@ -7,46 +7,85 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08B22136750135925DB40660 /* ProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368BF0D265B4D5132C22F895 /* ProviderTests.swift */; };
+		08F3A1CED9A6C73732138D13 /* BackgroundRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */; };
 		0D3F139B23F12C4651F6ECAF /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
 		15993B83E78CA079FB337D39 /* CurrencyFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35D6BFA5BF102F83C2367CA /* CurrencyFormatterTests.swift */; };
 		1B22024B5F5FF9614F7D72E8 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED918A3544E7516D5BD257A /* NotificationServiceTests.swift */; };
 		212E49A8977BCDA0C3B97959 /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
 		2A3C12DFC7E87DAA382F0E63 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
+		2F0D53B128803CD439FBFA97 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
+		30D318C13EA002F0106510B8 /* iCodexBarCoreMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */; };
+		324D4E82E0AB7240F8FB9FF8 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
 		32504591E808C4C6472F42FE /* AppRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F920A1A65F2E5EA170894F /* AppRuntime.swift */; };
+		35F5EEAEE8EE095156D13F5C /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
 		3B52051C9FF843032A0181EA /* iCodexBarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F20E2DAE86B41A934B028E /* iCodexBarUITestsLaunchTests.swift */; };
+		3D94691A2C7DF694DEC79AD7 /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		40079AB0594B5D159227602E /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
+		445CA4AB517049EE08062E65 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
+		48964AF12CCB9A72EBDADEC0 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
 		4E052A9C494CA5F12B05B513 /* iCodexBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA09EE5D04EE743FE3357100 /* iCodexBarApp.swift */; };
+		51F207C9343A313BB4FEC6F8 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
+		56BDE48D050B671D3DF1618E /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
 		60E81F63548618E2714F1027 /* BackgroundRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */; };
+		6197BAD1E16A12B779299B6D /* iCodexBarCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */; };
+		62A1D614E0D7F420F4DE38D1 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
 		6ABE1BEA0173A488E8557B1B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */; };
 		6B5AF32073809F50D31F49D2 /* UsageFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967E80210F804167F4597EA5 /* UsageFormatterTests.swift */; };
+		6BBDFDC729FCF75A55951B02 /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
 		6C4C821132B371951DC748B0 /* SettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D26CDCB2ECC57E384DDD2E /* SettingsUITests.swift */; };
 		72F98CCC4A301FE164CFF530 /* KeychainServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536E0910E168F7F00CCBD927 /* KeychainServiceTests.swift */; };
 		73999A7C53327F5053FEA64B /* ProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368BF0D265B4D5132C22F895 /* ProviderTests.swift */; };
+		750CC39DEF49655F7105B11D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
 		7A3C57DB1D66F9CAC1B8AB26 /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
+		7C0D5982110A5EEECE766EC5 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
 		7CEFA77D67D4D0C213D12A3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE58C1C516F60C12ED52476 /* Assets.xcassets */; };
 		7EF3609568ECD7F89ED1F9AE /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
 		7FC57956991F0A7AA2707794 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
 		7FD2FE36EBE48E095BEBD63D /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
 		8331E5E4292BA6CC40867F61 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
+		83AA39A879FBC81A535F276F /* iCodexBarCoreMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		892FD58EAFB4E17E1827FD1E /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
+		8B84B8A5FBF4AA485DDBE05F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
+		8CD690ACDBF941916BDE5220 /* CurrencyFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35D6BFA5BF102F83C2367CA /* CurrencyFormatterTests.swift */; };
+		8E39E5D6C0A5AB76366A5953 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
+		9110BE7F48DCA00E70DAC97A /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED918A3544E7516D5BD257A /* NotificationServiceTests.swift */; };
 		912E8A6393457B91CFAE33EF /* RateWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B440C7DC165C4BEA2C4A6F /* RateWindowTests.swift */; };
+		91350A78D572D3BCF597BEA7 /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		930802A82159BAB69199F834 /* iCodexBarCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		94956E742312EE1DD100133E /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF3F9644B215AF992059E1 /* UsageStore.swift */; };
+		999E19E0E47B7DC2E1F86250 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
 		9D78BAF5F9EDA11B57135073 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
+		9DB61BA3A2A9FC53BFDFA529 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
 		9DC97359B3D648D94EDDBF9D /* DashboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521013640690A32E91A0AFE3 /* DashboardUITests.swift */; };
+		A8C977694242F938BA1551F3 /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
+		AB67F7DB524CC341E40521F3 /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
+		AC9F0688EC8257C955D0B778 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
+		AD6D8CEDE870949135803AA1 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		B49D1934C160F4FEC6912D4F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
 		B691B0FE536BDAA53B5B9144 /* iCodexBarWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC884A2DA41614C98C9D82C8 /* iCodexBarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */; };
+		C38354B0BA9306E3647ED431 /* AlertThresholdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFC297F937673EC092D6170 /* AlertThresholdTests.swift */; };
 		C5FB458C804919B323953A41 /* APIKeyEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CBBDFFD19159A3634DABD4 /* APIKeyEntryView.swift */; };
+		C6236DA203407D9B37201780 /* UsageFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967E80210F804167F4597EA5 /* UsageFormatterTests.swift */; };
 		C8038F0405A877B3127C5C39 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF3F9644B215AF992059E1 /* UsageStore.swift */; };
 		C96DFE5DDD17D58A75B88ABE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6758361B6645402DE8C9827F /* DashboardView.swift */; };
+		CCFAFCCB1308FF640A87D11D /* UsageAPIServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F54133D1A35F6ED1139955 /* UsageAPIServiceTests.swift */; };
 		D553AAD3F0436EE373BEBCB5 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		D62B27A1ADE792CF80D27574 /* UsageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51134BC00231FABBA5454D16 /* UsageCardView.swift */; };
+		D63D1F6C0F9D613965AAAD34 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
+		DD566DB6DEEF1289159D7676 /* KeychainServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536E0910E168F7F00CCBD927 /* KeychainServiceTests.swift */; };
 		DE3E33562C6E641DB710B696 /* AlertThresholdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFC297F937673EC092D6170 /* AlertThresholdTests.swift */; };
 		DF76489BCF2E6DDEE103E90F /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
+		E17A7F51C3BF41A1B17739E7 /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
 		E6A77AD8B58F43A970F0F124 /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		E807A9CCFC0416ADCED41853 /* ProviderUsageSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369B692392651616169D64EE /* ProviderUsageSnapshotTests.swift */; };
 		EC45F111110709EFB4212B8B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
 		EEBD5228E4C1901E3BA3EAD4 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
 		EF9E87572DEC439FC38590A2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6255D81437795DF1627C28 /* DashboardViewModel.swift */; };
 		F4209CE1B3D75B95E2B56A71 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		F891B412EA0E5BBAABA29C1E /* ProviderUsageSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369B692392651616169D64EE /* ProviderUsageSnapshotTests.swift */; };
+		F997D2E79630E9EE4129CF93 /* RateWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B440C7DC165C4BEA2C4A6F /* RateWindowTests.swift */; };
 		FCE5D0C8414DE13AC5E4236B /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
 		FFC546652A3E0D2F1248B399 /* UsageAPIServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F54133D1A35F6ED1139955 /* UsageAPIServiceTests.swift */; };
 /* End PBXBuildFile section */
@@ -66,12 +105,19 @@
 			remoteGlobalIDString = E7ADC1085F871A71FDF6589B;
 			remoteInfo = iCodexBarWidgetExtension;
 		};
-		A64839F113A742BF2D7B56AC /* PBXContainerItemProxy */ = {
+		81CE9BD0024F4CF130683572 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ACB167B3C55AA2969BB4CBAB /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 200B0182C911169C72F073B4;
-			remoteInfo = iCodexBar;
+			remoteGlobalIDString = 806E3A334054862C3F98EDEE;
+			remoteInfo = iCodexBarCoreMac;
+		};
+		C4B7166D2430CB31B611DC86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACB167B3C55AA2969BB4CBAB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2918E01B1927C99353E717A;
+			remoteInfo = iCodexBarCore;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -87,10 +133,33 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7D21C26207DAD742BA63E4DF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				930802A82159BAB69199F834 /* iCodexBarCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B90C944A6A8464BC64F4E037 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				83AA39A879FBC81A535F276F /* iCodexBarCoreMac.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		12D26CDCB2ECC57E384DDD2E /* SettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUITests.swift; sourceTree = "<group>"; };
+		1317AF33361A06B7DAEE2995 /* iCodexBarMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iCodexBarMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshService.swift; sourceTree = "<group>"; };
 		2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		33BF3F9644B215AF992059E1 /* UsageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStore.swift; sourceTree = "<group>"; };
@@ -124,7 +193,9 @@
 		B89DF51912DD02811E25D316 /* AlertThreshold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertThreshold.swift; sourceTree = "<group>"; };
 		B93E05543A2B3B528445C4D5 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		C0CBBDFFD19159A3634DABD4 /* APIKeyEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyEntryView.swift; sourceTree = "<group>"; };
+		C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iCodexBarCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA09EE5D04EE743FE3357100 /* iCodexBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCodexBarApp.swift; sourceTree = "<group>"; };
+		D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iCodexBarCoreMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderUsageSnapshot.swift; sourceTree = "<group>"; };
 		E35E208272B965D3886815B8 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		EB6255D81437795DF1627C28 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
@@ -134,6 +205,25 @@
 		F5438B193D082AFCB3EFC676 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F5F20E2DAE86B41A934B028E /* iCodexBarUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCodexBarUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		24FA10BAFEE1DC5655C1396F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6197BAD1E16A12B779299B6D /* iCodexBarCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9F9DF632F4A79CAC925E1A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D318C13EA002F0106510B8 /* iCodexBarCoreMac.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		29867ED02078C864EDF8AC12 /* Services */ = {
@@ -314,6 +404,9 @@
 			isa = PBXGroup;
 			children = (
 				8A5943A2F2C958B8F14E8101 /* iCodexBar.app */,
+				C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */,
+				D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */,
+				1317AF33361A06B7DAEE2995 /* iCodexBarMacTests.xctest */,
 				ACA6B1B68FA780ABE06EE4C6 /* iCodexBarTests.xctest */,
 				8284B8B6320893017513BAF5 /* iCodexBarUITests.xctest */,
 				B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */,
@@ -362,6 +455,60 @@
 			productReference = 8284B8B6320893017513BAF5 /* iCodexBarUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		7712CD87AA553F09D0E9CA47 /* iCodexBarMacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30EEF09CE164E30ECD935E8B /* Build configuration list for PBXNativeTarget "iCodexBarMacTests" */;
+			buildPhases = (
+				BC806EFAD16E46E95D74DF23 /* Sources */,
+				C9F9DF632F4A79CAC925E1A5 /* Frameworks */,
+				B90C944A6A8464BC64F4E037 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3968A53F7EDCB3B8F7F6B72E /* PBXTargetDependency */,
+			);
+			name = iCodexBarMacTests;
+			packageProductDependencies = (
+			);
+			productName = iCodexBarMacTests;
+			productReference = 1317AF33361A06B7DAEE2995 /* iCodexBarMacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		806E3A334054862C3F98EDEE /* iCodexBarCoreMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14AB72DFCF6673767379A687 /* Build configuration list for PBXNativeTarget "iCodexBarCoreMac" */;
+			buildPhases = (
+				69C36F8C7FB0D2884DB55DAF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iCodexBarCoreMac;
+			packageProductDependencies = (
+			);
+			productName = iCodexBarCoreMac;
+			productReference = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A2918E01B1927C99353E717A /* iCodexBarCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3555D45E0182C6B6B741544A /* Build configuration list for PBXNativeTarget "iCodexBarCore" */;
+			buildPhases = (
+				165ABF743B844CECF0B91EBE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iCodexBarCore;
+			packageProductDependencies = (
+			);
+			productName = iCodexBarCore;
+			productReference = C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 93AAC399AFDD3ED172BA23AC /* Build configuration list for PBXNativeTarget "iCodexBarWidgetExtension" */;
@@ -384,11 +531,13 @@
 			buildConfigurationList = E35F1CD63962BD6475F60875 /* Build configuration list for PBXNativeTarget "iCodexBarTests" */;
 			buildPhases = (
 				DCD199DFC90F0C315EF048D2 /* Sources */,
+				24FA10BAFEE1DC5655C1396F /* Frameworks */,
+				7D21C26207DAD742BA63E4DF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				AF0F5F5EFACB2C6D663DB799 /* PBXTargetDependency */,
+				8829351B8EFA4394D646BE27 /* PBXTargetDependency */,
 			);
 			name = iCodexBarTests;
 			packageProductDependencies = (
@@ -413,6 +562,15 @@
 						DevelopmentTeam = "";
 						TestTargetID = 200B0182C911169C72F073B4;
 					};
+					7712CD87AA553F09D0E9CA47 = {
+						DevelopmentTeam = "";
+					};
+					806E3A334054862C3F98EDEE = {
+						DevelopmentTeam = "";
+					};
+					A2918E01B1927C99353E717A = {
+						DevelopmentTeam = "";
+					};
 					E7ADC1085F871A71FDF6589B = {
 						DevelopmentTeam = "";
 					};
@@ -436,6 +594,9 @@
 			projectRoot = "";
 			targets = (
 				200B0182C911169C72F073B4 /* iCodexBar */,
+				A2918E01B1927C99353E717A /* iCodexBarCore */,
+				806E3A334054862C3F98EDEE /* iCodexBarCoreMac */,
+				7712CD87AA553F09D0E9CA47 /* iCodexBarMacTests */,
 				EB1709411C43615752611D7F /* iCodexBarTests */,
 				4ACC3B0D6D3856C37D0CC236 /* iCodexBarUITests */,
 				E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */,
@@ -455,6 +616,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		165ABF743B844CECF0B91EBE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B84B8A5FBF4AA485DDBE05F /* APIKey.swift in Sources */,
+				6BBDFDC729FCF75A55951B02 /* AlertThreshold.swift in Sources */,
+				08F3A1CED9A6C73732138D13 /* BackgroundRefreshService.swift in Sources */,
+				40079AB0594B5D159227602E /* CurrencyFormatter.swift in Sources */,
+				8E39E5D6C0A5AB76366A5953 /* DailyUsageEntry.swift in Sources */,
+				324D4E82E0AB7240F8FB9FF8 /* KeychainService.swift in Sources */,
+				7C0D5982110A5EEECE766EC5 /* NotificationService.swift in Sources */,
+				48964AF12CCB9A72EBDADEC0 /* Provider.swift in Sources */,
+				3D94691A2C7DF694DEC79AD7 /* ProviderUsageSnapshot.swift in Sources */,
+				62A1D614E0D7F420F4DE38D1 /* RateWindow.swift in Sources */,
+				445CA4AB517049EE08062E65 /* UsageAPIService.swift in Sources */,
+				56BDE48D050B671D3DF1618E /* UsageData.swift in Sources */,
+				E17A7F51C3BF41A1B17739E7 /* UsageFormatter.swift in Sources */,
+				94956E742312EE1DD100133E /* UsageStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		545DD855C92FB0C81AC6E1DD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -466,6 +648,25 @@
 				2A3C12DFC7E87DAA382F0E63 /* RateWindow.swift in Sources */,
 				7A3C57DB1D66F9CAC1B8AB26 /* UsageFormatter.swift in Sources */,
 				BC884A2DA41614C98C9D82C8 /* iCodexBarWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		69C36F8C7FB0D2884DB55DAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				999E19E0E47B7DC2E1F86250 /* APIKey.swift in Sources */,
+				35F5EEAEE8EE095156D13F5C /* AlertThreshold.swift in Sources */,
+				51F207C9343A313BB4FEC6F8 /* CurrencyFormatter.swift in Sources */,
+				AD6D8CEDE870949135803AA1 /* DailyUsageEntry.swift in Sources */,
+				9DB61BA3A2A9FC53BFDFA529 /* KeychainService.swift in Sources */,
+				750CC39DEF49655F7105B11D /* NotificationService.swift in Sources */,
+				AC9F0688EC8257C955D0B778 /* Provider.swift in Sources */,
+				91350A78D572D3BCF597BEA7 /* ProviderUsageSnapshot.swift in Sources */,
+				2F0D53B128803CD439FBFA97 /* RateWindow.swift in Sources */,
+				D63D1F6C0F9D613965AAAD34 /* UsageAPIService.swift in Sources */,
+				AB67F7DB524CC341E40521F3 /* UsageData.swift in Sources */,
+				A8C977694242F938BA1551F3 /* UsageFormatter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +708,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BC806EFAD16E46E95D74DF23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C38354B0BA9306E3647ED431 /* AlertThresholdTests.swift in Sources */,
+				8CD690ACDBF941916BDE5220 /* CurrencyFormatterTests.swift in Sources */,
+				DD566DB6DEEF1289159D7676 /* KeychainServiceTests.swift in Sources */,
+				9110BE7F48DCA00E70DAC97A /* NotificationServiceTests.swift in Sources */,
+				08B22136750135925DB40660 /* ProviderTests.swift in Sources */,
+				E807A9CCFC0416ADCED41853 /* ProviderUsageSnapshotTests.swift in Sources */,
+				F997D2E79630E9EE4129CF93 /* RateWindowTests.swift in Sources */,
+				CCFAFCCB1308FF640A87D11D /* UsageAPIServiceTests.swift in Sources */,
+				C6236DA203407D9B37201780 /* UsageFormatterTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCD199DFC90F0C315EF048D2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -536,14 +753,39 @@
 			target = E7ADC1085F871A71FDF6589B /* iCodexBarWidgetExtension */;
 			targetProxy = 51C0C20477F74F47EA6F2F16 /* PBXContainerItemProxy */;
 		};
-		AF0F5F5EFACB2C6D663DB799 /* PBXTargetDependency */ = {
+		3968A53F7EDCB3B8F7F6B72E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 200B0182C911169C72F073B4 /* iCodexBar */;
-			targetProxy = A64839F113A742BF2D7B56AC /* PBXContainerItemProxy */;
+			target = 806E3A334054862C3F98EDEE /* iCodexBarCoreMac */;
+			targetProxy = 81CE9BD0024F4CF130683572 /* PBXContainerItemProxy */;
+		};
+		8829351B8EFA4394D646BE27 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2918E01B1927C99353E717A /* iCodexBarCore */;
+			targetProxy = C4B7166D2430CB31B611DC86 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		05D3A48CAC506A861CE7934B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
 		0F147DD698AC751C75FE9F77 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -553,9 +795,30 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCodexBar.app/iCodexBar";
 			};
 			name = Debug;
+		};
+		2849905CDC2D07F78CC3329B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.core.mac;
+				PRODUCT_MODULE_NAME = iCodexBarCore;
+				PRODUCT_NAME = iCodexBarCore;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
 		};
 		2A5F35082FF600A569C7F831 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -634,10 +897,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -658,6 +921,28 @@
 			};
 			name = Release;
 		};
+		661FAE6EB9466D169BD16238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.core.mac;
+				PRODUCT_MODULE_NAME = iCodexBarCore;
+				PRODUCT_NAME = iCodexBarCore;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
 		7446FBEE619E1347310A0643 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -675,6 +960,18 @@
 			};
 			name = Debug;
 		};
+		7A01454239EFA0E0799A84DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.mactests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
 		83B9A54ED7E4D81D64D6ECE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -684,7 +981,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCodexBar.app/iCodexBar";
 			};
 			name = Release;
 		};
@@ -698,6 +994,26 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = iCodexBar;
+			};
+			name = Release;
+		};
+		A75E8C046B571A9CE65A6EB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -757,16 +1073,28 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
+		};
+		E171F68170484D81D2BA43A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.icodexbar.app.mactests;
+				SDKROOT = macosx;
+			};
+			name = Release;
 		};
 		FF3BAE381F9220CC779BC93C /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -797,11 +1125,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		14AB72DFCF6673767379A687 /* Build configuration list for PBXNativeTarget "iCodexBarCoreMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				661FAE6EB9466D169BD16238 /* Debug */,
+				2849905CDC2D07F78CC3329B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		1A53BF14EEF60564341343C8 /* Build configuration list for PBXNativeTarget "iCodexBarUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2DE559204750D4E27439B3BF /* Debug */,
 				947FD97F603F50EB4583B2B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		30EEF09CE164E30ECD935E8B /* Build configuration list for PBXNativeTarget "iCodexBarMacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A01454239EFA0E0799A84DF /* Debug */,
+				E171F68170484D81D2BA43A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3555D45E0182C6B6B741544A /* Build configuration list for PBXNativeTarget "iCodexBarCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05D3A48CAC506A861CE7934B /* Debug */,
+				A75E8C046B571A9CE65A6EB9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
