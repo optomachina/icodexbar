@@ -3,10 +3,7 @@ import XCTest
 
 final class UsageAPIServiceTests: XCTestCase {
     func testAnthropicMessageResponseDecodesUsageFromBody() throws {
-        let json = """
-        {"id":"msg_01abc","type":"message","role":"assistant","model":"claude-haiku-4-5-20251001","content":[{"type":"text","text":"ok"}],"stop_reason":"end_turn","usage":{"input_tokens":12,"output_tokens":5}}
-        """
-        let data = try XCTUnwrap(json.data(using: .utf8))
+        let data = try FixtureLoader.loadData("Anthropic/message_basic")
 
         let decoded = try JSONDecoder().decode(AnthropicMessageResponse.self, from: data)
 
@@ -15,10 +12,7 @@ final class UsageAPIServiceTests: XCTestCase {
     }
 
     func testOpenAICostsResponseParsesDailyCostWithoutTokens() throws {
-        let json = """
-        {"object":"page","data":[{"object":"bucket","start_time":1714003200,"end_time":1714089600,"results":[{"object":"organization.costs.result","amount":{"value":1.2345,"currency":"usd"},"line_item":null,"project_id":null}]}],"has_more":false,"next_page":null}
-        """
-        let data = try XCTUnwrap(json.data(using: .utf8))
+        let data = try FixtureLoader.loadData("OpenAI/costs_basic")
         let decoded = try JSONDecoder().decode(OpenAICostsResponse.self, from: data)
 
         let snapshot = OpenAIUsageAPI().parseReport(

@@ -288,11 +288,11 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
 
 // MARK: - OpenRouter API Response Models
 
-private struct OpenRouterCredits: Decodable {
+struct OpenRouterCredits: Decodable {
     let data: OpenRouterCreditsData
 }
 
-private struct OpenRouterCreditsData: Decodable {
+struct OpenRouterCreditsData: Decodable {
     let totalCredits: Double
     let totalUsage: Double
     let balance: Double
@@ -304,7 +304,7 @@ private struct OpenRouterCreditsData: Decodable {
     }
 }
 
-private struct OpenRouterKeyInfo: Decodable {
+struct OpenRouterKeyInfo: Decodable {
     let limit: Double?
     let usage: Double?
     let rateLimit: OpenRouterRateLimit?
@@ -315,7 +315,7 @@ private struct OpenRouterKeyInfo: Decodable {
     }
 }
 
-private struct OpenRouterRateLimit: Codable {
+struct OpenRouterRateLimit: Codable {
     let requests: Int
     let interval: String
 }
