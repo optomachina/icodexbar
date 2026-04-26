@@ -22,8 +22,8 @@ public enum CurrencyFormatter {
     public static func formatCompact(_ value: Double) -> String {
         if value >= 1_000_000 {
             String(format: "$%.1fM", value / 1_000_000)
-        } else if value >= 1000 {
-            String(format: "$%.1fK", value / 1000)
+        } else if value >= 1_000 {
+            String(format: "$%.1fK", value / 1_000)
         } else {
             format(value)
         }

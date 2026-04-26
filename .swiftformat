@@ -15,4 +15,12 @@
 --importgrouping alpha
 --modifierorder override,acl,setteracl,dynamic,mutators,lazy,final,required
 
+# Don't touch numeric literal grouping — defer to SwiftLint's number_separator
+# rule, which requires underscores on any 4+ digit decimal (e.g. 1_000).
+# SwiftFormat's default would strip those, causing CI lint to fail.
+--decimalgrouping ignore
+--binarygrouping ignore
+--octalgrouping ignore
+--hexgrouping ignore
+
 --exclude vendor,Pods,build,.build,DerivedData,.swiftpm
