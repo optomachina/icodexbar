@@ -2,11 +2,11 @@
 import XCTest
 
 final class AnthropicDecoderTests: XCTestCase {
-    func testMessageBasicDecodesUsage() throws {
-        let decoded = try FixtureLoader.decode(AnthropicMessageResponse.self, from: "Anthropic/message_basic")
+    func testOAuthUsageBasicDecodesUsage() throws {
+        let decoded = try FixtureLoader.decode(AnthropicOAuthUsageResponse.self, from: "Anthropic/oauth_usage_basic")
 
-        XCTAssertEqual(decoded.usage.inputTokens, 12)
-        XCTAssertEqual(decoded.usage.outputTokens, 5)
+        XCTAssertEqual(decoded.sevenDay, 47_000)
+        XCTAssertEqual(decoded.rateLimitTier, "build")
     }
 
     func testUnauthorizedFixtureLoads() throws {

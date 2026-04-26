@@ -23,12 +23,12 @@ struct APIKeyEntryView: View {
 
                     HStack {
                         if showKey {
-                            TextField("sk-...", text: $apiKey)
+                            TextField(keyPlaceholder, text: $apiKey)
                                 .textContentType(.password)
                                 .autocorrectionDisabled()
                                 .textInputAutocapitalization(.never)
                         } else {
-                            SecureField("sk-...", text: $apiKey)
+                            SecureField(keyPlaceholder, text: $apiKey)
                                 .textContentType(.password)
                         }
 
@@ -109,12 +109,16 @@ struct APIKeyEntryView: View {
         }
     }
 
+    private var keyPlaceholder: String {
+        provider == .anthropic ? "Claude Code OAuth token" : "sk-..."
+    }
+
     private var providerKeyHint: String {
         switch provider {
         case .openAI:
             "Find your API key at platform.openai.com/api-keys"
         case .anthropic:
-            "Find your API key at console.anthropic.com/settings/keys"
+            "Enter your Claude Code OAuth token. Get it from claude.ai after signing in with Claude Code."
         case .openRouter:
             "Find your API key at openrouter.ai/settings/keys"
         }
@@ -214,7 +218,7 @@ struct APIKeyEntryView: View {
         case .openAI:
             key.hasPrefix("sk-") && key.count > 10
         case .anthropic:
-            key.hasPrefix("sk-ant-") && key.count > 10
+            key.count >= 10
         case .openRouter:
             key.hasPrefix("sk-or-") && key.count > 10
         }

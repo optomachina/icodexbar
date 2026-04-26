@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @State private var thresholds: [AlertThreshold] = []
     @State private var configuredProviders: [Provider] = []
+    @AppStorage("isDemoMode") private var isDemoMode = false
 
     var body: some View {
         NavigationStack {
@@ -40,6 +41,16 @@ struct SettingsView: View {
                 Section("Alert Thresholds") {
                     ForEach($thresholds) { $threshold in
                         AlertRowView(threshold: $threshold, onChange: saveThresholds)
+                    }
+                }
+
+                // Developer Section
+                Section("Developer") {
+                    Toggle("Demo Mode", isOn: $isDemoMode)
+                    if isDemoMode {
+                        Text("Showing sample data. Disable to fetch real usage.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
 
