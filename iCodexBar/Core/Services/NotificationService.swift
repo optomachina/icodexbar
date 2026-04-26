@@ -7,6 +7,8 @@ public actor NotificationService {
 
     private init() {}
 
+    // TODO: Add a dedicated low-credit alert when Balance mode lands.
+
     // MARK: - Authorization
 
     public func requestAuthorization() async throws {
@@ -73,7 +75,7 @@ public actor NotificationService {
 
     // MARK: - Alert Evaluation
 
-    public func evaluateAlerts(snapshots: [Provider: ProviderUsageSnapshot], thresholds: [AlertThreshold]) async {
+    func evaluateAlerts(snapshots: [Provider: ProviderUsageSnapshot], thresholds: [AlertThreshold]) async {
         for threshold in thresholds where threshold.isEnabled {
             guard let snapshot = snapshots[threshold.provider] else { continue }
             let usedPercent = Int(snapshot.primary?.usedPercent ?? 0)

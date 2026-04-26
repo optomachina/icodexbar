@@ -5,35 +5,42 @@ default_platform(:ios)
 platform :ios do
   # Project configuration
   project_name = "iCodexBar"
+  repo_root = File.expand_path("..", __dir__)
+  project = File.join(repo_root, "#{project_name}.xcodeproj")
   scheme = "iCodexBar"
-  workspace = "#{project_name}.xcworkspace"
   
   # Derived paths
-  build_path = "./build"
-  output_path = "./output"
+  build_path = File.join(repo_root, "build")
+  output_path = File.join(repo_root, "output")
   
   desc "Generate Xcode project from project.yml"
   lane :generate do
-    sh("xcodegen generate")
+    Dir.chdir(repo_root) do
+      sh("xcodegen generate")
+    end
   end
   
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
       mode: :lint,
-      config_file: ".swiftlint.yml",
+      config_file: File.join(repo_root, ".swiftlint.yml"),
       raise_if_swiftlint_error: true
     )
   end
   
   desc "Run SwiftFormat (check mode)"
   lane :format_check do
-    sh("swiftformat --lint .")
+    Dir.chdir(repo_root) do
+      sh("swiftformat --lint .")
+    end
   end
   
   desc "Run SwiftFormat (apply changes)"
   lane :format do
-    sh("swiftformat .")
+    Dir.chdir(repo_root) do
+      sh("swiftformat .")
+    end
   end
   
   desc "Run all code quality checks"
@@ -44,31 +51,43 @@ platform :ios do
   
   desc "Build Debug configuration"
   lane :build_debug do
-    build_app(
-      scheme: scheme,
-      configuration: "Debug",
-      derived_data_path: build_path,
-      clean: true
+    sh(
+      "xcodebuild",
+      "build",
+      "-project", project,
+      "-scheme", scheme,
+      "-configuration", "Debug",
+      "-destination", "generic/platform=iOS Simulator",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO"
     )
   end
   
   desc "Build Release configuration"
   lane :build_release do
-    build_app(
-      scheme: scheme,
-      configuration: "Release",
-      derived_data_path: build_path,
-      clean: true
+    sh(
+      "xcodebuild",
+      "build",
+      "-project", project,
+      "-scheme", scheme,
+      "-configuration", "Release",
+      "-destination", "generic/platform=iOS Simulator",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO"
     )
   end
   
   desc "Run unit tests"
   lane :test do
-    run_tests(
-      scheme: "iCodexBarTests",
-      configuration: "Debug",
-      devices: ["iPhone 15 Pro (17.0)"],
-      code_coverage: true
+    sh(
+      "xcodebuild",
+      "test",
+      "-project", project,
+      "-scheme", "iCodexBarMacTests",
+      "-configuration", "Debug",
+      "-destination", "platform=macOS",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO"
     )
   end
 

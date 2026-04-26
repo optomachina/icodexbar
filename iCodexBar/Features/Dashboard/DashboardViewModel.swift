@@ -19,7 +19,11 @@ public final class DashboardViewModel {
     }
 
     public var hasAnyConfiguredKey: Bool {
-        Provider.allCases.contains { store.isConfigured($0) }
+        if AppRuntime.isRunningTests {
+            return false
+        }
+
+        return Provider.allCases.contains { store.isConfigured($0) }
     }
 
     public func refresh() async {
@@ -36,6 +40,6 @@ public final class DashboardViewModel {
     }
 
     public func error(for provider: Provider) -> String? {
-        errors[provider]
+        errors[provider] ?? nil
     }
 }

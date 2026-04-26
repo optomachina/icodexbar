@@ -36,7 +36,7 @@ public final class UsageStore {
         await withTaskGroup(of: (Provider, ProviderUsageSnapshot?).self) { group in
             for provider in Provider.allCases {
                 group.addTask {
-                    await self.fetchProvider(provider)
+                    (provider, await self.fetchProvider(provider))
                 }
             }
 
@@ -57,7 +57,7 @@ public final class UsageStore {
     }
 
     public func fetchProvider(_ provider: Provider) async -> ProviderUsageSnapshot? {
-        guard let apiKey = try? await KeychainService.shared.get(key: provider.rawValue), !apiKey.isEmpty else {
+        guard let apiKey = try? KeychainService.shared.get(key: provider.rawValue), !apiKey.isEmpty else {
             errors[provider] = "No API key configured"
             return nil
         }

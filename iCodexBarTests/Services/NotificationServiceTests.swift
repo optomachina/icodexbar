@@ -1,5 +1,6 @@
 import XCTest
-@testable import iCodexBar
+import UserNotifications
+@testable import iCodexBarCore
 
 final class NotificationServiceTests: XCTestCase {
 
@@ -12,38 +13,39 @@ final class NotificationServiceTests: XCTestCase {
 
     // MARK: - Permission Tests
 
-    func testRequestAuthorization() async throws {
-        // This will show a system dialog on first run
-        let granted = try await service.requestAuthorization()
-        // We can't assert true/false since it depends on user response
-        // Just verify it doesn't crash
-        XCTAssertTrue(true)
+    func testCheckAuthorizationStatus() async throws {
+        #if os(macOS)
+        throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
+        let status = await service.checkAuthorizationStatus()
+        var expectedStatuses: [UNAuthorizationStatus] = [
+            .notDetermined,
+            .denied,
+            .authorized,
+            .provisional
+        ]
+        #if os(iOS)
+        expectedStatuses.append(.ephemeral)
+        #endif
+        XCTAssertTrue(expectedStatuses.contains(status))
+        #endif
     }
 
     // MARK: - Notification Sending Tests
 
     func testSendUsageAlert() async throws {
-        // Request authorization first
-        _ = try? await service.requestAuthorization()
-
+        #if os(macOS)
+        throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
         // Send test notification
-        await service.sendUsageAlert(
+        await service.sendAlert(
             provider: .openAI,
-            percentUsed: 85
+            percent: 85,
+            threshold: 80
         )
 
         // Verify no crash - actual notification delivery is system-dependent
         XCTAssertTrue(true)
-    }
-
-    func testSendLowCreditAlert() async throws {
-        _ = try? await service.requestAuthorization()
-
-        await service.sendLowCreditAlert(
-            provider: .openRouter,
-            balance: 5.50
-        )
-
-        XCTAssertTrue(true)
+        #endif
     }
 }

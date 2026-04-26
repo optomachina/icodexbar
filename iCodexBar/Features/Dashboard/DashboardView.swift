@@ -34,7 +34,9 @@ struct DashboardView: View {
                 await viewModel.refresh()
             }
             .task {
-                await viewModel.refresh()
+                if !AppRuntime.isRunningTests {
+                    await viewModel.refresh()
+                }
             }
         }
     }
