@@ -131,7 +131,6 @@ struct UsageCardView: View {
         }
     }
 
-    @ViewBuilder
     private func statItem(label: String, value: String, accent: Color) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
@@ -149,7 +148,16 @@ struct UsageCardView: View {
     VStack(spacing: 16) {
         UsageCardView(
             provider: .openAI,
-            snapshot: .placeholder,
+            snapshot: ProviderUsageSnapshot(
+                provider: .openAI,
+                primary: RateWindow(
+                    usedPercent: 43.2,
+                    resetsAt: Calendar.current.date(byAdding: .day, value: 15, to: Date()),
+                    resetDescription: "in 15 days"
+                ),
+                totalTokens: 1_234_567,
+                totalCostUSD: 4.32
+            ),
             error: nil,
             isLoading: false
         )

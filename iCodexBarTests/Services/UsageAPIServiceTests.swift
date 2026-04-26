@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class UsageAPIServiceTests: XCTestCase {
-
     func testAnthropicMessageResponseDecodesUsageFromBody() throws {
         let json = """
         {"id":"msg_01abc","type":"message","role":"assistant","model":"claude-haiku-4-5-20251001","content":[{"type":"text","text":"ok"}],"stop_reason":"end_turn","usage":{"input_tokens":12,"output_tokens":5}}

@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class ProviderTests: XCTestCase {
-
     // MARK: - Raw Value Tests
 
     func testProviderRawValues() {

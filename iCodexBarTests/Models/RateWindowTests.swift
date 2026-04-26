@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class RateWindowTests: XCTestCase {
-
     // MARK: - Initialization Tests
 
     func testRateWindowInit() {

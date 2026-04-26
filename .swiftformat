@@ -1,47 +1,36 @@
-# SwiftFormat Configuration for iCodexBar
+# SwiftFormat configuration for iCodexBar
+# https://github.com/nicklockwood/SwiftFormat#config-file
 
-# Indent with 4 spaces
-indent: 4
+--swiftversion 5.9
+--indent 4
+--tabwidth 4
+--maxwidth 120
+--linebreaks lf
+--semicolons never
+--self remove
+--voidtype Void
+--closurevoid remove
+--wrapenumcases always
+--xcodeindentation enabled
+--importgrouping alpha
+--modifierorder override,acl,setteracl,dynamic,mutators,lazy,final,required
 
-# Use spaces for indentation, not tabs
-tabWidth: 4
+# Don't touch numeric literal grouping — defer to SwiftLint's number_separator
+# rule, which requires underscores on any 4+ digit decimal (e.g. 1_000).
+# SwiftFormat's default would strip those, causing CI lint to fail.
+--decimalgrouping ignore
+--binarygrouping ignore
+--octalgrouping ignore
+--hexgrouping ignore
 
-# Maximum line length
-maxWidth: 120
+# Match SwiftLint policy:
+# - SwiftLint's `trailing_comma` rule (default-on) bans trailing commas in
+#   collection literals; SwiftFormat's default `--trailing-commas always` adds
+#   them. SwiftLint wins.
+# - SwiftLint's `opening_brace` rule wants `{` on the same line as the
+#   declaration; SwiftFormat's `wrapMultilineStatementBraces` rule pushes it
+#   to the next line for wrapped signatures. Disabled.
+--trailing-commas never
+--disable wrapMultilineStatementBraces
 
-# Wrap enum cases
-wrapEnumCases: beforeFirst
-
-# Preserve blank lines
-stripBlankLinesAtStartOfScope: false
-stripBlankLinesAtEndOfScope: false
-
-# Remove semicolons
-semicolons: never
-
-# Multiline function arguments
-indentMultiLineFunctionDefinition: true
-
-# Guard clause spacing
-indentGuardClause: true
-
-# Make internal access explicit
-modifierOrder: [override, ACL, setterACL, dynamic, mutators, lazy, final, required]
-
-# Sort imports
-sortedImports: true
-
-# Xcode version for generated headers
-xcodeIndentation: true
-
-# Swift version
-swiftVersion: "5.9"
-
-# Remove redundant self
-redundantSelf: remove
-
-# Void return type style
-void: void
-
-# Closure arguments
-redundantVoidReturnType: remove
+--exclude vendor,Pods,build,.build,DerivedData,.swiftpm

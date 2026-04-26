@@ -18,6 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Select Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -32,11 +37,19 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
+      - name: Verify generated project matches committed
+        run: |
+          if ! git diff --quiet -- iCodexBar.xcodeproj; then
+            echo "::error::xcodegen produced a different project than the committed iCodexBar.xcodeproj. Re-run 'xcodegen generate' locally and commit the result."
+            git diff --stat -- iCodexBar.xcodeproj
+            exit 1
+          fi
+
       - name: SwiftLint
         run: swiftlint --reporter github-actions-logging
 
       - name: SwiftFormat (check)
-        run: swiftformat --lint . 2>&1 | true
+        run: swiftformat --lint .
 
   build:
     name: Build (${{ matrix.configuration }})
@@ -48,6 +61,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -76,6 +94,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Select Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -94,14 +117,25 @@ jobs:
         env:
           CI: true
 
+  # Gated behind workflow_dispatch until signing is provisioned (see
+  # archive_release in fastlane/Fastfile). The DEVELOPMENT_TEAM secret alone
+  # isn't enough — `build_app` with automatic signing also needs a certificate
+  # in the keychain and a matching provisioning profile. Run manually from
+  # Actions UI when those are wired up (e.g. via `match` or
+  # `import_certificate` + `app_store_connect_api_key`).
   beta:
     name: Upload to TestFlight
     runs-on: macos-15
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Select Xcode 16.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1

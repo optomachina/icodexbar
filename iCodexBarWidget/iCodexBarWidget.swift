@@ -1,5 +1,5 @@
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 // MARK: - Widget Entry
 
@@ -18,23 +18,22 @@ struct ICodexBarEntry: TimelineEntry {
 // MARK: - Timeline Provider
 
 struct ICodexBarProvider: TimelineProvider {
-
     typealias Entry = ICodexBarEntry
 
     private let appGroupID = "group.com.icodexbar.shared"
     private let snapshotsKey = "provider_usage_snapshots"
     private let lastFetchedKey = "last_fetched_at"
 
-    func placeholder(in context: Context) -> Entry {
+    func placeholder(in _: Context) -> Entry {
         .placeholder
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
+    func getSnapshot(in _: Context, completion: @escaping (Entry) -> Void) {
         let entry = loadEntry()
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
+    func getTimeline(in _: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         let entry = loadEntry()
         let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: Date())!
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
@@ -267,7 +266,7 @@ struct LockScreenCircularView: View {
         let snapshot = entry.snapshots[entry.provider]
         let percent = snapshot?.primary?.usedPercent ?? 0
 
-        Gauge(value: min(100, percent), in: 0...100) {
+        Gauge(value: min(100, percent), in: 0 ... 100) {
             Image(systemName: entry.provider.iconName)
                 .font(.caption2)
         } currentValueLabel: {

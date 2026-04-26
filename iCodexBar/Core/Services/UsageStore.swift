@@ -5,7 +5,6 @@ import WidgetKit
 /// Persists to App Group UserDefaults so the widget can read it
 @Observable
 public final class UsageStore {
-
     public static let shared = UsageStore()
 
     public var snapshots: [Provider: ProviderUsageSnapshot] = [:]
@@ -36,7 +35,7 @@ public final class UsageStore {
         await withTaskGroup(of: (Provider, ProviderUsageSnapshot?).self) { group in
             for provider in Provider.allCases {
                 group.addTask {
-                    (provider, await self.fetchProvider(provider))
+                    await (provider, self.fetchProvider(provider))
                 }
             }
 
@@ -51,7 +50,7 @@ public final class UsageStore {
         isLoading = false
         saveToAppGroup()
         reloadWidgets()
-        
+
         // Check thresholds and trigger notifications
         await checkThresholdsAndNotify()
     }
@@ -63,14 +62,13 @@ public final class UsageStore {
         }
 
         do {
-            let snapshot: ProviderUsageSnapshot
-            switch provider {
+            let snapshot: ProviderUsageSnapshot = switch provider {
             case .openAI:
-                snapshot = try await OpenAIUsageAPI.shared.fetchUsage(apiKey: apiKey)
+                try await OpenAIUsageAPI.shared.fetchUsage(apiKey: apiKey)
             case .openRouter:
-                snapshot = try await OpenRouterUsageAPI.shared.fetchUsage(apiKey: apiKey)
+                try await OpenRouterUsageAPI.shared.fetchUsage(apiKey: apiKey)
             case .anthropic:
-                snapshot = try await AnthropicUsageAPI.shared.fetchUsage(apiKey: apiKey)
+                try await AnthropicUsageAPI.shared.fetchUsage(apiKey: apiKey)
             }
             errors[provider] = nil
             return snapshot
@@ -140,18 +138,18 @@ public final class UsageStore {
     private func checkThresholdsAndNotify() async {
         let thresholds = loadThresholds()
         guard !thresholds.isEmpty else { return }
-        
+
         for threshold in thresholds where threshold.isEnabled {
             guard let snapshot = snapshots[threshold.provider],
                   let primary = snapshot.primary else { continue }
-            
+
             let usedPercent = Int(primary.usedPercent)
             let thresholdPercent = threshold.thresholdPercent
-            
+
             // Only notify if threshold is crossed and we haven't already notified for this level
             if usedPercent >= thresholdPercent {
                 let lastNotified = lastNotifiedPercent[threshold.provider] ?? 0
-                
+
                 // Notify if we haven't already notified for this or higher percentage
                 if lastNotified < thresholdPercent {
                     await NotificationService.shared.sendAlert(
@@ -159,7 +157,7 @@ public final class UsageStore {
                         percent: usedPercent,
                         threshold: thresholdPercent
                     )
-                    
+
                     // Update last notified state
                     lastNotifiedPercent[threshold.provider] = usedPercent
                     saveLastNotifiedState()
@@ -179,18 +177,18 @@ public final class UsageStore {
         guard let defaults = UserDefaults(suiteName: appGroupID) else {
             return Provider.allCases.map { AlertThreshold(provider: $0) }
         }
-        
+
         if let data = defaults.data(forKey: thresholdsKey),
            let decoded = try? JSONDecoder().decode([AlertThreshold].self, from: data) {
             return decoded
         }
-        
+
         return Provider.allCases.map { AlertThreshold(provider: $0) }
     }
 
     private func loadLastNotifiedState() {
         guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
-        
+
         if let data = defaults.data(forKey: lastNotifiedKey),
            let decoded = try? JSONDecoder().decode([String: Int].self, from: data) {
             lastNotifiedPercent = [:]
@@ -204,9 +202,9 @@ public final class UsageStore {
 
     private func saveLastNotifiedState() {
         guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
-        
+
         let dict = Dictionary(uniqueKeysWithValues: lastNotifiedPercent.map { ($0.key.rawValue, $0.value) })
-        
+
         if let data = try? JSONEncoder().encode(dict) {
             defaults.set(data, forKey: lastNotifiedKey)
             defaults.synchronize()

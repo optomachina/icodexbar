@@ -2,7 +2,6 @@ import SwiftUI
 
 @main
 struct ICodexBarApp: App {
-
     init() {
         if !AppRuntime.isRunningTests {
             requestNotificationPermission()
@@ -25,7 +24,6 @@ struct ICodexBarApp: App {
     private func registerBackgroundTask() {
         BackgroundRefreshService.shared.registerBackgroundTask()
     }
-
 }
 
 struct ContentView: View {

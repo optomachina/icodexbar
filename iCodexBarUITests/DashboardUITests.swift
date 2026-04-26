@@ -1,7 +1,6 @@
 import XCTest
 
 final class DashboardUITests: XCTestCase {
-
     private var app: XCUIApplication!
 
     override func setUpWithError() throws {

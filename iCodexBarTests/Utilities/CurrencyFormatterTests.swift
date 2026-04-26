@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class CurrencyFormatterTests: XCTestCase {
-
     // MARK: - Basic Formatting Tests
 
     func testFormatZero() {

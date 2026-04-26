@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class AlertThresholdTests: XCTestCase {
-
     // MARK: - Initialization Tests
 
     func testAlertThresholdDefaultInit() {
@@ -41,9 +40,9 @@ final class AlertThresholdTests: XCTestCase {
         XCTAssertEqual(threshold?.provider, .openAI)
     }
 
-    func testStoreUpdateExisting() {
+    func testStoreUpdateExisting() throws {
         var store = AlertThresholdStore()
-        var threshold = store.threshold(for: .openAI)!
+        var threshold = try XCTUnwrap(store.threshold(for: .openAI))
         threshold.thresholdPercent = 90
 
         store.update(threshold)
@@ -51,11 +50,11 @@ final class AlertThresholdTests: XCTestCase {
         XCTAssertEqual(store.threshold(for: .openAI)?.thresholdPercent, 90)
     }
 
-    func testStoreSetEnabled() {
+    func testStoreSetEnabled() throws {
         var store = AlertThresholdStore()
         store.setEnabled(false, for: .anthropic)
 
-        XCTAssertFalse(store.threshold(for: .anthropic)!.isEnabled)
+        XCTAssertFalse(try XCTUnwrap(store.threshold(for: .anthropic)?.isEnabled))
     }
 
     func testStoreSetThresholdPercent() {
@@ -99,7 +98,7 @@ final class AlertThresholdTests: XCTestCase {
         let decoded = try JSONDecoder().decode(AlertThresholdStore.self, from: data)
 
         XCTAssertEqual(decoded.threshold(for: .anthropic)?.thresholdPercent, 45)
-        XCTAssertFalse(decoded.threshold(for: .openAI)!.isEnabled)
+        XCTAssertFalse(try XCTUnwrap(decoded.threshold(for: .openAI)?.isEnabled))
     }
 
     // MARK: - Equatable Tests

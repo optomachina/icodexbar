@@ -101,6 +101,12 @@ targets:
     type: app-extension
     platform: iOS
     sources:
+      - path: iCodexBar/Core/Models
+        excludes:
+          - "**/.DS_Store"
+      - path: iCodexBar/Core/Utilities
+        excludes:
+          - "**/.DS_Store"
       - path: iCodexBarWidget
         excludes:
           - "**/.DS_Store"
@@ -134,6 +140,7 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
+        GENERATE_INFOPLIST_FILE: "YES"
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.tests
         GENERATE_INFOPLIST_FILE: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"
@@ -165,6 +172,7 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
+        GENERATE_INFOPLIST_FILE: "YES"
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.uitests
         GENERATE_INFOPLIST_FILE: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"

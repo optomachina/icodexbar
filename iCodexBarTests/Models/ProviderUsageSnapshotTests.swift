@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class ProviderUsageSnapshotTests: XCTestCase {
-
     // MARK: - Initialization Tests
 
     func testSnapshotMinimalInit() {
@@ -106,7 +105,7 @@ final class ProviderUsageSnapshotTests: XCTestCase {
         let snapshot = ProviderUsageSnapshot(
             provider: .openRouter,
             primary: RateWindow(usedPercent: 60.0),
-            totalTokens: 100000,
+            totalTokens: 100_000,
             totalCostUSD: 5.50,
             balance: 25.75
         )
@@ -115,7 +114,7 @@ final class ProviderUsageSnapshotTests: XCTestCase {
         let decoded = try JSONDecoder().decode(ProviderUsageSnapshot.self, from: data)
 
         XCTAssertEqual(decoded.provider, .openRouter)
-        XCTAssertEqual(decoded.totalTokens, 100000)
+        XCTAssertEqual(decoded.totalTokens, 100_000)
         XCTAssertEqual(decoded.totalCostUSD, 5.50)
         XCTAssertEqual(decoded.balance, 25.75)
     }

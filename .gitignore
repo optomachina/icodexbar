@@ -30,6 +30,10 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/.env*
 
+# Bundler
+vendor/bundle/
+.bundle/
+
 # Xcodegen
 *.generated.plist
 
@@ -63,3 +67,4 @@ fastlane/.env*
 *.gcov
 *.gcno
 *.gcda
+.claude/

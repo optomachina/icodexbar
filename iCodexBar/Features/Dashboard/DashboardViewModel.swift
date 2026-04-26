@@ -3,7 +3,6 @@ import SwiftUI
 
 @Observable
 public final class DashboardViewModel {
-
     public var snapshots: [Provider: ProviderUsageSnapshot?] = [:]
     public var errors: [Provider: String?] = [:]
     public var isLoading: Bool = false
@@ -36,10 +35,10 @@ public final class DashboardViewModel {
     }
 
     public func snapshot(for provider: Provider) -> ProviderUsageSnapshot? {
-        snapshots[provider] ?? nil
+        snapshots[provider].flatMap { $0 }
     }
 
     public func error(for provider: Provider) -> String? {
-        errors[provider] ?? nil
+        errors[provider].flatMap { $0 }
     }
 }

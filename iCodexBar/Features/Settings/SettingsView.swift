@@ -140,7 +140,7 @@ struct AlertRowView: View {
                             get: { Double(threshold.thresholdPercent) },
                             set: { threshold.thresholdPercent = Int($0) }
                         ),
-                        in: 50...100,
+                        in: 50 ... 100,
                         step: 5
                     )
 

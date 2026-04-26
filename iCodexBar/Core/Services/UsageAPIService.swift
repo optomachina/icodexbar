@@ -12,12 +12,12 @@ public enum ProviderAPIError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidCredentials: return "Invalid API key"
-        case let .networkError(msg): return "Network error: \(msg)"
-        case let .apiError(code, msg): return "API error \(code): \(msg)"
-        case let .parseError(msg): return "Parse error: \(msg)"
-        case .rateLimited: return "Rate limited. Try again later."
-        case .notConfigured: return "API key not configured"
+        case .invalidCredentials: "Invalid API key"
+        case let .networkError(msg): "Network error: \(msg)"
+        case let .apiError(code, msg): "API error \(code): \(msg)"
+        case let .parseError(msg): "Parse error: \(msg)"
+        case .rateLimited: "Rate limited. Try again later."
+        case .notConfigured: "API key not configured"
         }
     }
 }
@@ -31,7 +31,6 @@ public protocol UsageAPIFetching: Sendable {
 // MARK: - OpenAI Usage API
 
 public struct OpenAIUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenAIUsageAPI()
 
     private let session: URLSession
@@ -176,7 +175,6 @@ struct OpenAICostsResponse: Decodable {
 // MARK: - OpenRouter Usage API
 
 public struct OpenRouterUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenRouterUsageAPI()
 
     private let session: URLSession
@@ -231,7 +229,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             resetDescription: balance > 0 ? "Credit: \(CurrencyFormatter.format(balance))" : nil
         )
 
-        var secondary: RateWindow? = nil
+        var secondary: RateWindow?
         if let keyLimit = keyInfo?.limit, let keyUsage = keyInfo?.usage, keyLimit > 0 {
             let keyPercent = (keyUsage / keyLimit) * 100
             secondary = RateWindow(
@@ -257,7 +255,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
     private func fetchKeyInfo(apiKey: String) async -> OpenRouterKeyInfo? {
         await withTaskGroup(of: OpenRouterKeyInfo?.self) { group in
             group.addTask {
-                await self.fetchKeyInfoRequest(apiKey: apiKey)
+                await fetchKeyInfoRequest(apiKey: apiKey)
             }
             group.addTask {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -265,7 +263,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             }
             let result = await group.next()
             group.cancelAll()
-            return result ?? nil
+            return result.flatMap { $0 }
         }
     }
 
@@ -325,7 +323,6 @@ private struct OpenRouterRateLimit: Codable {
 // MARK: - Anthropic Usage API
 
 public struct AnthropicUsageAPI: UsageAPIFetching {
-
     public static let shared = AnthropicUsageAPI()
 
     private let session: URLSession

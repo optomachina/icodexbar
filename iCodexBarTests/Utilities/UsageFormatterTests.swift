@@ -1,8 +1,7 @@
-import XCTest
 @testable import iCodexBarCore
+import XCTest
 
 final class UsageFormatterTests: XCTestCase {
-
     // MARK: - Token Formatting Tests
 
     func testFormatTokensLessThanThousand() {
@@ -14,7 +13,7 @@ final class UsageFormatterTests: XCTestCase {
     }
 
     func testFormatTokensThousands() {
-        XCTAssertEqual(UsageFormatter.formatTokens(456789), "457K")
+        XCTAssertEqual(UsageFormatter.formatTokens(456_789), "457K")
     }
 
     func testFormatTokensExactlyOneMillion() {
@@ -85,19 +84,19 @@ final class UsageFormatterTests: XCTestCase {
     }
 
     func testFormatRelativeDateDaysAgo() {
-        let date = Date().addingTimeInterval(-259200) // 3 days
+        let date = Date().addingTimeInterval(-259_200) // 3 days
         XCTAssertEqual(UsageFormatter.formatRelativeDate(date), "3d ago")
     }
 
     // MARK: - Days Remaining Tests
 
-    func testDaysRemainingFuture() {
-        let futureDate = Calendar.current.date(byAdding: .day, value: 5, to: Date())!
+    func testDaysRemainingFuture() throws {
+        let futureDate = try XCTUnwrap(Calendar.current.date(byAdding: .day, value: 5, to: Date()))
         XCTAssertEqual(UsageFormatter.daysRemaining(in: futureDate), 5)
     }
 
-    func testDaysRemainingPast() {
-        let pastDate = Calendar.current.date(byAdding: .day, value: -5, to: Date())!
+    func testDaysRemainingPast() throws {
+        let pastDate = try XCTUnwrap(Calendar.current.date(byAdding: .day, value: -5, to: Date()))
         XCTAssertLessThanOrEqual(UsageFormatter.daysRemaining(in: pastDate), 0)
     }
 

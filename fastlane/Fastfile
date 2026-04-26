@@ -8,18 +8,18 @@ platform :ios do
   repo_root = File.expand_path("..", __dir__)
   project = File.join(repo_root, "#{project_name}.xcodeproj")
   scheme = "iCodexBar"
-  
+
   # Derived paths
   build_path = File.join(repo_root, "build")
   output_path = File.join(repo_root, "output")
-  
+
   desc "Generate Xcode project from project.yml"
   lane :generate do
     Dir.chdir(repo_root) do
       sh("xcodegen generate")
     end
   end
-  
+
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
@@ -28,56 +28,95 @@ platform :ios do
       raise_if_swiftlint_error: true
     )
   end
-  
+
   desc "Run SwiftFormat (check mode)"
   lane :format_check do
     Dir.chdir(repo_root) do
       sh("swiftformat --lint .")
     end
   end
-  
+
   desc "Run SwiftFormat (apply changes)"
   lane :format do
     Dir.chdir(repo_root) do
       sh("swiftformat .")
     end
   end
-  
+
   desc "Run all code quality checks"
   lane :check do
     lint
     format_check
   end
-  
-  desc "Build Debug configuration"
+
+  # ENABLE_TESTABILITY=YES is required because the iCodexBar scheme builds
+  # the iCodexBarTests target as a dependency, and the tests use
+  # `@testable import iCodexBar` — which requires the app module to be
+  # compiled with testability enabled. Debug configs default to YES; Release
+  # defaults to NO, so Release builds otherwise fail with
+  # "module 'iCodexBar' was not compiled for testing".
+  desc "Build Debug configuration (CI sanity build, no archive, no signing)"
   lane :build_debug do
     sh(
       "xcodebuild",
-      "build",
+      "clean", "build",
       "-project", project,
       "-scheme", scheme,
       "-configuration", "Debug",
       "-destination", "generic/platform=iOS Simulator",
       "-derivedDataPath", build_path,
-      "CODE_SIGNING_ALLOWED=NO"
+      "CODE_SIGNING_ALLOWED=NO",
+      "CODE_SIGNING_REQUIRED=NO",
+      "CODE_SIGN_IDENTITY=",
+      "ENABLE_TESTABILITY=YES"
     )
   end
-  
-  desc "Build Release configuration"
+
+  desc "Build Release configuration (CI sanity build, no archive, no signing)"
   lane :build_release do
     sh(
       "xcodebuild",
-      "build",
+      "clean", "build",
       "-project", project,
       "-scheme", scheme,
       "-configuration", "Release",
       "-destination", "generic/platform=iOS Simulator",
       "-derivedDataPath", build_path,
-      "CODE_SIGNING_ALLOWED=NO"
+      "CODE_SIGNING_ALLOWED=NO",
+      "CODE_SIGNING_REQUIRED=NO",
+      "CODE_SIGN_IDENTITY=",
+      "ENABLE_TESTABILITY=YES"
     )
   end
-  
-  desc "Run unit tests"
+
+  # Picks the newest available iPhone simulator for the installed Xcode toolchain.
+  # Avoids hardcoding a specific runtime (e.g. "iPhone 15 Pro (17.0)") that breaks
+  # whenever the runner image bumps Xcode.
+  #
+  # Sorts numerically — naive string sort would put "iOS-9-0" after "iOS-18-2"
+  # because '9' > '1'. Same for device names: "iPhone 9" must rank below
+  # "iPhone 16". Non-numeric models like "iPhone SE" are ranked last.
+  def latest_iphone_simulator
+    require "json"
+    output = `xcrun simctl list devices available --json`
+    devices = JSON.parse(output)["devices"]
+
+    runtime = devices.keys
+      .select { |k| k.include?("iOS") }
+      .max_by { |k| (k[/iOS-(\d+)-(\d+)/, 1].to_i * 1_000) + k[/iOS-(\d+)-(\d+)/, 2].to_i }
+    UI.user_error!("No available iOS simulator runtime found") unless runtime
+
+    available = devices[runtime].select { |d| d["name"].start_with?("iPhone") && d["isAvailable"] }
+    UI.user_error!("No available iPhone simulator found in #{runtime}") if available.empty?
+
+    iphone = available.max_by do |d|
+      model = d["name"][/iPhone\s+(\d+)/, 1]
+      model ? model.to_i : -1 # SE / mini / non-numeric ranked below numbered models
+    end
+    iphone["name"]
+  end
+
+  desc "Run unit tests (macOS companion target)"
   lane :test do
     sh(
       "xcodebuild",
@@ -94,13 +133,14 @@ platform :ios do
   desc "Run UI tests"
   lane :ui_test do
     run_tests(
-      scheme: "iCodexBar",
+      scheme: scheme,
       configuration: "Debug",
-      devices: ["iPhone 15 Pro (17.0)"],
-      code_coverage: false
+      device: latest_iphone_simulator,
+      code_coverage: false,
+      only_testing: ["iCodexBarUITests"]
     )
   end
-  
+
   desc "Build and test"
   lane :ci do
     generate
@@ -108,18 +148,30 @@ platform :ios do
     build_debug
     test
   end
-  
+
+  # Real signed archive for TestFlight/App Store. Requires DEVELOPMENT_TEAM
+  # and an App Store Connect API key in the environment (see ci.yml beta job).
+  desc "Archive Release for distribution"
+  lane :archive_release do
+    build_app(
+      scheme: scheme,
+      configuration: "Release",
+      derived_data_path: build_path,
+      clean: true
+    )
+  end
+
   desc "Upload to TestFlight"
   lane :beta do
-    build_release
+    archive_release
     upload_to_testflight(
       skip_waiting_for_build_processing: true
     )
   end
-  
+
   desc "Submit to App Store"
   lane :release do
-    build_release
+    archive_release
     upload_to_app_store(
       force: true,
       submit_for_review: true
