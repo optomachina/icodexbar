@@ -2,6 +2,13 @@ import Foundation
 
 /// Unified snapshot for any provider's current usage state
 public struct ProviderUsageSnapshot: Codable, Equatable, Sendable {
+    public static let placeholder = ProviderUsageSnapshot(
+        provider: .openAI,
+        primary: RateWindow(usedPercent: 42),
+        totalTokens: 1_500_000,
+        totalCostUSD: 12.34
+    )
+
     public let provider: Provider
     /// Primary rate limit (e.g., monthly spend limit)
     public let primary: RateWindow?

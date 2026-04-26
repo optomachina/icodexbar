@@ -3,37 +3,39 @@ import SwiftUI
 
 public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
     case openAI = "openai"
-    case anthropic = "anthropic"
+    case anthropic
     case openRouter = "openrouter"
 
-    public var id: String { rawValue }
+    public var id: String {
+        rawValue
+    }
 
     public var displayName: String {
         switch self {
-        case .openAI:      return "OpenAI"
-        case .anthropic:  return "Anthropic"
-        case .openRouter:  return "OpenRouter"
+        case .openAI: "OpenAI"
+        case .anthropic: "Anthropic"
+        case .openRouter: "OpenRouter"
         }
     }
 
     public var accentColor: Color {
         switch self {
-        case .openAI:     return Color(hex: "10A37F")
-        case .anthropic: return Color(hex: "CC785C")
-        case .openRouter: return Color(hex: "E63946")
+        case .openAI: Color(hex: "10A37F")
+        case .anthropic: Color(hex: "CC785C")
+        case .openRouter: Color(hex: "E63946")
         }
     }
 
     public var iconName: String {
         switch self {
-        case .openAI:     return "brain"
-        case .anthropic: return "cpu"
-        case .openRouter: return "network"
+        case .openAI: "brain"
+        case .anthropic: "cpu"
+        case .openRouter: "network"
         }
     }
 
     public var keychainService: String {
-        return "com.icodexbar.keychain.\(rawValue)"
+        "com.icodexbar.keychain.\(rawValue)"
     }
 }
 
@@ -55,9 +57,9 @@ extension Color {
         }
         self.init(
             .sRGB,
-            red:   Double(red) / 255,
+            red: Double(red) / 255,
             green: Double(green) / 255,
-            blue:  Double(blue) / 255,
+            blue: Double(blue) / 255,
             opacity: Double(alpha) / 255
         )
     }

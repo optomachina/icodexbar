@@ -1,13 +1,18 @@
+@testable import iCodexBarCore
 import XCTest
-@testable import iCodexBar
 
 // MARK: - Mock URL Protocol
 
 final class MockURLProtocol: URLProtocol {
     static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
 
-    override class func canInit(with request: URLRequest) -> Bool { true }
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override class func canInit(with _: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
 
     override func startLoading() {
         guard let handler = MockURLProtocol.requestHandler else {
@@ -42,13 +47,18 @@ private func makeResponse(url: URL, statusCode: Int) -> HTTPURLResponse {
 // MARK: - OpenAI Tests
 
 final class OpenAIUsageAPITests: XCTestCase {
+    override func tearDown() {
+        MockURLProtocol.requestHandler = nil
+        super.tearDown()
+    }
 
     func testParsesDailyCost() async throws {
         let json = """
-        {"data": [{"n_tokens_total": 12000, "cost": 1.45, "date": "2026-04-01",
-                   "n_context_tokens_total": 10000, "n_generated_tokens_total": 2000}]}
+        {"object":"page","data":[{"object":"bucket","start_time":1714003200,"end_time":1714089600,\
+        "results":[{"object":"organization.costs.result","amount":{"value":1.2345,"currency":"usd"}}]}],\
+        "has_more":false,"next_page":null}
         """
-        let url = URL(string: "https://api.openai.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.openai.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(json.utf8))
         }
@@ -57,13 +67,13 @@ final class OpenAIUsageAPITests: XCTestCase {
         let snapshot = try await api.fetchUsage(apiKey: "sk-test-key-valid")
 
         XCTAssertEqual(snapshot.provider, .openAI)
-        XCTAssertEqual(snapshot.totalTokens, 12000)
-        XCTAssertEqual(snapshot.totalCostUSD, 1.45, accuracy: 0.001)
+        XCTAssertEqual(snapshot.totalCostUSD ?? 0, 1.2345, accuracy: 0.001)
+        XCTAssertNil(snapshot.totalTokens)
     }
 
     func testParsesEmptyData() async throws {
-        let json = """{"data": []}"""
-        let url = URL(string: "https://api.openai.com")!
+        let json = #"{"data": []}"#
+        let url = try XCTUnwrap(URL(string: "https://api.openai.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(json.utf8))
         }
@@ -71,12 +81,12 @@ final class OpenAIUsageAPITests: XCTestCase {
         let api = OpenAIUsageAPI(session: makeMockSession())
         let snapshot = try await api.fetchUsage(apiKey: "sk-test-key-valid")
 
-        XCTAssertEqual(snapshot.totalTokens, 0)
-        XCTAssertEqual(snapshot.totalCostUSD, 0.0, accuracy: 0.001)
+        XCTAssertEqual(snapshot.totalCostUSD ?? -1, 0.0, accuracy: 0.001)
+        XCTAssertNil(snapshot.totalTokens)
     }
 
     func test401ThrowsInvalidCredentials() async throws {
-        let url = URL(string: "https://api.openai.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.openai.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 401), Data())
         }
@@ -91,7 +101,7 @@ final class OpenAIUsageAPITests: XCTestCase {
     }
 
     func test404ThrowsDescriptiveError() async throws {
-        let url = URL(string: "https://api.openai.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.openai.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 404), Data())
         }
@@ -100,7 +110,7 @@ final class OpenAIUsageAPITests: XCTestCase {
         do {
             _ = try await api.fetchUsage(apiKey: "sk-test-key-valid")
             XCTFail("Expected apiError")
-        } catch ProviderAPIError.apiError(let code, let message) {
+        } catch let ProviderAPIError.apiError(code, message) {
             XCTAssertEqual(code, 404)
             XCTAssertTrue(message.contains("legacy org API key"), "Expected descriptive 404 message, got: \(message)")
         }
@@ -110,12 +120,16 @@ final class OpenAIUsageAPITests: XCTestCase {
 // MARK: - OpenRouter Tests
 
 final class OpenRouterUsageAPITests: XCTestCase {
+    override func tearDown() {
+        MockURLProtocol.requestHandler = nil
+        super.tearDown()
+    }
 
     func testParsesBalance() async throws {
         let creditsJSON = """
         {"data": {"total_credits": 10.0, "total_usage": 3.80, "balance": 6.20}}
         """
-        let url = URL(string: "https://openrouter.ai")!
+        let url = try XCTUnwrap(URL(string: "https://openrouter.ai"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(creditsJSON.utf8))
         }
@@ -124,15 +138,15 @@ final class OpenRouterUsageAPITests: XCTestCase {
         let snapshot = try await api.fetchUsage(apiKey: "sk-or-test-key-valid")
 
         XCTAssertEqual(snapshot.provider, .openRouter)
-        XCTAssertEqual(snapshot.balance, 6.20, accuracy: 0.001)
-        XCTAssertEqual(snapshot.totalCostUSD, 3.80, accuracy: 0.001)
+        XCTAssertEqual(snapshot.balance ?? 0, 6.20, accuracy: 0.001)
+        XCTAssertEqual(snapshot.totalCostUSD ?? 0, 3.80, accuracy: 0.001)
     }
 
     func testZeroTotalCreditsGivesZeroPercent() async throws {
         let creditsJSON = """
         {"data": {"total_credits": 0.0, "total_usage": 0.0, "balance": 0.0}}
         """
-        let url = URL(string: "https://openrouter.ai")!
+        let url = try XCTUnwrap(URL(string: "https://openrouter.ai"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(creditsJSON.utf8))
         }
@@ -147,12 +161,16 @@ final class OpenRouterUsageAPITests: XCTestCase {
 // MARK: - Anthropic OAuth Tests
 
 final class AnthropicUsageAPITests: XCTestCase {
+    override func tearDown() {
+        MockURLProtocol.requestHandler = nil
+        super.tearDown()
+    }
 
     func testParsesSevenDayAndTier() async throws {
         let json = """
         {"seven_day": 47000, "five_hour": 1200, "rate_limit_tier": "build"}
         """
-        let url = URL(string: "https://api.anthropic.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(json.utf8))
         }
@@ -162,14 +180,14 @@ final class AnthropicUsageAPITests: XCTestCase {
 
         XCTAssertEqual(snapshot.provider, .anthropic)
         XCTAssertEqual(snapshot.totalTokens, 47000)
-        XCTAssertEqual(snapshot.totalCostUSD, 0.0, accuracy: 0.001)
+        XCTAssertEqual(snapshot.totalCostUSD ?? -1, 0.0, accuracy: 0.001)
         XCTAssertTrue(snapshot.primary?.resetDescription?.contains("build") ?? false,
                       "Expected rate limit tier in resetDescription")
     }
 
     func testMissingRateLimitTierShowsUnknown() async throws {
-        let json = """{"seven_day": 1000}"""
-        let url = URL(string: "https://api.anthropic.com")!
+        let json = #"{"seven_day": 1000}"#
+        let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(json.utf8))
         }
@@ -181,7 +199,7 @@ final class AnthropicUsageAPITests: XCTestCase {
     }
 
     func test401ThrowsDescriptiveError() async throws {
-        let url = URL(string: "https://api.anthropic.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 401), Data())
         }
@@ -190,14 +208,14 @@ final class AnthropicUsageAPITests: XCTestCase {
         do {
             _ = try await api.fetchUsage(apiKey: "bad-oauth-token")
             XCTFail("Expected apiError")
-        } catch ProviderAPIError.apiError(let code, let message) {
+        } catch let ProviderAPIError.apiError(code, message) {
             XCTAssertEqual(code, 401)
             XCTAssertTrue(message.contains("OAuth token"), "Expected OAuth token guidance, got: \(message)")
         }
     }
 
     func test404ThrowsDescriptiveError() async throws {
-        let url = URL(string: "https://api.anthropic.com")!
+        let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 404), Data())
         }
@@ -206,9 +224,35 @@ final class AnthropicUsageAPITests: XCTestCase {
         do {
             _ = try await api.fetchUsage(apiKey: "oauth-test-token-valid")
             XCTFail("Expected apiError")
-        } catch ProviderAPIError.apiError(let code, let message) {
+        } catch let ProviderAPIError.apiError(code, message) {
             XCTAssertEqual(code, 404)
             XCTAssertTrue(message.contains("Demo Mode"), "Expected Demo Mode guidance in 404 message, got: \(message)")
         }
+    }
+}
+
+// MARK: - OpenAI Costs Response Decoding
+
+final class OpenAICostsResponseTests: XCTestCase {
+    func testParsesDailyCostWithoutTokens() throws {
+        let json = """
+        {"object":"page","data":[{"object":"bucket","start_time":1714003200,"end_time":1714089600,\
+        "results":[{"object":"organization.costs.result","amount":{"value":1.2345,"currency":"usd"},\
+        "line_item":null,"project_id":null}]}],"has_more":false,"next_page":null}
+        """
+        let data = try XCTUnwrap(json.data(using: .utf8))
+        let decoded = try JSONDecoder().decode(OpenAICostsResponse.self, from: data)
+
+        let snapshot = OpenAIUsageAPI().parseReport(
+            decoded,
+            updatedAt: Date(timeIntervalSince1970: 0)
+        )
+
+        XCTAssertEqual(snapshot.dailyUsage.count, 1)
+        XCTAssertEqual(snapshot.dailyUsage.first?.date, "2024-04-25")
+        XCTAssertEqual(snapshot.dailyUsage.first?.costUSD, 1.2345)
+        XCTAssertNil(snapshot.dailyUsage.first?.totalTokens)
+        XCTAssertNil(snapshot.totalTokens)
+        XCTAssertEqual(snapshot.totalCostUSD, 1.2345)
     }
 }

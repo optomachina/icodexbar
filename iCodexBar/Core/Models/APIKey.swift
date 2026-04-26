@@ -9,10 +9,10 @@ struct APIKeyRecord: Codable, Identifiable, Equatable {
     let createdAt: Date
 
     init(provider: Provider, label: String? = nil) {
-        self.id = UUID()
+        id = UUID()
         self.provider = provider
         self.label = label
-        self.createdAt = Date()
+        createdAt = Date()
     }
 }
 

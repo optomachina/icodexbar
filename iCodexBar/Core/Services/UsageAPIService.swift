@@ -12,12 +12,12 @@ public enum ProviderAPIError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidCredentials: return "Invalid API key"
-        case let .networkError(msg): return "Network error: \(msg)"
-        case let .apiError(code, msg): return "API error \(code): \(msg)"
-        case let .parseError(msg): return "Parse error: \(msg)"
-        case .rateLimited: return "Rate limited. Try again later."
-        case .notConfigured: return "API key not configured"
+        case .invalidCredentials: "Invalid API key"
+        case let .networkError(msg): "Network error: \(msg)"
+        case let .apiError(code, msg): "API error \(code): \(msg)"
+        case let .parseError(msg): "Parse error: \(msg)"
+        case .rateLimited: "Rate limited. Try again later."
+        case .notConfigured: "API key not configured"
         }
     }
 }
@@ -31,7 +31,6 @@ public protocol UsageAPIFetching: Sendable {
 // MARK: - OpenAI Usage API
 
 public struct OpenAIUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenAIUsageAPI()
 
     private let session: URLSession
@@ -46,13 +45,19 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         let now = Date()
         let calendar = Calendar.current
         let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate]
+        let startUnix = Int(startOfMonth.timeIntervalSince1970)
+        let endUnix = Int(now.timeIntervalSince1970)
 
-        let startStr = dateFormatter.string(from: startOfMonth)
-        let endStr = dateFormatter.string(from: now)
-
-        let url = URL(string: "https://api.openai.com/v1/billing/usage?start_date=\(startStr)&end_date=\(endStr)")!
+        // TODO(admin-key): /v1/organization/costs requires an sk-admin-* key with org permissions.
+        // APIKeyEntryView currently accepts any sk-* prefix; users with non-admin keys will hit
+        // 401 here. Tighten validation in fix/openai-admin-key-validation.
+        var components = URLComponents(string: "https://api.openai.com/v1/organization/costs")!
+        components.queryItems = [
+            URLQueryItem(name: "start_time", value: "\(startUnix)"),
+            URLQueryItem(name: "end_time", value: "\(endUnix)"),
+            URLQueryItem(name: "bucket_width", value: "1d")
+        ]
+        let url = components.url!
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -75,14 +80,14 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             throw ProviderAPIError.rateLimited
         case 404:
             throw ProviderAPIError.apiError(404,
-                "OpenAI billing API unavailable — use a legacy org API key (not a project key)")
+                                            "OpenAI billing API unavailable — use a legacy org API key (not a project key)")
         default:
             let body = String(data: data, encoding: .utf8) ?? "unknown"
             throw ProviderAPIError.apiError(httpResponse.statusCode, body.prefix(200).description)
         }
 
         do {
-            let report = try JSONDecoder().decode(OpenAIDailyReport.self, from: data)
+            let report = try JSONDecoder().decode(OpenAICostsResponse.self, from: data)
             return parseReport(report, updatedAt: now)
         } catch let error as DecodingError {
             throw ProviderAPIError.parseError("Usage response: \(error.localizedDescription)")
@@ -91,9 +96,12 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         }
     }
 
-    private func parseReport(_ report: OpenAIDailyReport, updatedAt: Date) -> ProviderUsageSnapshot {
-        let totalTokens = report.data.reduce(0) { $0 + ($1.totalTokens ?? 0) }
-        let totalCost = report.data.reduce(0.0) { $0 + ($1.costUSD ?? 0) }
+    func parseReport(_ report: OpenAICostsResponse, updatedAt: Date) -> ProviderUsageSnapshot {
+        let totalCost = report.data.reduce(0.0) { bucketTotal, bucket in
+            bucketTotal + bucket.results.reduce(0.0) { resultTotal, result in
+                resultTotal + (result.amount?.value ?? 0)
+            }
+        }
 
         let calendar = Calendar.current
         let now = Date()
@@ -113,13 +121,19 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             resetDescription: remainingDays == 1 ? "tomorrow" : "in \(remainingDays) days"
         )
 
-        let dailyEntries = report.data.map { entry in
-            DailyUsageEntry(
-                date: entry.date,
-                totalTokens: entry.totalTokens,
-                costUSD: entry.costUSD,
-                inputTokens: entry.inputTokens,
-                outputTokens: entry.outputTokens
+        let dailyEntries = report.data.map { bucket in
+            let cost = bucket.results.reduce(0.0) { $0 + ($1.amount?.value ?? 0) }
+            let date = Date(timeIntervalSince1970: TimeInterval(bucket.startTime))
+            let formatter = DateFormatter()
+            formatter.calendar = Calendar(identifier: .gregorian)
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.dateFormat = "yyyy-MM-dd"
+
+            return DailyUsageEntry(
+                date: formatter.string(from: date),
+                totalTokens: nil,
+                costUSD: cost
             )
         }
 
@@ -127,7 +141,7 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             provider: .openAI,
             primary: primary,
             secondary: nil,
-            totalTokens: totalTokens,
+            totalTokens: nil,
             totalCostUSD: totalCost,
             balance: nil,
             dailyUsage: dailyEntries,
@@ -138,34 +152,32 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
 
 // MARK: - OpenAI API Response Models
 
-private struct OpenAIDailyReport: Decodable {
-    let data: [OpenAIDailyEntry]
+struct OpenAICostsResponse: Decodable {
+    let data: [Bucket]
 
-    private enum CodingKeys: String, CodingKey {
-        case data
+    struct Bucket: Decodable {
+        let startTime: Int
+        let results: [Result]
+
+        private enum CodingKeys: String, CodingKey {
+            case startTime = "start_time"
+            case results
+        }
     }
-}
 
-private struct OpenAIDailyEntry: Decodable {
-    let date: String
-    let totalTokens: Int?
-    let costUSD: Double?
-    let inputTokens: Int?
-    let outputTokens: Int?
+    struct Result: Decodable {
+        let amount: Amount?
+    }
 
-    private enum CodingKeys: String, CodingKey {
-        case date
-        case totalTokens = "n_tokens_total"
-        case costUSD = "cost"
-        case inputTokens = "n_context_tokens_total"
-        case outputTokens = "n_generated_tokens_total"
+    struct Amount: Decodable {
+        let value: Double?
+        let currency: String?
     }
 }
 
 // MARK: - OpenRouter Usage API
 
 public struct OpenRouterUsageAPI: UsageAPIFetching {
-
     public static let shared = OpenRouterUsageAPI()
 
     private let session: URLSession
@@ -220,7 +232,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             resetDescription: balance > 0 ? "Credit: \(CurrencyFormatter.format(balance))" : nil
         )
 
-        var secondary: RateWindow? = nil
+        var secondary: RateWindow?
         if let keyLimit = keyInfo?.limit, let keyUsage = keyInfo?.usage, keyLimit > 0 {
             let keyPercent = (keyUsage / keyLimit) * 100
             secondary = RateWindow(
@@ -246,7 +258,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
     private func fetchKeyInfo(apiKey: String) async -> OpenRouterKeyInfo? {
         await withTaskGroup(of: OpenRouterKeyInfo?.self) { group in
             group.addTask {
-                await self.fetchKeyInfoRequest(apiKey: apiKey)
+                await fetchKeyInfoRequest(apiKey: apiKey)
             }
             group.addTask {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
@@ -254,7 +266,7 @@ public struct OpenRouterUsageAPI: UsageAPIFetching {
             }
             let result = await group.next()
             group.cancelAll()
-            return result ?? nil
+            return result.flatMap { $0 }
         }
     }
 
@@ -314,7 +326,6 @@ private struct OpenRouterRateLimit: Codable {
 // MARK: - Anthropic Usage API
 
 public struct AnthropicUsageAPI: UsageAPIFetching {
-
     public static let shared = AnthropicUsageAPI()
 
     private let session: URLSession
@@ -323,9 +334,6 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         self.session = session
     }
 
-    /// Fetches Claude Code usage via the OAuth usage endpoint.
-    /// Requires a Claude Code OAuth token (not a standard sk-ant- API key).
-    /// Returns 7-day rolling token count and rate limit tier — no cost data available.
     public func fetchUsage(apiKey: String) async throws -> ProviderUsageSnapshot {
         guard !apiKey.isEmpty else { throw ProviderAPIError.notConfigured }
 
@@ -348,10 +356,10 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
             break
         case 401, 403:
             throw ProviderAPIError.apiError(httpResponse.statusCode,
-                "Claude Code OAuth token required — get it from claude.ai after logging in with Claude Code")
+                                            "Claude Code OAuth token required — get it from claude.ai after logging in with Claude Code")
         case 404:
             throw ProviderAPIError.apiError(404,
-                "Anthropic usage endpoint unavailable — enable Demo Mode in Settings for offline demo")
+                                            "Anthropic usage endpoint unavailable — enable Demo Mode in Settings for offline demo")
         case 429:
             throw ProviderAPIError.rateLimited
         default:
@@ -363,7 +371,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
             let usage = try JSONDecoder().decode(AnthropicOAuthUsageResponse.self, from: data)
             let tier = usage.rateLimitTier ?? "unknown"
             let primary = RateWindow(
-                usedPercent: 0,  // no usage limit returned from this endpoint
+                usedPercent: 0,
                 windowMinutes: nil,
                 resetsAt: nil,
                 resetDescription: "Rate limit tier: \(tier)"

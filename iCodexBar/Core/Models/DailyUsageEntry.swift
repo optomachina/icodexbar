@@ -17,7 +17,7 @@ public struct DailyUsageEntry: Codable, Equatable, Identifiable, Sendable {
         inputTokens: Int? = nil,
         outputTokens: Int? = nil
     ) {
-        self.id = date
+        id = date
         self.date = date
         self.totalTokens = totalTokens
         self.costUSD = costUSD
@@ -27,12 +27,12 @@ public struct DailyUsageEntry: Codable, Equatable, Identifiable, Sendable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.date = try container.decode(String.self, forKey: .date)
-        self.id = self.date
-        self.totalTokens = try container.decodeIfPresent(Int.self, forKey: .totalTokens)
-        self.costUSD = try container.decodeIfPresent(Double.self, forKey: .costUSD)
-        self.inputTokens = try container.decodeIfPresent(Int.self, forKey: .inputTokens)
-        self.outputTokens = try container.decodeIfPresent(Int.self, forKey: .outputTokens)
+        date = try container.decode(String.self, forKey: .date)
+        id = date
+        totalTokens = try container.decodeIfPresent(Int.self, forKey: .totalTokens)
+        costUSD = try container.decodeIfPresent(Double.self, forKey: .costUSD)
+        inputTokens = try container.decodeIfPresent(Int.self, forKey: .inputTokens)
+        outputTokens = try container.decodeIfPresent(Int.self, forKey: .outputTokens)
     }
 
     private enum CodingKeys: String, CodingKey {

@@ -2,15 +2,14 @@ import Foundation
 
 /// Number and token formatting utilities
 public enum UsageFormatter {
-
     /// Format token count as compact string: 1234567 -> "1.23M", 456789 -> "457K"
     public static func formatTokens(_ tokens: Int) -> String {
         if tokens >= 1_000_000 {
-            return String(format: "%.2fM", Double(tokens) / 1_000_000).replacingOccurrences(of: ".00", with: "")
+            String(format: "%.2fM", Double(tokens) / 1_000_000).replacingOccurrences(of: ".00", with: "")
         } else if tokens >= 1_000 {
-            return String(format: "%.1fK", Double(tokens) / 1_000).replacingOccurrences(of: ".0", with: "")
+            String(format: "%.0fK", Double(tokens) / 1_000)
         } else {
-            return NumberFormatter.localizedString(from: NSNumber(value: tokens), number: .decimal)
+            NumberFormatter.localizedString(from: NSNumber(value: tokens), number: .decimal)
         }
     }
 
@@ -30,33 +29,38 @@ public enum UsageFormatter {
 
         if seconds < 60 {
             return "just now"
-        } else if seconds < 3600 {
+        } else if seconds < 3_600 {
             let minutes = seconds / 60
             return "\(minutes)m ago"
-        } else if seconds < 86400 {
-            let hours = seconds / 3600
+        } else if seconds < 86_400 {
+            let hours = seconds / 3_600
             return "\(hours)h ago"
-        } else if seconds < 172800 {
+        } else if seconds < 172_800 {
             return "yesterday"
         } else {
-            let days = seconds / 86400
+            let days = seconds / 86_400
             return "\(days)d ago"
         }
     }
 
     /// Days remaining in a period ending at the given date
     public static func daysRemaining(in periodEnd: Date) -> Int {
-        Calendar.current.dateComponents([.day], from: Date(), to: periodEnd).day ?? 0
+        let calendar = Calendar.current
+        return calendar.dateComponents(
+            [.day],
+            from: calendar.startOfDay(for: Date()),
+            to: calendar.startOfDay(for: periodEnd)
+        ).day ?? 0
     }
 
     /// Format days remaining as string
     public static func formatDaysRemaining(_ days: Int) -> String {
         if days <= 0 {
-            return "ended"
+            "ended"
         } else if days == 1 {
-            return "1 day left"
+            "1 day left"
         } else {
-            return "\(days) days left"
+            "\(days) days left"
         }
     }
 

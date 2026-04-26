@@ -3,7 +3,7 @@ import Security
 
 // MARK: - Keychain Error
 
-public enum KeychainError: Error, LocalizedError {
+public enum KeychainError: Error, LocalizedError, Equatable {
     case duplicate
     case notFound
     case unexpectedStatus(OSStatus)
@@ -13,15 +13,15 @@ public enum KeychainError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .duplicate:
-            return "An item with this key already exists"
+            "An item with this key already exists"
         case .notFound:
-            return "Item not found in Keychain"
+            "Item not found in Keychain"
         case let .unexpectedStatus(status):
-            return "Keychain error: \(status)"
+            "Keychain error: \(status)"
         case .encodingError:
-            return "Failed to encode or decode data"
+            "Failed to encode or decode data"
         case .invalidInput:
-            return "Invalid input"
+            "Invalid input"
         }
     }
 }
@@ -29,11 +29,10 @@ public enum KeychainError: Error, LocalizedError {
 // MARK: - Keychain Service
 
 /// Secure storage for API keys using iOS Keychain
-public actor KeychainService {
-
+public final class KeychainService {
     public static let shared = KeychainService()
 
-    private let accessGroup: String? = nil  // Set to App Group keychain group if sharing between app + widget
+    private let accessGroup: String? = nil // Set to App Group keychain group if sharing between app + widget
 
     private init() {}
 
@@ -92,7 +91,7 @@ public actor KeychainService {
         }
 
         // Try to delete existing item first
-        try? delete(key: key, service: service)
+        try? delete(for: key, in: service)
 
         var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -140,7 +139,8 @@ public actor KeychainService {
         }
 
         guard let data = result as? Data,
-              let string = String(data: data, encoding: .utf8) else {
+              let string = String(data: data, encoding: .utf8)
+        else {
             throw KeychainError.encodingError
         }
 

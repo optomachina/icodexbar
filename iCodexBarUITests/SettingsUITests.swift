@@ -1,7 +1,6 @@
 import XCTest
 
 final class SettingsUITests: XCTestCase {
-
     private var app: XCUIApplication!
 
     override func setUpWithError() throws {

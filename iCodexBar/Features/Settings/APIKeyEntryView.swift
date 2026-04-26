@@ -116,11 +116,11 @@ struct APIKeyEntryView: View {
     private var providerKeyHint: String {
         switch provider {
         case .openAI:
-            return "Find your API key at platform.openai.com/api-keys"
+            "Find your API key at platform.openai.com/api-keys"
         case .anthropic:
-            return "Enter your Claude Code OAuth token. Get it from claude.ai after signing in with Claude Code."
+            "Enter your Claude Code OAuth token. Get it from claude.ai after signing in with Claude Code."
         case .openRouter:
-            return "Find your API key at openrouter.ai/settings/keys"
+            "Find your API key at openrouter.ai/settings/keys"
         }
     }
 
@@ -164,7 +164,7 @@ struct APIKeyEntryView: View {
 
         // Save to Keychain
         do {
-            try await KeychainService.shared.save(key: provider.rawValue, value: trimmedKey)
+            try KeychainService.shared.save(key: provider.rawValue, value: trimmedKey)
         } catch {
             errorMessage = "Failed to save: \(error.localizedDescription)"
             isSaving = false
@@ -206,7 +206,7 @@ struct APIKeyEntryView: View {
 
     private func deleteKey() async {
         do {
-            try await KeychainService.shared.delete(key: provider.rawValue)
+            try KeychainService.shared.delete(key: provider.rawValue)
             dismiss()
         } catch {
             errorMessage = "Failed to delete: \(error.localizedDescription)"
@@ -216,11 +216,11 @@ struct APIKeyEntryView: View {
     private func isValidKeyFormat(_ key: String) -> Bool {
         switch provider {
         case .openAI:
-            return key.hasPrefix("sk-") && key.count > 10
+            key.hasPrefix("sk-") && key.count > 10
         case .anthropic:
-            return key.count >= 10  // OAuth tokens have no public prefix spec
+            key.count >= 10
         case .openRouter:
-            return key.hasPrefix("sk-or-") && key.count > 10
+            key.hasPrefix("sk-or-") && key.count > 10
         }
     }
 }

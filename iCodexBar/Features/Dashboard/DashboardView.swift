@@ -4,7 +4,7 @@ struct DashboardView: View {
     @State private var viewModel = DashboardViewModel()
 
     private let columns = [
-        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
     ]
 
     var body: some View {
@@ -34,7 +34,9 @@ struct DashboardView: View {
                 await viewModel.refresh()
             }
             .task {
-                await viewModel.refresh()
+                if !AppRuntime.isRunningTests {
+                    await viewModel.refresh()
+                }
             }
         }
     }

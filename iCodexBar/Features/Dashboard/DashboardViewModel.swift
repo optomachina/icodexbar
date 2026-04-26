@@ -3,7 +3,6 @@ import SwiftUI
 
 @Observable
 public final class DashboardViewModel {
-
     public var snapshots: [Provider: ProviderUsageSnapshot?] = [:]
     public var errors: [Provider: String?] = [:]
     public var isLoading: Bool = false
@@ -20,6 +19,9 @@ public final class DashboardViewModel {
 
     public var hasAnyConfiguredKey: Bool {
         if UserDefaults.standard.bool(forKey: "isDemoMode") { return true }
+        if AppRuntime.isRunningTests {
+            return false
+        }
         return Provider.allCases.contains { store.isConfigured($0) }
     }
 
@@ -38,6 +40,7 @@ public final class DashboardViewModel {
 
     private func loadDemoData() {
         let now = Date()
+        errors.removeAll()
         snapshots[.openAI] = ProviderUsageSnapshot(
             provider: .openAI,
             primary: RateWindow(usedPercent: 68, windowMinutes: nil, resetsAt: nil, resetDescription: "in 14 days"),
@@ -50,7 +53,12 @@ public final class DashboardViewModel {
         )
         snapshots[.anthropic] = ProviderUsageSnapshot(
             provider: .anthropic,
-            primary: RateWindow(usedPercent: 0, windowMinutes: nil, resetsAt: nil, resetDescription: "Rate limit tier: build"),
+            primary: RateWindow(
+                usedPercent: 0,
+                windowMinutes: nil,
+                resetsAt: nil,
+                resetDescription: "Rate limit tier: build"
+            ),
             secondary: nil,
             totalTokens: 47_000,
             totalCostUSD: 0.0,
@@ -70,13 +78,19 @@ public final class DashboardViewModel {
         )
         lastFetchedAt = now
         isLoading = false
+
+        for (provider, snapshot) in snapshots {
+            if let snapshot { store.snapshots[provider] = snapshot }
+        }
+        store.lastFetchedAt = now
+        store.saveToAppGroup()
     }
 
     public func snapshot(for provider: Provider) -> ProviderUsageSnapshot? {
-        snapshots[provider] ?? nil
+        snapshots[provider].flatMap { $0 }
     }
 
     public func error(for provider: Provider) -> String? {
-        errors[provider]
+        errors[provider].flatMap { $0 }
     }
 }

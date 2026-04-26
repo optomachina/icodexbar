@@ -40,7 +40,7 @@ struct SettingsView: View {
                 // Alerts Section
                 Section("Alert Thresholds") {
                     ForEach($thresholds) { $threshold in
-                        AlertRowView(threshold: $threshold)
+                        AlertRowView(threshold: $threshold, onChange: saveThresholds)
                     }
                 }
 
@@ -111,12 +111,20 @@ struct SettingsView: View {
             }
         }
     }
+
+    private func saveThresholds() {
+        let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
+        if let encoded = try? JSONEncoder().encode(thresholds) {
+            defaults.set(encoded, forKey: "alert_thresholds")
+        }
+    }
 }
 
 // MARK: - Alert Row
 
 struct AlertRowView: View {
     @Binding var threshold: AlertThreshold
+    let onChange: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -143,7 +151,7 @@ struct AlertRowView: View {
                             get: { Double(threshold.thresholdPercent) },
                             set: { threshold.thresholdPercent = Int($0) }
                         ),
-                        in: 50...100,
+                        in: 50 ... 100,
                         step: 5
                     )
 
@@ -154,15 +162,8 @@ struct AlertRowView: View {
                 }
             }
         }
-        .onChange(of: threshold.isEnabled) { _, _ in saveThresholds() }
-        .onChange(of: threshold.thresholdPercent) { _, _ in saveThresholds() }
-    }
-
-    private func saveThresholds() {
-        let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
-        if let encoded = try? JSONEncoder().encode(thresholds) {
-            defaults.set(encoded, forKey: "alert_thresholds")
-        }
+        .onChange(of: threshold.isEnabled) { _, _ in onChange() }
+        .onChange(of: threshold.thresholdPercent) { _, _ in onChange() }
     }
 }
 

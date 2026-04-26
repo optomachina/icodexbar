@@ -2,10 +2,11 @@ import Foundation
 import UserNotifications
 
 public actor NotificationService {
-
     public static let shared = NotificationService()
 
     private init() {}
+
+    // TODO: Add a dedicated low-credit alert when Balance mode lands.
 
     // MARK: - Authorization
 
@@ -40,7 +41,7 @@ public actor NotificationService {
         let request = UNNotificationRequest(
             identifier: "alert-\(provider.rawValue)-\(Date().timeIntervalSince1970)",
             content: content,
-            trigger: nil  // deliver immediately
+            trigger: nil // deliver immediately
         )
 
         do {
@@ -73,12 +74,16 @@ public actor NotificationService {
 
     // MARK: - Alert Evaluation
 
-    public func evaluateAlerts(snapshots: [Provider: ProviderUsageSnapshot], thresholds: [AlertThreshold]) async {
+    func evaluateAlerts(snapshots: [Provider: ProviderUsageSnapshot], thresholds: [AlertThreshold]) async {
         for threshold in thresholds where threshold.isEnabled {
             guard let snapshot = snapshots[threshold.provider] else { continue }
             let usedPercent = Int(snapshot.primary?.usedPercent ?? 0)
             if usedPercent >= threshold.thresholdPercent {
-                await sendAlert(provider: threshold.provider, percent: usedPercent, threshold: threshold.thresholdPercent)
+                await sendAlert(
+                    provider: threshold.provider,
+                    percent: usedPercent,
+                    threshold: threshold.thresholdPercent
+                )
             }
         }
     }
@@ -90,7 +95,7 @@ public enum NotificationError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .authorizationDenied:
-            return "Notification permission denied. Enable in Settings."
+            "Notification permission denied. Enable in Settings."
         }
     }
 }
