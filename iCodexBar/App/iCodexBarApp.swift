@@ -3,8 +3,10 @@ import SwiftUI
 @main
 struct ICodexBarApp: App {
     init() {
-        requestNotificationPermission()
-        registerBackgroundTask()
+        if !AppRuntime.isRunningTests {
+            requestNotificationPermission()
+            registerBackgroundTask()
+        }
     }
 
     var body: some Scene {

@@ -45,13 +45,19 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         let now = Date()
         let calendar = Calendar.current
         let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate]
+        let startUnix = Int(startOfMonth.timeIntervalSince1970)
+        let endUnix = Int(now.timeIntervalSince1970)
 
-        let startStr = dateFormatter.string(from: startOfMonth)
-        let endStr = dateFormatter.string(from: now)
-
-        let url = URL(string: "https://api.openai.com/v1/billing/usage?start_date=\(startStr)&end_date=\(endStr)")!
+        // TODO(admin-key): /v1/organization/costs requires an sk-admin-* key with org permissions.
+        // APIKeyEntryView currently accepts any sk-* prefix; users with non-admin keys will hit
+        // 401 here. Tighten validation in fix/openai-admin-key-validation.
+        var components = URLComponents(string: "https://api.openai.com/v1/organization/costs")!
+        components.queryItems = [
+            URLQueryItem(name: "start_time", value: "\(startUnix)"),
+            URLQueryItem(name: "end_time", value: "\(endUnix)"),
+            URLQueryItem(name: "bucket_width", value: "1d"),
+        ]
+        let url = components.url!
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -78,7 +84,7 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         }
 
         do {
-            let report = try JSONDecoder().decode(OpenAIDailyReport.self, from: data)
+            let report = try JSONDecoder().decode(OpenAICostsResponse.self, from: data)
             return parseReport(report, updatedAt: now)
         } catch let error as DecodingError {
             throw ProviderAPIError.parseError("Usage response: \(error.localizedDescription)")
@@ -87,9 +93,12 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
         }
     }
 
-    private func parseReport(_ report: OpenAIDailyReport, updatedAt: Date) -> ProviderUsageSnapshot {
-        let totalTokens = report.data.reduce(0) { $0 + ($1.totalTokens ?? 0) }
-        let totalCost = report.data.reduce(0.0) { $0 + ($1.costUSD ?? 0) }
+    func parseReport(_ report: OpenAICostsResponse, updatedAt: Date) -> ProviderUsageSnapshot {
+        let totalCost = report.data.reduce(0.0) { bucketTotal, bucket in
+            bucketTotal + bucket.results.reduce(0.0) { resultTotal, result in
+                resultTotal + (result.amount?.value ?? 0)
+            }
+        }
 
         let calendar = Calendar.current
         let now = Date()
@@ -109,13 +118,19 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             resetDescription: remainingDays == 1 ? "tomorrow" : "in \(remainingDays) days"
         )
 
-        let dailyEntries = report.data.map { entry in
-            DailyUsageEntry(
-                date: entry.date,
-                totalTokens: entry.totalTokens,
-                costUSD: entry.costUSD,
-                inputTokens: entry.inputTokens,
-                outputTokens: entry.outputTokens
+        let dailyEntries = report.data.map { bucket in
+            let cost = bucket.results.reduce(0.0) { $0 + ($1.amount?.value ?? 0) }
+            let date = Date(timeIntervalSince1970: TimeInterval(bucket.startTime))
+            let formatter = DateFormatter()
+            formatter.calendar = Calendar(identifier: .gregorian)
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.dateFormat = "yyyy-MM-dd"
+
+            return DailyUsageEntry(
+                date: formatter.string(from: date),
+                totalTokens: nil,
+                costUSD: cost
             )
         }
 
@@ -123,7 +138,7 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
             provider: .openAI,
             primary: primary,
             secondary: nil,
-            totalTokens: totalTokens,
+            totalTokens: nil,
             totalCostUSD: totalCost,
             balance: nil,
             dailyUsage: dailyEntries,
@@ -134,27 +149,26 @@ public struct OpenAIUsageAPI: UsageAPIFetching {
 
 // MARK: - OpenAI API Response Models
 
-private struct OpenAIDailyReport: Decodable {
-    let data: [OpenAIDailyEntry]
+struct OpenAICostsResponse: Decodable {
+    let data: [Bucket]
 
-    private enum CodingKeys: String, CodingKey {
-        case data
+    struct Bucket: Decodable {
+        let startTime: Int
+        let results: [Result]
+
+        private enum CodingKeys: String, CodingKey {
+            case startTime = "start_time"
+            case results
+        }
     }
-}
 
-private struct OpenAIDailyEntry: Decodable {
-    let date: String
-    let totalTokens: Int?
-    let costUSD: Double?
-    let inputTokens: Int?
-    let outputTokens: Int?
+    struct Result: Decodable {
+        let amount: Amount?
+    }
 
-    private enum CodingKeys: String, CodingKey {
-        case date
-        case totalTokens = "n_tokens_total"
-        case costUSD = "cost"
-        case inputTokens = "n_context_tokens_total"
-        case outputTokens = "n_generated_tokens_total"
+    struct Amount: Decodable {
+        let value: Double?
+        let currency: String?
     }
 }
 
@@ -318,29 +332,30 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
     }
 
     /// Anthropic does not have a public billing API. This implementation makes
-    /// a minimal /v1/messages call and extracts token usage from response headers.
+    /// a minimal /v1/messages call and extracts token usage from the response body.
     /// Running totals are persisted to UserDefaults for the current billing period.
     public func fetchUsage(apiKey: String) async throws -> ProviderUsageSnapshot {
         guard !apiKey.isEmpty else { throw ProviderAPIError.notConfigured }
 
-        // Make a minimal API call to get usage from headers
+        // Make a minimal API call to get usage from the response body.
         let url = URL(string: "https://api.anthropic.com/v1/messages")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("anthropic-version: 2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.timeoutInterval = 20
 
+        // TODO: Keep model id current with Anthropic releases.
         let body: [String: Any] = [
-            "model": "claude-haiku-4-20250514",
+            "model": "claude-haiku-4-5-20251001",
             "max_tokens": 10,
             "messages": [["role": "user", "content": "ping"]],
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
-        let (_, response) = try await session.data(for: request)
+        let (data, response) = try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ProviderAPIError.networkError("Invalid response")
@@ -357,22 +372,19 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
             throw ProviderAPIError.apiError(httpResponse.statusCode, "Anthropic fetch failed")
         }
 
-        // Extract usage from response headers (anthropic-usage contains token counts)
-        let usageHeader = httpResponse.value(forHTTPHeaderField: "anthropic-usage")
         let billingPeriod = currentBillingPeriod()
 
-        var inputTokens = 0
-        var outputTokens = 0
-
-        if let usageHeader, let data = usageHeader.data(using: .utf8),
-           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-        {
-            inputTokens = json["input_tokens"] as? Int ?? 0
-            outputTokens = json["output_tokens"] as? Int ?? 0
+        let message: AnthropicMessageResponse
+        do {
+            message = try JSONDecoder().decode(AnthropicMessageResponse.self, from: data)
+        } catch let error as DecodingError {
+            throw ProviderAPIError.parseError("Anthropic response: \(error.localizedDescription)")
+        } catch {
+            throw ProviderAPIError.parseError(error.localizedDescription)
         }
 
-        let totalTokens = inputTokens + outputTokens
-
+        let inputTokens = message.usage.inputTokens
+        let outputTokens = message.usage.outputTokens
         // Load persisted cumulative totals from UserDefaults
         let defaults = UserDefaults(suiteName: "group.com.icodexbar.shared") ?? .standard
         let key = "anthropic_usage_\(billingPeriod)"
@@ -397,10 +409,9 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
             defaults.set(encoded, forKey: key)
         }
 
-        // Estimate cost using Anthropic's published pricing
-        // Haiku: $0.25/M input, $1.25/M output (approximate)
-        let estimatedCost = (Double(cumulative.inputTokens) * 0.25 / 1_000_000)
-            + (Double(cumulative.outputTokens) * 1.25 / 1_000_000)
+        // Estimate cost using Anthropic's published Claude Haiku 4.5 pricing.
+        let estimatedCost = (Double(cumulative.inputTokens) * 1.0 / 1_000_000)
+            + (Double(cumulative.outputTokens) * 5.0 / 1_000_000)
 
         let now = Date()
         let calendar = Calendar.current
@@ -435,6 +446,20 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         formatter.dateFormat = "yyyy-MM"
         return formatter.string(from: Date())
     }
+}
+
+struct AnthropicMessageResponse: Decodable {
+    struct Usage: Decodable {
+        let inputTokens: Int
+        let outputTokens: Int
+
+        private enum CodingKeys: String, CodingKey {
+            case inputTokens = "input_tokens"
+            case outputTokens = "output_tokens"
+        }
+    }
+
+    let usage: Usage
 }
 
 private struct CumulativeAnthropicUsage: Codable {

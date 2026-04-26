@@ -6,6 +6,8 @@ public actor NotificationService {
 
     private init() {}
 
+    // TODO: Add a dedicated low-credit alert when Balance mode lands.
+
     // MARK: - Authorization
 
     public func requestAuthorization() async throws {

@@ -5,43 +5,50 @@ default_platform(:ios)
 platform :ios do
   # Project configuration
   project_name = "iCodexBar"
+  repo_root = File.expand_path("..", __dir__)
+  project = File.join(repo_root, "#{project_name}.xcodeproj")
   scheme = "iCodexBar"
-  workspace = "#{project_name}.xcworkspace"
-  
+
   # Derived paths
-  build_path = "./build"
-  output_path = "./output"
-  
+  build_path = File.join(repo_root, "build")
+  output_path = File.join(repo_root, "output")
+
   desc "Generate Xcode project from project.yml"
   lane :generate do
-    sh("xcodegen generate")
+    Dir.chdir(repo_root) do
+      sh("xcodegen generate")
+    end
   end
-  
+
   desc "Run SwiftLint"
   lane :lint do
     swiftlint(
       mode: :lint,
-      config_file: ".swiftlint.yml",
+      config_file: File.join(repo_root, ".swiftlint.yml"),
       raise_if_swiftlint_error: true
     )
   end
-  
+
   desc "Run SwiftFormat (check mode)"
   lane :format_check do
-    sh("swiftformat --lint .")
+    Dir.chdir(repo_root) do
+      sh("swiftformat --lint .")
+    end
   end
-  
+
   desc "Run SwiftFormat (apply changes)"
   lane :format do
-    sh("swiftformat .")
+    Dir.chdir(repo_root) do
+      sh("swiftformat .")
+    end
   end
-  
+
   desc "Run all code quality checks"
   lane :check do
     lint
     format_check
   end
-  
+
   # ENABLE_TESTABILITY=YES is required because the iCodexBar scheme builds
   # the iCodexBarTests target as a dependency, and the tests use
   # `@testable import iCodexBar` — which requires the app module to be
@@ -51,37 +58,37 @@ platform :ios do
   desc "Build Debug configuration (CI sanity build, no archive, no signing)"
   lane :build_debug do
     sh(
-      "set -o pipefail && xcodebuild " \
-      "-project ../#{project_name}.xcodeproj " \
-      "-scheme #{scheme} " \
-      "-configuration Debug " \
-      "-destination 'generic/platform=iOS Simulator' " \
-      "-derivedDataPath ../build " \
-      "CODE_SIGNING_ALLOWED=NO " \
-      "CODE_SIGNING_REQUIRED=NO " \
-      "CODE_SIGN_IDENTITY='' " \
-      "ENABLE_TESTABILITY=YES " \
-      "clean build | xcbeautify"
+      "xcodebuild",
+      "clean", "build",
+      "-project", project,
+      "-scheme", scheme,
+      "-configuration", "Debug",
+      "-destination", "generic/platform=iOS Simulator",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO",
+      "CODE_SIGNING_REQUIRED=NO",
+      "CODE_SIGN_IDENTITY=",
+      "ENABLE_TESTABILITY=YES"
     )
   end
 
   desc "Build Release configuration (CI sanity build, no archive, no signing)"
   lane :build_release do
     sh(
-      "set -o pipefail && xcodebuild " \
-      "-project ../#{project_name}.xcodeproj " \
-      "-scheme #{scheme} " \
-      "-configuration Release " \
-      "-destination 'generic/platform=iOS Simulator' " \
-      "-derivedDataPath ../build " \
-      "CODE_SIGNING_ALLOWED=NO " \
-      "CODE_SIGNING_REQUIRED=NO " \
-      "CODE_SIGN_IDENTITY='' " \
-      "ENABLE_TESTABILITY=YES " \
-      "clean build | xcbeautify"
+      "xcodebuild",
+      "clean", "build",
+      "-project", project,
+      "-scheme", scheme,
+      "-configuration", "Release",
+      "-destination", "generic/platform=iOS Simulator",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO",
+      "CODE_SIGNING_REQUIRED=NO",
+      "CODE_SIGN_IDENTITY=",
+      "ENABLE_TESTABILITY=YES"
     )
   end
-  
+
   # Picks the latest available iPhone simulator for the installed Xcode toolchain.
   # Avoids hardcoding a specific runtime (e.g. "iPhone 15 Pro (17.0)") that breaks
   # whenever the runner image bumps Xcode.
@@ -98,14 +105,17 @@ platform :ios do
     iphone["name"]
   end
 
-  desc "Run unit tests"
+  desc "Run unit tests (macOS companion target)"
   lane :test do
-    run_tests(
-      scheme: scheme,
-      configuration: "Debug",
-      device: latest_iphone_simulator,
-      code_coverage: true,
-      only_testing: ["iCodexBarTests"]
+    sh(
+      "xcodebuild",
+      "test",
+      "-project", project,
+      "-scheme", "iCodexBarMacTests",
+      "-configuration", "Debug",
+      "-destination", "platform=macOS",
+      "-derivedDataPath", build_path,
+      "CODE_SIGNING_ALLOWED=NO"
     )
   end
 
@@ -119,7 +129,7 @@ platform :ios do
       only_testing: ["iCodexBarUITests"]
     )
   end
-  
+
   desc "Build and test"
   lane :ci do
     generate
@@ -127,7 +137,7 @@ platform :ios do
     build_debug
     test
   end
-  
+
   # Real signed archive for TestFlight/App Store. Requires DEVELOPMENT_TEAM
   # and an App Store Connect API key in the environment (see ci.yml beta job).
   desc "Archive Release for distribution"

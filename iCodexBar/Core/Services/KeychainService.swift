@@ -29,7 +29,7 @@ public enum KeychainError: Error, LocalizedError, Equatable {
 // MARK: - Keychain Service
 
 /// Secure storage for API keys using iOS Keychain
-public actor KeychainService {
+public final class KeychainService {
     public static let shared = KeychainService()
 
     private let accessGroup: String? = nil // Set to App Group keychain group if sharing between app + widget

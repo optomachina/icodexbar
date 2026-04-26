@@ -1,4 +1,4 @@
-@testable import iCodexBar
+@testable import iCodexBarCore
 import XCTest
 
 final class AlertThresholdTests: XCTestCase {

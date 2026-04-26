@@ -15,6 +15,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A2918E01B1927C99353E717A"
+               BuildableName = "iCodexBarCore.framework"
+               BlueprintName = "iCodexBarCore"
+               ReferencedContainer = "container:iCodexBar.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "EB1709411C43615752611D7F"
                BuildableName = "iCodexBarTests.xctest"
                BlueprintName = "iCodexBarTests"
@@ -25,20 +39,31 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       shouldUseLaunchSchemeArgsEnv = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "NO">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB1709411C43615752611D7F"
-            BuildableName = "iCodexBarTests.xctest"
-            BlueprintName = "iCodexBarTests"
+            BlueprintIdentifier = "A2918E01B1927C99353E717A"
+            BuildableName = "iCodexBarCore.framework"
+            BlueprintName = "iCodexBarCore"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EB1709411C43615752611D7F"
+               BuildableName = "iCodexBarTests.xctest"
+               BlueprintName = "iCodexBarTests"
+               ReferencedContainer = "container:iCodexBar.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>
@@ -56,9 +81,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB1709411C43615752611D7F"
-            BuildableName = "iCodexBarTests.xctest"
-            BlueprintName = "iCodexBarTests"
+            BlueprintIdentifier = "A2918E01B1927C99353E717A"
+            BuildableName = "iCodexBarCore.framework"
+            BlueprintName = "iCodexBarCore"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -72,9 +97,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB1709411C43615752611D7F"
-            BuildableName = "iCodexBarTests.xctest"
-            BlueprintName = "iCodexBarTests"
+            BlueprintIdentifier = "A2918E01B1927C99353E717A"
+            BuildableName = "iCodexBarCore.framework"
+            BlueprintName = "iCodexBarCore"
             ReferencedContainer = "container:iCodexBar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

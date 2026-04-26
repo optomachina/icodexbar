@@ -39,9 +39,7 @@ struct SettingsView: View {
                 // Alerts Section
                 Section("Alert Thresholds") {
                     ForEach($thresholds) { $threshold in
-                        AlertRowView(threshold: $threshold) {
-                            saveThresholds()
-                        }
+                        AlertRowView(threshold: $threshold, onChange: saveThresholds)
                     }
                 }
 
@@ -77,9 +75,7 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .onAppear {
                 loadThresholds()
-                Task {
-                    await loadConfiguredProviders()
-                }
+                loadConfiguredProviders()
             }
         }
     }
@@ -95,19 +91,15 @@ struct SettingsView: View {
         }
     }
 
-    private func loadConfiguredProviders() async {
-        var providers: [Provider] = []
-        for provider in Provider.allCases {
+    private func loadConfiguredProviders() {
+        configuredProviders = Provider.allCases.filter { provider in
             do {
-                let key = try await KeychainService.shared.get(key: provider.rawValue)
-                if !key.isEmpty {
-                    providers.append(provider)
-                }
+                let key = try KeychainService.shared.get(key: provider.rawValue)
+                return !key.isEmpty
             } catch {
-                continue
+                return false
             }
         }
-        configuredProviders = providers
     }
 
     private func saveThresholds() {
@@ -122,7 +114,7 @@ struct SettingsView: View {
 
 struct AlertRowView: View {
     @Binding var threshold: AlertThreshold
-    let onSave: () -> Void
+    let onChange: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -160,8 +152,8 @@ struct AlertRowView: View {
                 }
             }
         }
-        .onChange(of: threshold.isEnabled) { _, _ in onSave() }
-        .onChange(of: threshold.thresholdPercent) { _, _ in onSave() }
+        .onChange(of: threshold.isEnabled) { _, _ in onChange() }
+        .onChange(of: threshold.thresholdPercent) { _, _ in onChange() }
     }
 }
 

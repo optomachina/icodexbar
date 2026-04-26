@@ -1,4 +1,5 @@
-@testable import iCodexBar
+@testable import iCodexBarCore
+import UserNotifications
 import XCTest
 
 final class NotificationServiceTests: XCTestCase {
@@ -11,28 +12,39 @@ final class NotificationServiceTests: XCTestCase {
 
     // MARK: - Permission Tests
 
-    func testRequestAuthorization() async throws {
-        // This will show a system dialog on first run
-        try await service.requestAuthorization()
-        // We can't assert true/false since it depends on user response
-        // Just verify it doesn't crash
-        XCTAssertTrue(true)
+    func testCheckAuthorizationStatus() async throws {
+        #if os(macOS)
+            throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
+            let status = await service.checkAuthorizationStatus()
+            var expectedStatuses: [UNAuthorizationStatus] = [
+                .notDetermined,
+                .denied,
+                .authorized,
+                .provisional,
+            ]
+            #if os(iOS)
+                expectedStatuses.append(.ephemeral)
+            #endif
+            XCTAssertTrue(expectedStatuses.contains(status))
+        #endif
     }
 
     // MARK: - Notification Sending Tests
 
-    func testSendUsageAlert() async {
-        // Request authorization first
-        _ = try? await service.requestAuthorization()
+    func testSendUsageAlert() async throws {
+        #if os(macOS)
+            throw XCTSkip("UNUserNotificationCenter requires an app bundle in macOS XCTest.")
+        #else
+            // Send test notification
+            await service.sendAlert(
+                provider: .openAI,
+                percent: 85,
+                threshold: 80
+            )
 
-        // Send test notification
-        await service.sendAlert(
-            provider: .openAI,
-            percent: 85,
-            threshold: 80
-        )
-
-        // Verify no crash - actual notification delivery is system-dependent
-        XCTAssertTrue(true)
+            // Verify no crash - actual notification delivery is system-dependent
+            XCTAssertTrue(true)
+        #endif
     }
 }
