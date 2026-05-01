@@ -1,0 +1,8 @@
+{
+  "limit": 5.0,
+  "usage": 1.5,
+  "rate_limit": {
+    "requests": 200,
+    "interval": "10s"
+  }
+}

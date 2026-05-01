@@ -235,12 +235,7 @@ final class AnthropicUsageAPITests: XCTestCase {
 
 final class OpenAICostsResponseTests: XCTestCase {
     func testParsesDailyCostWithoutTokens() throws {
-        let json = """
-        {"object":"page","data":[{"object":"bucket","start_time":1714003200,"end_time":1714089600,\
-        "results":[{"object":"organization.costs.result","amount":{"value":1.2345,"currency":"usd"},\
-        "line_item":null,"project_id":null}]}],"has_more":false,"next_page":null}
-        """
-        let data = try XCTUnwrap(json.data(using: .utf8))
+        let data = try FixtureLoader.loadData("OpenAI/costs_basic")
         let decoded = try JSONDecoder().decode(OpenAICostsResponse.self, from: data)
 
         let snapshot = OpenAIUsageAPI().parseReport(

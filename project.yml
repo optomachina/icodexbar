@@ -138,11 +138,21 @@ targets:
       - path: iCodexBarTests
         excludes:
           - "**/.DS_Store"
+          - "**/*.json"
+          - "Fixtures/**"
+      - path: iCodexBarTests/Fixtures/OpenAI
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/OpenRouter
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/Anthropic
+        buildPhase: resources
+        type: folder
     settings:
       base:
         GENERATE_INFOPLIST_FILE: "YES"
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.tests
-        GENERATE_INFOPLIST_FILE: "YES"
         TARGETED_DEVICE_FAMILY: "1,2"
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
     dependencies:
@@ -155,6 +165,17 @@ targets:
       - path: iCodexBarTests
         excludes:
           - "**/.DS_Store"
+          - "**/*.json"
+          - "Fixtures/**"
+      - path: iCodexBarTests/Fixtures/OpenAI
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/OpenRouter
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/Anthropic
+        buildPhase: resources
+        type: folder
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.app.mactests
