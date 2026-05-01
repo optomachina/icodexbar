@@ -1,13 +1,16 @@
 import Foundation
 import XCTest
 
+/// Marker type used to resolve the active XCTest bundle at runtime.
 final class FixtureLoaderProbe {}
 
+/// Loads JSON fixtures from the current test bundle.
 enum FixtureLoader {
     enum Error: Swift.Error {
         case missing(String)
     }
 
+    /// Returns fixture data for a provider-relative path without the `.json` extension.
     static func loadData(
         _ path: String,
         file: StaticString = #file,
@@ -15,7 +18,11 @@ enum FixtureLoader {
     ) throws -> Data {
         let bundle = Bundle(for: FixtureLoaderProbe.self)
         let components = path.split(separator: "/")
-        let name = String(components.last!)
+        guard let lastComponent = components.last else {
+            XCTFail("Fixture path must not be empty", file: file, line: line)
+            throw Error.missing(path)
+        }
+        let name = String(lastComponent)
         let subdir = components.dropLast().joined(separator: "/")
         guard let url = bundle.url(
             forResource: name,
@@ -28,6 +35,7 @@ enum FixtureLoader {
         return try Data(contentsOf: url)
     }
 
+    /// Decodes a JSON fixture into the requested model type.
     static func decode<T: Decodable>(
         _ type: T.Type,
         from path: String,
