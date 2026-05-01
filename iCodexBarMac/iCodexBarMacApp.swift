@@ -15,13 +15,13 @@ struct iCodexBarMacApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItemController: StatusItemController?
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         // Prevent appearing in the Dock (belt + suspenders with LSUIElement)
         NSApp.setActivationPolicy(.accessory)
         statusItemController = StatusItemController()
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
+    func applicationWillTerminate(_: Notification) {
         statusItemController = nil
     }
 }

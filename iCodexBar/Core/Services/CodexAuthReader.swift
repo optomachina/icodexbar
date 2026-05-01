@@ -65,8 +65,7 @@ public enum CodexAuthReader {
     ) -> URL {
         let configURL = configFileURL(env: env)
         if let contents = try? String(contentsOf: configURL, encoding: .utf8),
-           let raw = parseChatGPTBaseURL(from: contents)
-        {
+           let raw = parseChatGPTBaseURL(from: contents) {
             let normalized = normalizeChatGPTBaseURL(raw)
             if let url = URL(string: normalized) {
                 return url
@@ -84,8 +83,7 @@ public enum CodexAuthReader {
 
         // Support legacy API-key-only format
         if let apiKey = json["OPENAI_API_KEY"] as? String,
-           !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        {
+           !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return CodexAuthCredentials(accessToken: apiKey, accountId: nil)
         }
 
@@ -115,15 +113,14 @@ public enum CodexAuthReader {
 
     private static func codexHomeURL(env: [String: String]) -> URL {
         if let codexHome = env["CODEX_HOME"],
-           !codexHome.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        {
+           !codexHome.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return URL(fileURLWithPath: codexHome)
         }
         #if os(macOS)
-        return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".codex")
+            return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".codex")
         #else
-        // On iOS, ~/.codex does not exist; callers handle the auth-file-missing error.
-        return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".codex")
+            // On iOS, ~/.codex does not exist; callers handle the auth-file-missing error.
+            return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".codex")
         #endif
     }
 
@@ -147,8 +144,7 @@ public enum CodexAuthReader {
             var value = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
             // Strip surrounding quotes
             if (value.hasPrefix("\"") && value.hasSuffix("\"")) ||
-               (value.hasPrefix("'") && value.hasSuffix("'"))
-            {
+                (value.hasPrefix("'") && value.hasSuffix("'")) {
                 value = String(value.dropFirst().dropLast())
             }
             return value.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -160,11 +156,12 @@ public enum CodexAuthReader {
         var trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return "https://chatgpt.com/backend-api" }
         // Remove trailing slashes
-        while trimmed.hasSuffix("/") { trimmed.removeLast() }
+        while trimmed.hasSuffix("/") {
+            trimmed.removeLast()
+        }
         // If it's a chat host without a path, append /backend-api
-        if (trimmed.hasPrefix("https://chatgpt.com") || trimmed.hasPrefix("https://chat.openai.com")),
-           !trimmed.contains("/backend-api")
-        {
+        if trimmed.hasPrefix("https://chatgpt.com") || trimmed.hasPrefix("https://chat.openai.com"),
+           !trimmed.contains("/backend-api") {
             trimmed += "/backend-api"
         }
         return trimmed

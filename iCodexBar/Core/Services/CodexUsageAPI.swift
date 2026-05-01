@@ -18,8 +18,8 @@ public struct CodexUsageResponse: Decodable, Sendable {
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.primaryWindow = try? container.decodeIfPresent(WindowSnapshot.self, forKey: .primaryWindow)
-            self.secondaryWindow = try? container.decodeIfPresent(WindowSnapshot.self, forKey: .secondaryWindow)
+            primaryWindow = try? container.decodeIfPresent(WindowSnapshot.self, forKey: .primaryWindow)
+            secondaryWindow = try? container.decodeIfPresent(WindowSnapshot.self, forKey: .secondaryWindow)
         }
     }
 
@@ -41,12 +41,12 @@ public struct CodexUsageResponse: Decodable, Sendable {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             // Accept both Int and Double from the wire
             if let intVal = try? container.decode(Int.self, forKey: .usedPercent) {
-                self.usedPercent = Double(intVal)
+                usedPercent = Double(intVal)
             } else {
-                self.usedPercent = (try? container.decode(Double.self, forKey: .usedPercent)) ?? 0
+                usedPercent = (try? container.decode(Double.self, forKey: .usedPercent)) ?? 0
             }
-            self.resetAt = (try? container.decode(Int.self, forKey: .resetAt)) ?? 0
-            self.limitWindowSeconds = (try? container.decode(Int.self, forKey: .limitWindowSeconds)) ?? 0
+            resetAt = (try? container.decode(Int.self, forKey: .resetAt)) ?? 0
+            limitWindowSeconds = (try? container.decode(Int.self, forKey: .limitWindowSeconds)) ?? 0
         }
     }
 
@@ -63,15 +63,16 @@ public struct CodexUsageResponse: Decodable, Sendable {
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.hasCredits = (try? container.decode(Bool.self, forKey: .hasCredits)) ?? false
-            self.unlimited = (try? container.decode(Bool.self, forKey: .unlimited)) ?? false
+            hasCredits = (try? container.decode(Bool.self, forKey: .hasCredits)) ?? false
+            unlimited = (try? container.decode(Bool.self, forKey: .unlimited)) ?? false
             // balance may be a number or a stringified number
-            if let d = try? container.decode(Double.self, forKey: .balance) {
-                self.balance = d
-            } else if let s = try? container.decode(String.self, forKey: .balance), let d = Double(s) {
-                self.balance = d
+            if let value = try? container.decode(Double.self, forKey: .balance) {
+                balance = value
+            } else if let stringValue = try? container.decode(String.self, forKey: .balance),
+                      let value = Double(stringValue) {
+                balance = value
             } else {
-                self.balance = nil
+                balance = nil
             }
         }
     }
@@ -84,9 +85,9 @@ public struct CodexUsageResponse: Decodable, Sendable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.planType = try? container.decodeIfPresent(String.self, forKey: .planType)
-        self.rateLimit = try? container.decodeIfPresent(RateLimitDetails.self, forKey: .rateLimit)
-        self.credits = try? container.decodeIfPresent(CreditDetails.self, forKey: .credits)
+        planType = try? container.decodeIfPresent(String.self, forKey: .planType)
+        rateLimit = try? container.decodeIfPresent(RateLimitDetails.self, forKey: .rateLimit)
+        credits = try? container.decodeIfPresent(CreditDetails.self, forKey: .credits)
     }
 }
 
@@ -152,7 +153,7 @@ public struct CodexUsageAPI: Sendable {
             }
 
             switch http.statusCode {
-            case 200...299:
+            case 200 ... 299:
                 do {
                     return try JSONDecoder().decode(CodexUsageResponse.self, from: data)
                 } catch {
