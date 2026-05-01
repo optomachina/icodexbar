@@ -200,7 +200,7 @@ final class AnthropicUsageAPITests: XCTestCase {
         do {
             _ = try await api.fetchUsage(apiKey: "oauth-test-token-valid")
             XCTFail("Expected parseError when both windows are nil")
-        } catch ProviderAPIError.parseError(let msg) {
+        } catch let ProviderAPIError.parseError(msg) {
             XCTAssertTrue(msg.contains("no windows"), "Expected 'no windows' in error, got: \(msg)")
         }
     }

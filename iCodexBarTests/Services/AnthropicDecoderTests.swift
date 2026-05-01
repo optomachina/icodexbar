@@ -23,7 +23,10 @@ final class AnthropicDecoderTests: XCTestCase {
 
     /// Verifies extra_usage fields decode correctly.
     func testUsageWithExtraDecodes() throws {
-        let decoded = try FixtureLoader.decode(AnthropicOAuthUsageResponse.self, from: "Anthropic/oauth_usage_with_extra")
+        let decoded = try FixtureLoader.decode(
+            AnthropicOAuthUsageResponse.self,
+            from: "Anthropic/oauth_usage_with_extra"
+        )
 
         let fiveHour = try XCTUnwrap(decoded.fiveHour)
         XCTAssertEqual(fiveHour.utilization ?? -1, 0.65, accuracy: 0.001)
@@ -41,7 +44,10 @@ final class AnthropicDecoderTests: XCTestCase {
 
     /// Verifies that unknown keys (omelette, cowork, claude_design, etc.) don't throw.
     func testUsageWithUnknownKeysDoesNotThrow() throws {
-        let decoded = try FixtureLoader.decode(AnthropicOAuthUsageResponse.self, from: "Anthropic/oauth_usage_unknown_keys")
+        let decoded = try FixtureLoader.decode(
+            AnthropicOAuthUsageResponse.self,
+            from: "Anthropic/oauth_usage_unknown_keys"
+        )
 
         // Known windows are still decoded correctly.
         let fiveHour = try XCTUnwrap(decoded.fiveHour)

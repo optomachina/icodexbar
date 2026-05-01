@@ -334,7 +334,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         self.session = session
     }
 
-    // Hardcoded fallback matching CodexBar's reference user-agent for the OAuth usage endpoint.
+    /// Hardcoded fallback matching CodexBar's reference user-agent for the OAuth usage endpoint.
     private static let userAgent = "claude-code/2.1.0"
 
     public func fetchUsage(apiKey: String) async throws -> ProviderUsageSnapshot {
@@ -486,10 +486,12 @@ private struct AnthropicDynamicKey: CodingKey {
 
     init?(stringValue: String) {
         self.stringValue = stringValue
-        self.intValue = nil
+        intValue = nil
     }
 
-    init?(intValue: Int) { nil }
+    init?(intValue _: Int) {
+        nil
+    }
 }
 
 struct AnthropicUsageWindow: Decodable {
