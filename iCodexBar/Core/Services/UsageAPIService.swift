@@ -334,6 +334,9 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         self.session = session
     }
 
+    // Hardcoded fallback matching CodexBar's reference user-agent for the OAuth usage endpoint.
+    private static let userAgent = "claude-code/2.1.0"
+
     public func fetchUsage(apiKey: String) async throws -> ProviderUsageSnapshot {
         guard !apiKey.isEmpty else { throw ProviderAPIError.notConfigured }
 
@@ -343,6 +346,7 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("oauth-2025-04-20", forHTTPHeaderField: "anthropic-beta")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
         request.timeoutInterval = 20
 
         let (data, response) = try await session.data(for: request)
@@ -369,35 +373,147 @@ public struct AnthropicUsageAPI: UsageAPIFetching {
 
         do {
             let usage = try JSONDecoder().decode(AnthropicOAuthUsageResponse.self, from: data)
-            let tier = usage.rateLimitTier ?? "unknown"
-            let primary = RateWindow(
-                usedPercent: 0,
-                windowMinutes: nil,
-                resetsAt: nil,
-                resetDescription: "Rate limit tier: \(tier)"
-            )
+
+            guard usage.fiveHour != nil || usage.sevenDay != nil else {
+                throw ProviderAPIError.parseError("Anthropic usage response had no windows")
+            }
+
+            let primary: RateWindow? = usage.fiveHour.map { window in
+                RateWindow(
+                    usedPercent: (window.utilization ?? 0) * 100,
+                    windowMinutes: 5 * 60,
+                    resetsAt: AnthropicOAuthUsageResponse.parseISO8601Date(window.resetsAt),
+                    resetDescription: AnthropicOAuthUsageResponse.relativeCountdown(
+                        from: AnthropicOAuthUsageResponse.parseISO8601Date(window.resetsAt)
+                    )
+                )
+            }
+
+            let secondary: RateWindow? = usage.sevenDay.map { window in
+                RateWindow(
+                    usedPercent: (window.utilization ?? 0) * 100,
+                    windowMinutes: 7 * 24 * 60,
+                    resetsAt: AnthropicOAuthUsageResponse.parseISO8601Date(window.resetsAt),
+                    resetDescription: AnthropicOAuthUsageResponse.relativeCountdown(
+                        from: AnthropicOAuthUsageResponse.parseISO8601Date(window.resetsAt)
+                    )
+                )
+            }
+
             return ProviderUsageSnapshot(
                 provider: .anthropic,
                 primary: primary,
-                secondary: nil,
-                totalTokens: usage.sevenDay,
+                secondary: secondary,
+                totalTokens: nil,
                 totalCostUSD: 0.0,
                 balance: nil,
                 dailyUsage: [],
                 updatedAt: Date()
             )
+        } catch let error as ProviderAPIError {
+            throw error
         } catch {
             throw ProviderAPIError.parseError("Anthropic OAuth response: \(error.localizedDescription)")
         }
     }
 }
 
-struct AnthropicOAuthUsageResponse: Decodable {
-    let sevenDay: Int
-    let rateLimitTier: String?
+// MARK: - Anthropic OAuth Decoder
 
-    private enum CodingKeys: String, CodingKey {
-        case sevenDay = "seven_day"
-        case rateLimitTier = "rate_limit_tier"
+struct AnthropicOAuthUsageResponse: Decodable {
+    let fiveHour: AnthropicUsageWindow?
+    let sevenDay: AnthropicUsageWindow?
+    let sevenDayOpus: AnthropicUsageWindow?
+    let sevenDaySonnet: AnthropicUsageWindow?
+    let sevenDayOAuthApps: AnthropicUsageWindow?
+    let extraUsage: AnthropicExtraUsage?
+
+    /// Tolerant decoder: unknown keys are silently ignored so Anthropic's experimental
+    /// fields (omelette, cowork, claude_design, etc.) don't break decoding.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: AnthropicDynamicKey.self)
+        fiveHour = Self.decodeWindow(container, "five_hour")
+        sevenDay = Self.decodeWindow(container, "seven_day")
+        sevenDayOpus = Self.decodeWindow(container, "seven_day_opus")
+        sevenDaySonnet = Self.decodeWindow(container, "seven_day_sonnet")
+        sevenDayOAuthApps = Self.decodeWindow(container, "seven_day_oauth_apps")
+        extraUsage = Self.decodeValue(container, "extra_usage")
+    }
+
+    private static func decodeWindow(
+        _ container: KeyedDecodingContainer<AnthropicDynamicKey>,
+        _ key: String
+    ) -> AnthropicUsageWindow? {
+        decodeValue(container, key)
+    }
+
+    private static func decodeValue<T: Decodable>(
+        _ container: KeyedDecodingContainer<AnthropicDynamicKey>,
+        _ key: String
+    ) -> T? {
+        guard let codingKey = AnthropicDynamicKey(stringValue: key) else { return nil }
+        return try? container.decodeIfPresent(T.self, forKey: codingKey)
+    }
+
+    /// ISO 8601 date parser tolerating both fractional-seconds and whole-second variants.
+    static func parseISO8601Date(_ string: String?) -> Date? {
+        guard let string, !string.isEmpty else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: string) { return date }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: string)
+    }
+
+    /// Returns a human-readable countdown string like "in 3h 12m" or nil.
+    static func relativeCountdown(from date: Date?) -> String? {
+        guard let date else { return nil }
+        let interval = date.timeIntervalSinceNow
+        guard interval > 0 else { return "now" }
+        let totalMinutes = Int(interval / 60)
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        if hours > 0 {
+            return "in \(hours)h \(minutes)m"
+        }
+        return "in \(minutes)m"
+    }
+}
+
+private struct AnthropicDynamicKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init?(intValue: Int) { nil }
+}
+
+struct AnthropicUsageWindow: Decodable {
+    let utilization: Double?
+    let resetsAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case utilization
+        case resetsAt = "resets_at"
+    }
+}
+
+struct AnthropicExtraUsage: Decodable {
+    let isEnabled: Bool?
+    let monthlyLimit: Double?
+    let usedCredits: Double?
+    let utilization: Double?
+    let currency: String?
+
+    enum CodingKeys: String, CodingKey {
+        case isEnabled = "is_enabled"
+        case monthlyLimit = "monthly_limit"
+        case usedCredits = "used_credits"
+        case utilization
+        case currency
     }
 }
