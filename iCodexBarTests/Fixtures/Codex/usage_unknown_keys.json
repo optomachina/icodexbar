@@ -1,0 +1,20 @@
+{
+  "plan_type": "pro",
+  "future_field_we_dont_know_about": "some_value",
+  "rate_limit": {
+    "primary_window": {
+      "used_percent": 10,
+      "reset_at": 1746122400,
+      "limit_window_seconds": 18000,
+      "extra_unknown_key": 999
+    },
+    "secondary_window": null
+  },
+  "credits": {
+    "has_credits": false,
+    "unlimited": true,
+    "balance": null,
+    "another_unknown": true
+  },
+  "mystery_object": {"nested": "data"}
+}

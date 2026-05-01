@@ -42,6 +42,8 @@ targets:
       - path: iCodexBar/Core/Services/KeychainService.swift
       - path: iCodexBar/Core/Services/NotificationService.swift
       - path: iCodexBar/Core/Services/UsageAPIService.swift
+      - path: iCodexBar/Core/Services/CodexAuthReader.swift
+      - path: iCodexBar/Core/Services/CodexUsageAPI.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.core.mac
@@ -131,6 +133,25 @@ targets:
         com.apple.security.application-groups:
           - group.com.icodexbar.shared
 
+  iCodexBarMac:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: iCodexBarMac
+        excludes:
+          - "**/.DS_Store"
+          - "Resources/**"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.mac
+        INFOPLIST_FILE: iCodexBarMac/Resources/Info.plist
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+    dependencies:
+      - target: iCodexBarCoreMac
+        embed: true
+
   iCodexBarTests:
     type: bundle.unit-test
     platform: iOS
@@ -147,6 +168,9 @@ targets:
         buildPhase: resources
         type: folder
       - path: iCodexBarTests/Fixtures/Anthropic
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/Codex
         buildPhase: resources
         type: folder
     settings:
@@ -174,6 +198,9 @@ targets:
         buildPhase: resources
         type: folder
       - path: iCodexBarTests/Fixtures/Anthropic
+        buildPhase: resources
+        type: folder
+      - path: iCodexBarTests/Fixtures/Codex
         buildPhase: resources
         type: folder
     settings:
@@ -242,3 +269,17 @@ schemes:
       debugEnabled: false
       targets:
         - iCodexBarMacTests
+
+  iCodexBarMac:
+    build:
+      targets:
+        iCodexBarMac: all
+        iCodexBarCoreMac: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

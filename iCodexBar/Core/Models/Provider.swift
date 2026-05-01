@@ -5,6 +5,7 @@ public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
     case openAI = "openai"
     case anthropic
     case openRouter = "openrouter"
+    case codexCLI = "codexcli"
 
     public var id: String {
         rawValue
@@ -15,6 +16,7 @@ public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
         case .openAI: "OpenAI"
         case .anthropic: "Anthropic"
         case .openRouter: "OpenRouter"
+        case .codexCLI: "Codex CLI"
         }
     }
 
@@ -23,6 +25,7 @@ public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
         case .openAI: Color(hex: "10A37F")
         case .anthropic: Color(hex: "CC785C")
         case .openRouter: Color(hex: "E63946")
+        case .codexCLI: Color(hex: "0F0F0F")
         }
     }
 
@@ -31,6 +34,7 @@ public enum Provider: String, Codable, CaseIterable, Identifiable, Sendable {
         case .openAI: "brain"
         case .anthropic: "cpu"
         case .openRouter: "network"
+        case .codexCLI: "terminal"
         }
     }
 
