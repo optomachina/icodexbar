@@ -166,9 +166,12 @@ final class AnthropicUsageAPITests: XCTestCase {
         super.tearDown()
     }
 
-    func testParsesSevenDayAndTier() async throws {
+    func testParsesFiveHourAndSevenDay() async throws {
         let json = """
-        {"seven_day": 47000, "five_hour": 1200, "rate_limit_tier": "build"}
+        {
+          "five_hour": {"utilization": 0.42, "resets_at": "2026-05-01T18:00:00Z"},
+          "seven_day": {"utilization": 0.18, "resets_at": "2026-05-08T18:00:00Z"}
+        }
         """
         let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
@@ -179,23 +182,27 @@ final class AnthropicUsageAPITests: XCTestCase {
         let snapshot = try await api.fetchUsage(apiKey: "oauth-test-token-valid")
 
         XCTAssertEqual(snapshot.provider, .anthropic)
-        XCTAssertEqual(snapshot.totalTokens, 47000)
         XCTAssertEqual(snapshot.totalCostUSD ?? -1, 0.0, accuracy: 0.001)
-        XCTAssertTrue(snapshot.primary?.resetDescription?.contains("build") ?? false,
-                      "Expected rate limit tier in resetDescription")
+        // primary = five_hour: 0.42 * 100 = 42%
+        XCTAssertEqual(snapshot.primary?.usedPercent ?? -1, 42.0, accuracy: 0.01)
+        // secondary = seven_day: 0.18 * 100 = 18%
+        XCTAssertEqual(snapshot.secondary?.usedPercent ?? -1, 18.0, accuracy: 0.01)
     }
 
-    func testMissingRateLimitTierShowsUnknown() async throws {
-        let json = #"{"seven_day": 1000}"#
+    func testEmptyResponseThrowsParseError() async throws {
+        let json = #"{}"#
         let url = try XCTUnwrap(URL(string: "https://api.anthropic.com"))
         MockURLProtocol.requestHandler = { _ in
             (makeResponse(url: url, statusCode: 200), Data(json.utf8))
         }
 
         let api = AnthropicUsageAPI(session: makeMockSession())
-        let snapshot = try await api.fetchUsage(apiKey: "oauth-test-token-valid")
-
-        XCTAssertTrue(snapshot.primary?.resetDescription?.contains("unknown") ?? false)
+        do {
+            _ = try await api.fetchUsage(apiKey: "oauth-test-token-valid")
+            XCTFail("Expected parseError when both windows are nil")
+        } catch let ProviderAPIError.parseError(msg) {
+            XCTAssertTrue(msg.contains("no windows"), "Expected 'no windows' in error, got: \(msg)")
+        }
     }
 
     func test401ThrowsDescriptiveError() async throws {

@@ -1,5 +1,14 @@
 {
-  "seven_day": 47000,
-  "five_hour": 1200,
-  "rate_limit_tier": "build"
+  "five_hour": {
+    "utilization": 0.42,
+    "resets_at": "2026-05-01T18:00:00Z"
+  },
+  "seven_day": {
+    "utilization": 0.18,
+    "resets_at": "2026-05-08T18:00:00Z"
+  },
+  "seven_day_opus": {
+    "utilization": 0.05,
+    "resets_at": "2026-05-08T18:00:00Z"
+  }
 }
