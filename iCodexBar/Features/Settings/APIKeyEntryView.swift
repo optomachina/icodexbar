@@ -121,6 +121,8 @@ struct APIKeyEntryView: View {
             "Enter your Claude Code OAuth token. Get it from claude.ai after signing in with Claude Code."
         case .openRouter:
             "Find your API key at openrouter.ai/settings/keys"
+        case .codexCLI:
+            "Codex CLI uses your ChatGPT login on macOS — no API key needed. Install the iCodexBar Mac companion."
         }
     }
 
@@ -181,6 +183,8 @@ struct APIKeyEntryView: View {
                 testSnapshot = try await OpenRouterUsageAPI.shared.fetchUsage(apiKey: trimmedKey)
             case .anthropic:
                 testSnapshot = try await AnthropicUsageAPI.shared.fetchUsage(apiKey: trimmedKey)
+            case .codexCLI:
+                testSnapshot = nil
             }
         } catch {
             testResult = "Saved but could not fetch usage: \(error.localizedDescription)"
@@ -221,6 +225,8 @@ struct APIKeyEntryView: View {
             key.count >= 10
         case .openRouter:
             key.hasPrefix("sk-or-") && key.count > 10
+        case .codexCLI:
+            false
         }
     }
 }

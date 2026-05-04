@@ -69,6 +69,10 @@ public final class UsageStore {
                 try await OpenRouterUsageAPI.shared.fetchUsage(apiKey: apiKey)
             case .anthropic:
                 try await AnthropicUsageAPI.shared.fetchUsage(apiKey: apiKey)
+            case .codexCLI:
+                // Codex CLI uses OAuth tokens from ~/.codex/auth.json, not a keychain API key.
+                // Fetching is handled by CodexUsageRefresher in the macOS companion.
+                throw ProviderAPIError.notConfigured
             }
             errors[provider] = nil
             return snapshot
