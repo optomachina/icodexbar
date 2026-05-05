@@ -68,3 +68,6 @@ vendor/bundle/
 *.gcno
 *.gcda
 .claude/
+.gstack/
+.playwright-mcp/
+sonar-*.png
