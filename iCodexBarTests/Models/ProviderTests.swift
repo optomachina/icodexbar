@@ -11,11 +11,12 @@ final class ProviderTests: XCTestCase {
     }
 
     func testProviderAllCases() {
-        XCTAssertEqual(Provider.allCases.count, 4)
+        XCTAssertEqual(Provider.allCases.count, 5)
         XCTAssertTrue(Provider.allCases.contains(.openAI))
         XCTAssertTrue(Provider.allCases.contains(.anthropic))
         XCTAssertTrue(Provider.allCases.contains(.openRouter))
         XCTAssertTrue(Provider.allCases.contains(.codexCLI))
+        XCTAssertTrue(Provider.allCases.contains(.claudeCode))
     }
 
     // MARK: - Display Name Tests

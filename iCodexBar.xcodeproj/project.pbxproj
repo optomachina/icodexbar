@@ -19,13 +19,17 @@
 		1B22024B5F5FF9614F7D72E8 /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED918A3544E7516D5BD257A /* NotificationServiceTests.swift */; };
 		212E49A8977BCDA0C3B97959 /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
 		23D563EDBCBC21C5C273F4BF /* AnthropicDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970E48867FACD6DFA981A718 /* AnthropicDecoderTests.swift */; };
+		28D8373C4C5A3FCE15453AF8 /* ClaudeCodeJSONL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D608075830FBDC5DE5CE5FA /* ClaudeCodeJSONL.swift */; };
 		2A3C12DFC7E87DAA382F0E63 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
+		2BC6D53D82BF3E7A733EE670 /* ClaudeCodeJSONLReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2379A62EF753BB1722E40A24 /* ClaudeCodeJSONLReader.swift */; };
+		2EAB3B9C30B853A5C2930370 /* ClaudeCodeKeychainReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F7A931D598F6EBD39CA819 /* ClaudeCodeKeychainReader.swift */; };
 		2F0D53B128803CD439FBFA97 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
 		30D318C13EA002F0106510B8 /* iCodexBarCoreMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */; };
 		316D04DA87A99234AE772136 /* CodexAuthReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C03ADA76693AB5C829C189D /* CodexAuthReaderTests.swift */; };
 		324D4E82E0AB7240F8FB9FF8 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
 		32504591E808C4C6472F42FE /* AppRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F920A1A65F2E5EA170894F /* AppRuntime.swift */; };
 		35F5EEAEE8EE095156D13F5C /* AlertThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89DF51912DD02811E25D316 /* AlertThreshold.swift */; };
+		360BFF540AD51C0BFFCA19DD /* ClaudeCodeJSONLReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B20236B66E6B22733D76E8 /* ClaudeCodeJSONLReaderTests.swift */; };
 		3B52051C9FF843032A0181EA /* iCodexBarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F20E2DAE86B41A934B028E /* iCodexBarUITestsLaunchTests.swift */; };
 		3BF9ADD8BB5C745922DFB883 /* AnthropicDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 970E48867FACD6DFA981A718 /* AnthropicDecoderTests.swift */; };
 		3D94691A2C7DF694DEC79AD7 /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
@@ -40,11 +44,14 @@
 		56BDE48D050B671D3DF1618E /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
 		58DB8CA8B116E51C41CFB0E0 /* OpenAI in Resources */ = {isa = PBXBuildFile; fileRef = 7E15371592308D00D7EFE1A4 /* OpenAI */; };
 		59986A9866DA7F8472F15700 /* OpenRouterDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 328D068766D2DDBF044AB832 /* OpenRouterDecoderTests.swift */; };
+		5A5245992425A200645A1478 /* ClaudeCodeKeychainAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C18BA1A375B5D1DBD7BCD09 /* ClaudeCodeKeychainAccessGate.swift */; };
 		5DE4E06AC71CC3BA5A13E6D3 /* CodexAuthReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C03ADA76693AB5C829C189D /* CodexAuthReaderTests.swift */; };
 		60386258EC8FCCFFA8E92E3D /* MenuBarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128C3A931F3EF519E516C389 /* MenuBarMenu.swift */; };
 		60E81F63548618E2714F1027 /* BackgroundRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */; };
 		6197BAD1E16A12B779299B6D /* iCodexBarCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */; };
 		62A1D614E0D7F420F4DE38D1 /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
+		6357C61CD318E4DF6E987989 /* ClaudeCodeJSONL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D608075830FBDC5DE5CE5FA /* ClaudeCodeJSONL.swift */; };
+		65D23740AECDD4AF626FAB78 /* ClaudeCodeKeychainReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BAA9191D2209751ED10917 /* ClaudeCodeKeychainReaderTests.swift */; };
 		66CB050724E9FAE469C19E81 /* OpenRouter in Resources */ = {isa = PBXBuildFile; fileRef = 95FF31148D488772BD21263D /* OpenRouter */; };
 		6ABE1BEA0173A488E8557B1B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */; };
 		6B5AF32073809F50D31F49D2 /* UsageFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967E80210F804167F4597EA5 /* UsageFormatterTests.swift */; };
@@ -52,47 +59,56 @@
 		6C27B4BCA6A19BD15C8277C1 /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
 		6C4C821132B371951DC748B0 /* SettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D26CDCB2ECC57E384DDD2E /* SettingsUITests.swift */; };
 		707EB54CE3546D066E9131F9 /* FixtureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67134D4A94C33D81B4BD6293 /* FixtureLoader.swift */; };
+		70AF518447B22CA872F9E37B /* ClaudeCodeKeychainAccessGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3785AD125306C05BC4A4021B /* ClaudeCodeKeychainAccessGateTests.swift */; };
 		72F98CCC4A301FE164CFF530 /* KeychainServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536E0910E168F7F00CCBD927 /* KeychainServiceTests.swift */; };
 		73999A7C53327F5053FEA64B /* ProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368BF0D265B4D5132C22F895 /* ProviderTests.swift */; };
 		750CC39DEF49655F7105B11D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
 		778CD7325C025BE99661F965 /* CodexAuthReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92D5DC682C095176B3DD19C /* CodexAuthReader.swift */; };
+		7980508F2DA1C20DF93FFE7D /* ClaudeCodeKeychainAccessGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3785AD125306C05BC4A4021B /* ClaudeCodeKeychainAccessGateTests.swift */; };
 		7A3C57DB1D66F9CAC1B8AB26 /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
 		7C0D5982110A5EEECE766EC5 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35E208272B965D3886815B8 /* NotificationService.swift */; };
 		7CEFA77D67D4D0C213D12A3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EE58C1C516F60C12ED52476 /* Assets.xcassets */; };
 		7EF3609568ECD7F89ED1F9AE /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
 		7FC57956991F0A7AA2707794 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
 		7FD2FE36EBE48E095BEBD63D /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		829C5EC1BDE064305A246607 /* ClaudeCodeKeychainAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C18BA1A375B5D1DBD7BCD09 /* ClaudeCodeKeychainAccessGate.swift */; };
 		8331E5E4292BA6CC40867F61 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
 		83AA39A879FBC81A535F276F /* iCodexBarCoreMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		855D8C64DF075426C86B62B9 /* OpenAIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF46F43413DC2FAB7C74883C /* OpenAIDecoderTests.swift */; };
+		864DD495EFE1D55D74C08C34 /* ClaudeCodeKeychainReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F7A931D598F6EBD39CA819 /* ClaudeCodeKeychainReader.swift */; };
 		892346A324F42372188090C3 /* OpenAI in Resources */ = {isa = PBXBuildFile; fileRef = 7E15371592308D00D7EFE1A4 /* OpenAI */; };
 		892FD58EAFB4E17E1827FD1E /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
+		8B601D20C2A6506DFB8D536A /* ClaudeCodeKeychainReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11F7A931D598F6EBD39CA819 /* ClaudeCodeKeychainReader.swift */; };
 		8B84B8A5FBF4AA485DDBE05F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
 		8CD690ACDBF941916BDE5220 /* CurrencyFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35D6BFA5BF102F83C2367CA /* CurrencyFormatterTests.swift */; };
 		8E39E5D6C0A5AB76366A5953 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		9110BE7F48DCA00E70DAC97A /* NotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED918A3544E7516D5BD257A /* NotificationServiceTests.swift */; };
 		912E8A6393457B91CFAE33EF /* RateWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B440C7DC165C4BEA2C4A6F /* RateWindowTests.swift */; };
 		91350A78D572D3BCF597BEA7 /* ProviderUsageSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE47E9052E9A9CC72FC8B472 /* ProviderUsageSnapshot.swift */; };
+		918DAB2D44DE3610B7714B58 /* MacUsageRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B484D82F05FBCA6B85F9DA /* MacUsageRefresher.swift */; };
 		930802A82159BAB69199F834 /* iCodexBarCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1BF66898E5A81333219ADEB /* iCodexBarCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		936FD61F03C804C37A30E5A1 /* OpenAIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF46F43413DC2FAB7C74883C /* OpenAIDecoderTests.swift */; };
 		939AD3A76A1A44B5BD68F1F9 /* CodexUsageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2511EAC127AB734DE8ED4B4 /* CodexUsageAPI.swift */; };
 		94956E742312EE1DD100133E /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BF3F9644B215AF992059E1 /* UsageStore.swift */; };
-		96B394975FD7F923E7120545 /* CodexUsageRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCB7EADF36F34C6D76F2293 /* CodexUsageRefresher.swift */; };
+		982AB74BE33CDDB62B7A6801 /* ClaudeCodeJSONLReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B20236B66E6B22733D76E8 /* ClaudeCodeJSONLReaderTests.swift */; };
 		999E19E0E47B7DC2E1F86250 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
 		9D78BAF5F9EDA11B57135073 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */; };
 		9DB61BA3A2A9FC53BFDFA529 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F4439BD45390A80E0D8CED /* KeychainService.swift */; };
 		9DC97359B3D648D94EDDBF9D /* DashboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521013640690A32E91A0AFE3 /* DashboardUITests.swift */; };
+		A5F0D405AB04F9E1D768EDF4 /* ClaudeCodeJSONLReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2379A62EF753BB1722E40A24 /* ClaudeCodeJSONLReader.swift */; };
 		A8C977694242F938BA1551F3 /* UsageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5247D1DA62ACCA2806070568 /* UsageFormatter.swift */; };
 		AB67F7DB524CC341E40521F3 /* UsageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B42CF72D4B6CD7145D340F /* UsageData.swift */; };
 		AC9F0688EC8257C955D0B778 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93E05543A2B3B528445C4D5 /* Provider.swift */; };
 		AD6D8CEDE870949135803AA1 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		AFCBB0888919691C4C9BBBF0 /* iCodexBarCoreMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D5D0F0E6045DEC48209427D9 /* iCodexBarCoreMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AFF94EDF662157AF3C7A14B0 /* ClaudeCodeJSONL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D608075830FBDC5DE5CE5FA /* ClaudeCodeJSONL.swift */; };
 		B49D1934C160F4FEC6912D4F /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
 		B49F85AEE9F048011C2E0E8F /* Anthropic in Resources */ = {isa = PBXBuildFile; fileRef = FC7C6EA5D559EF6DB0AA42A4 /* Anthropic */; };
 		B691B0FE536BDAA53B5B9144 /* iCodexBarWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B9D50D6BADF434C5EF1AF16C /* CodexUsageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2511EAC127AB734DE8ED4B4 /* CodexUsageAPI.swift */; };
 		BC884A2DA41614C98C9D82C8 /* iCodexBarWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */; };
 		BE11AF0549DCE86122B16291 /* OpenRouter in Resources */ = {isa = PBXBuildFile; fileRef = 95FF31148D488772BD21263D /* OpenRouter */; };
+		BE41663EF50E72A7B54B406B /* ClaudeCodeKeychainAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C18BA1A375B5D1DBD7BCD09 /* ClaudeCodeKeychainAccessGate.swift */; };
 		C1A18A0CCD22C9F8A3749331 /* iCodexBarMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72CF43A4BCB0AE65D852F6F /* iCodexBarMacApp.swift */; };
 		C38354B0BA9306E3647ED431 /* AlertThresholdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFC297F937673EC092D6170 /* AlertThresholdTests.swift */; };
 		C5B291403B493FA45964EDBC /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EDC32AA5BAC4A61920660 /* APIKey.swift */; };
@@ -104,6 +120,7 @@
 		C96DFE5DDD17D58A75B88ABE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6758361B6645402DE8C9827F /* DashboardView.swift */; };
 		CCFAFCCB1308FF640A87D11D /* UsageAPIServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F54133D1A35F6ED1139955 /* UsageAPIServiceTests.swift */; };
 		CEE622E421CA77E6A9C34B4C /* FixtureLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67134D4A94C33D81B4BD6293 /* FixtureLoader.swift */; };
+		D14549A99C65CF0E3F8364A1 /* ClaudeCodeKeychainReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BAA9191D2209751ED10917 /* ClaudeCodeKeychainReaderTests.swift */; };
 		D553AAD3F0436EE373BEBCB5 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
 		D62B27A1ADE792CF80D27574 /* UsageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51134BC00231FABBA5454D16 /* UsageCardView.swift */; };
 		D63D1F6C0F9D613965AAAD34 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
@@ -117,6 +134,7 @@
 		EEBD5228E4C1901E3BA3EAD4 /* UsageAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */; };
 		EF9E87572DEC439FC38590A2 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB6255D81437795DF1627C28 /* DashboardViewModel.swift */; };
 		F4209CE1B3D75B95E2B56A71 /* DailyUsageEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5C5914EF3C014FBAC478A1 /* DailyUsageEntry.swift */; };
+		F69A635AE734FF5861467B7D /* ClaudeCodeJSONLReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2379A62EF753BB1722E40A24 /* ClaudeCodeJSONLReader.swift */; };
 		F891B412EA0E5BBAABA29C1E /* ProviderUsageSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369B692392651616169D64EE /* ProviderUsageSnapshotTests.swift */; };
 		F997D2E79630E9EE4129CF93 /* RateWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B440C7DC165C4BEA2C4A6F /* RateWindowTests.swift */; };
 		FCE5D0C8414DE13AC5E4236B /* RateWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8E706AF7E230FEE41C354B /* RateWindow.swift */; };
@@ -211,19 +229,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		11F7A931D598F6EBD39CA819 /* ClaudeCodeKeychainReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeKeychainReader.swift; sourceTree = "<group>"; };
 		128C3A931F3EF519E516C389 /* MenuBarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarMenu.swift; sourceTree = "<group>"; };
 		12D26CDCB2ECC57E384DDD2E /* SettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUITests.swift; sourceTree = "<group>"; };
 		1317AF33361A06B7DAEE2995 /* iCodexBarMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iCodexBarMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1BCB7EADF36F34C6D76F2293 /* CodexUsageRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageRefresher.swift; sourceTree = "<group>"; };
+		1D608075830FBDC5DE5CE5FA /* ClaudeCodeJSONL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeJSONL.swift; sourceTree = "<group>"; };
+		2379A62EF753BB1722E40A24 /* ClaudeCodeJSONLReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeJSONLReader.swift; sourceTree = "<group>"; };
 		24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshService.swift; sourceTree = "<group>"; };
 		2BABAFFE5AEECC0DA4C75D18 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2C18BA1A375B5D1DBD7BCD09 /* ClaudeCodeKeychainAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeKeychainAccessGate.swift; sourceTree = "<group>"; };
 		328D068766D2DDBF044AB832 /* OpenRouterDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterDecoderTests.swift; sourceTree = "<group>"; };
 		33BF3F9644B215AF992059E1 /* UsageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStore.swift; sourceTree = "<group>"; };
 		368BF0D265B4D5132C22F895 /* ProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderTests.swift; sourceTree = "<group>"; };
 		369B692392651616169D64EE /* ProviderUsageSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderUsageSnapshotTests.swift; sourceTree = "<group>"; };
+		3785AD125306C05BC4A4021B /* ClaudeCodeKeychainAccessGateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeKeychainAccessGateTests.swift; sourceTree = "<group>"; };
 		38F4439BD45390A80E0D8CED /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		3ED918A3544E7516D5BD257A /* NotificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationServiceTests.swift; sourceTree = "<group>"; };
 		3F8E706AF7E230FEE41C354B /* RateWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateWindow.swift; sourceTree = "<group>"; };
+		40B20236B66E6B22733D76E8 /* ClaudeCodeJSONLReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeJSONLReaderTests.swift; sourceTree = "<group>"; };
 		45B42CF72D4B6CD7145D340F /* UsageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageData.swift; sourceTree = "<group>"; };
 		4B7FA2F9AA0EE59BD9F5E97B /* CodexUsageAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexUsageAPITests.swift; sourceTree = "<group>"; };
 		4CA9C5FD0E361DCA706DA842 /* UsageAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageAPIService.swift; sourceTree = "<group>"; };
@@ -239,6 +262,7 @@
 		6EE58C1C516F60C12ED52476 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FB86633B8F2FEB85FB3635C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		70CAEBB5A806982F59B0A19C /* iCodexBarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCodexBarWidget.swift; sourceTree = "<group>"; };
+		72B484D82F05FBCA6B85F9DA /* MacUsageRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacUsageRefresher.swift; sourceTree = "<group>"; };
 		7A8BE3B56200F49A43046DC2 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		7C03ADA76693AB5C829C189D /* CodexAuthReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAuthReaderTests.swift; sourceTree = "<group>"; };
 		7E15371592308D00D7EFE1A4 /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = OpenAI; path = iCodexBarTests/Fixtures/OpenAI; sourceTree = SOURCE_ROOT; };
@@ -254,6 +278,7 @@
 		A92D5DC682C095176B3DD19C /* CodexAuthReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAuthReader.swift; sourceTree = "<group>"; };
 		ACA6B1B68FA780ABE06EE4C6 /* iCodexBarTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = iCodexBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B35D6BFA5BF102F83C2367CA /* CurrencyFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatterTests.swift; sourceTree = "<group>"; };
+		B7BAA9191D2209751ED10917 /* ClaudeCodeKeychainReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeKeychainReaderTests.swift; sourceTree = "<group>"; };
 		B8704F2C8DEA733243DABF0B /* iCodexBarWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = iCodexBarWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89DF51912DD02811E25D316 /* AlertThreshold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertThreshold.swift; sourceTree = "<group>"; };
 		B93E05543A2B3B528445C4D5 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
@@ -308,6 +333,9 @@
 			isa = PBXGroup;
 			children = (
 				970E48867FACD6DFA981A718 /* AnthropicDecoderTests.swift */,
+				40B20236B66E6B22733D76E8 /* ClaudeCodeJSONLReaderTests.swift */,
+				3785AD125306C05BC4A4021B /* ClaudeCodeKeychainAccessGateTests.swift */,
+				B7BAA9191D2209751ED10917 /* ClaudeCodeKeychainReaderTests.swift */,
 				7C03ADA76693AB5C829C189D /* CodexAuthReaderTests.swift */,
 				4B7FA2F9AA0EE59BD9F5E97B /* CodexUsageAPITests.swift */,
 				536E0910E168F7F00CCBD927 /* KeychainServiceTests.swift */,
@@ -418,6 +446,10 @@
 			isa = PBXGroup;
 			children = (
 				24C7B4BA00E9D64A925F7E58 /* BackgroundRefreshService.swift */,
+				1D608075830FBDC5DE5CE5FA /* ClaudeCodeJSONL.swift */,
+				2379A62EF753BB1722E40A24 /* ClaudeCodeJSONLReader.swift */,
+				2C18BA1A375B5D1DBD7BCD09 /* ClaudeCodeKeychainAccessGate.swift */,
+				11F7A931D598F6EBD39CA819 /* ClaudeCodeKeychainReader.swift */,
 				A92D5DC682C095176B3DD19C /* CodexAuthReader.swift */,
 				D2511EAC127AB734DE8ED4B4 /* CodexUsageAPI.swift */,
 				38F4439BD45390A80E0D8CED /* KeychainService.swift */,
@@ -456,8 +488,8 @@
 		A668863081550C3048C5C69A /* iCodexBarMac */ = {
 			isa = PBXGroup;
 			children = (
-				1BCB7EADF36F34C6D76F2293 /* CodexUsageRefresher.swift */,
 				C72CF43A4BCB0AE65D852F6F /* iCodexBarMacApp.swift */,
+				72B484D82F05FBCA6B85F9DA /* MacUsageRefresher.swift */,
 				128C3A931F3EF519E516C389 /* MenuBarMenu.swift */,
 				CDBD740C85073A261AA5EF0B /* StatusItemController.swift */,
 			);
@@ -782,6 +814,10 @@
 				8B84B8A5FBF4AA485DDBE05F /* APIKey.swift in Sources */,
 				6BBDFDC729FCF75A55951B02 /* AlertThreshold.swift in Sources */,
 				08F3A1CED9A6C73732138D13 /* BackgroundRefreshService.swift in Sources */,
+				28D8373C4C5A3FCE15453AF8 /* ClaudeCodeJSONL.swift in Sources */,
+				F69A635AE734FF5861467B7D /* ClaudeCodeJSONLReader.swift in Sources */,
+				BE41663EF50E72A7B54B406B /* ClaudeCodeKeychainAccessGate.swift in Sources */,
+				8B601D20C2A6506DFB8D536A /* ClaudeCodeKeychainReader.swift in Sources */,
 				778CD7325C025BE99661F965 /* CodexAuthReader.swift in Sources */,
 				939AD3A76A1A44B5BD68F1F9 /* CodexUsageAPI.swift in Sources */,
 				40079AB0594B5D159227602E /* CurrencyFormatter.swift in Sources */,
@@ -802,7 +838,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96B394975FD7F923E7120545 /* CodexUsageRefresher.swift in Sources */,
+				918DAB2D44DE3610B7714B58 /* MacUsageRefresher.swift in Sources */,
 				60386258EC8FCCFFA8E92E3D /* MenuBarMenu.swift in Sources */,
 				1A0E59D2A14E2FEF7249E878 /* StatusItemController.swift in Sources */,
 				C1A18A0CCD22C9F8A3749331 /* iCodexBarMacApp.swift in Sources */,
@@ -832,6 +868,10 @@
 			files = (
 				999E19E0E47B7DC2E1F86250 /* APIKey.swift in Sources */,
 				35F5EEAEE8EE095156D13F5C /* AlertThreshold.swift in Sources */,
+				AFF94EDF662157AF3C7A14B0 /* ClaudeCodeJSONL.swift in Sources */,
+				2BC6D53D82BF3E7A733EE670 /* ClaudeCodeJSONLReader.swift in Sources */,
+				5A5245992425A200645A1478 /* ClaudeCodeKeychainAccessGate.swift in Sources */,
+				2EAB3B9C30B853A5C2930370 /* ClaudeCodeKeychainReader.swift in Sources */,
 				4CD2AF6AACE01972E0A5831B /* CodexAuthReader.swift in Sources */,
 				FE47B7E308F9AC3549E71D09 /* CodexUsageAPI.swift in Sources */,
 				51F207C9343A313BB4FEC6F8 /* CurrencyFormatter.swift in Sources */,
@@ -856,6 +896,10 @@
 				212E49A8977BCDA0C3B97959 /* AlertThreshold.swift in Sources */,
 				32504591E808C4C6472F42FE /* AppRuntime.swift in Sources */,
 				60E81F63548618E2714F1027 /* BackgroundRefreshService.swift in Sources */,
+				6357C61CD318E4DF6E987989 /* ClaudeCodeJSONL.swift in Sources */,
+				A5F0D405AB04F9E1D768EDF4 /* ClaudeCodeJSONLReader.swift in Sources */,
+				829C5EC1BDE064305A246607 /* ClaudeCodeKeychainAccessGate.swift in Sources */,
+				864DD495EFE1D55D74C08C34 /* ClaudeCodeKeychainReader.swift in Sources */,
 				FDFB7EE01FD3DC715AC0D97F /* CodexAuthReader.swift in Sources */,
 				B9D50D6BADF434C5EF1AF16C /* CodexUsageAPI.swift in Sources */,
 				7EF3609568ECD7F89ED1F9AE /* CurrencyFormatter.swift in Sources */,
@@ -893,6 +937,9 @@
 			files = (
 				C38354B0BA9306E3647ED431 /* AlertThresholdTests.swift in Sources */,
 				23D563EDBCBC21C5C273F4BF /* AnthropicDecoderTests.swift in Sources */,
+				360BFF540AD51C0BFFCA19DD /* ClaudeCodeJSONLReaderTests.swift in Sources */,
+				70AF518447B22CA872F9E37B /* ClaudeCodeKeychainAccessGateTests.swift in Sources */,
+				D14549A99C65CF0E3F8364A1 /* ClaudeCodeKeychainReaderTests.swift in Sources */,
 				5DE4E06AC71CC3BA5A13E6D3 /* CodexAuthReaderTests.swift in Sources */,
 				430B3DDBB879E9B9A0221438 /* CodexUsageAPITests.swift in Sources */,
 				8CD690ACDBF941916BDE5220 /* CurrencyFormatterTests.swift in Sources */,
@@ -915,6 +962,9 @@
 			files = (
 				DE3E33562C6E641DB710B696 /* AlertThresholdTests.swift in Sources */,
 				3BF9ADD8BB5C745922DFB883 /* AnthropicDecoderTests.swift in Sources */,
+				982AB74BE33CDDB62B7A6801 /* ClaudeCodeJSONLReaderTests.swift in Sources */,
+				7980508F2DA1C20DF93FFE7D /* ClaudeCodeKeychainAccessGateTests.swift in Sources */,
+				65D23740AECDD4AF626FAB78 /* ClaudeCodeKeychainReaderTests.swift in Sources */,
 				316D04DA87A99234AE772136 /* CodexAuthReaderTests.swift in Sources */,
 				C85FB860AB1DA8D4BEDE1DE1 /* CodexUsageAPITests.swift in Sources */,
 				15993B83E78CA079FB337D39 /* CurrencyFormatterTests.swift in Sources */,

@@ -10,9 +10,11 @@ enum FixtureLoader {
         case missing(String)
     }
 
-    /// Returns fixture data for a provider-relative path without the `.json` extension.
+    /// Returns fixture data for a provider-relative path without an extension.
+    /// Defaults to `.json`; pass `ext: "jsonl"` (etc.) for other formats.
     static func loadData(
         _ path: String,
+        ext: String = "json",
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> Data {
@@ -26,10 +28,10 @@ enum FixtureLoader {
         let subdir = components.dropLast().joined(separator: "/")
         guard let url = bundle.url(
             forResource: name,
-            withExtension: "json",
+            withExtension: ext,
             subdirectory: subdir.isEmpty ? nil : subdir
         ) else {
-            XCTFail("Missing fixture: \(path).json", file: file, line: line)
+            XCTFail("Missing fixture: \(path).\(ext)", file: file, line: line)
             throw Error.missing(path)
         }
         return try Data(contentsOf: url)

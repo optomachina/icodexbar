@@ -44,6 +44,10 @@ targets:
       - path: iCodexBar/Core/Services/UsageAPIService.swift
       - path: iCodexBar/Core/Services/CodexAuthReader.swift
       - path: iCodexBar/Core/Services/CodexUsageAPI.swift
+      - path: iCodexBar/Core/Services/ClaudeCodeJSONL.swift
+      - path: iCodexBar/Core/Services/ClaudeCodeJSONLReader.swift
+      - path: iCodexBar/Core/Services/ClaudeCodeKeychainReader.swift
+      - path: iCodexBar/Core/Services/ClaudeCodeKeychainAccessGate.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.icodexbar.core.mac
