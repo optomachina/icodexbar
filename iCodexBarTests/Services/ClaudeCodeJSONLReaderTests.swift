@@ -54,7 +54,7 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
             assistantLine(at: now, model: "claude-opus-4-7", input: 100, cacheCreate: 0, cacheRead: 0, output: 50),
             userLine(at: now),
             attachmentLine(at: now),
-            queueOperationLine(at: now),
+            queueOperationLine(at: now)
         ]
         try writeSession(lines: lines, in: "proj-a")
 
@@ -71,7 +71,7 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
         let lines = [
             assistantLine(at: now, model: "claude-opus-4-7", input: 10, cacheCreate: 0, cacheRead: 0, output: 5),
             "not json at all",
-            assistantLine(at: now, model: "claude-opus-4-7", input: 20, cacheCreate: 0, cacheRead: 0, output: 7),
+            assistantLine(at: now, model: "claude-opus-4-7", input: 20, cacheCreate: 0, cacheRead: 0, output: 7)
         ]
         try writeSession(lines: lines, in: "proj-a")
 
@@ -99,7 +99,7 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
             assistantLine(at: recent, model: "claude-opus-4-7",
                           input: 100, cacheCreate: 0, cacheRead: 0, output: 50),
             assistantLine(at: oldButThisWeek, model: "claude-opus-4-7",
-                          input: 200, cacheCreate: 0, cacheRead: 0, output: 100),
+                          input: 200, cacheCreate: 0, cacheRead: 0, output: 100)
         ]
         try writeSession(lines: lines, in: "proj-a")
 
@@ -123,7 +123,7 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
             assistantLine(at: in_window, model: "claude-opus-4-7",
                           input: 100, cacheCreate: 0, cacheRead: 0, output: 50),
             assistantLine(at: out_of_window, model: "claude-opus-4-7",
-                          input: 999, cacheCreate: 0, cacheRead: 0, output: 999),
+                          input: 999, cacheCreate: 0, cacheRead: 0, output: 999)
         ]
         try writeSession(lines: lines, in: "proj-a")
 
@@ -135,11 +135,11 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
         let now = Date()
         try writeSession(lines: [
             assistantLine(at: now, model: "claude-opus-4-7",
-                          input: 100, cacheCreate: 0, cacheRead: 0, output: 50),
+                          input: 100, cacheCreate: 0, cacheRead: 0, output: 50)
         ], in: "project-one")
         try writeSession(lines: [
             assistantLine(at: now, model: "claude-sonnet-4-6",
-                          input: 200, cacheCreate: 0, cacheRead: 0, output: 100),
+                          input: 200, cacheCreate: 0, cacheRead: 0, output: 100)
         ], in: "project-two")
 
         let snap = try ClaudeCodeJSONLReader.read(homeDirectory: tempHome, now: now)
@@ -183,7 +183,11 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
     ) -> String {
         let ts = iso.string(from: date)
         return """
-        {"type":"assistant","timestamp":"\(ts)","sessionId":"abc","message":{"model":"\(model)","usage":{"input_tokens":\(input),"cache_creation_input_tokens":\(cacheCreate),"cache_read_input_tokens":\(cacheRead),"output_tokens":\(output)}}}
+        {"type":"assistant","timestamp":"\(ts)","sessionId":"abc","message":{"model":"\(
+            model
+        )","usage":{"input_tokens":\(input),"cache_creation_input_tokens":\(cacheCreate),"cache_read_input_tokens":\(
+            cacheRead
+        ),"output_tokens":\(output)}}}
         """
     }
 
@@ -209,11 +213,13 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
     }
 }
 
-// Test-only convenience constructor for Usage (Decodable-only struct).
+/// Test-only convenience constructor for Usage (Decodable-only struct).
 private extension ClaudeCodeRecord.Usage {
     static func fromValues(input: Int, cacheCreate: Int, cacheRead: Int, output: Int) -> Self {
         let json = """
-        {"input_tokens":\(input),"cache_creation_input_tokens":\(cacheCreate),"cache_read_input_tokens":\(cacheRead),"output_tokens":\(output)}
+        {"input_tokens":\(input),"cache_creation_input_tokens":\(cacheCreate),"cache_read_input_tokens":\(
+            cacheRead
+        ),"output_tokens":\(output)}
         """
         return try! JSONDecoder().decode(Self.self, from: Data(json.utf8))
     }

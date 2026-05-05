@@ -8,7 +8,7 @@ public enum ClaudeCodeJSONLError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .directoryNotFound:
-            return "Claude Code session directory not found at ~/.claude/projects."
+            "Claude Code session directory not found at ~/.claude/projects."
         }
     }
 }
@@ -28,13 +28,13 @@ public enum ClaudeCodeJSONLReader {
             .appendingPathComponent("projects")
 
         var isDir: ObjCBool = false
-        let fm = FileManager.default
-        guard fm.fileExists(atPath: projectsURL.path, isDirectory: &isDir), isDir.boolValue else {
+        let fileManager = FileManager.default
+        guard fileManager.fileExists(atPath: projectsURL.path, isDirectory: &isDir), isDir.boolValue else {
             throw ClaudeCodeJSONLError.directoryNotFound
         }
 
-        let weekAgo = now.addingTimeInterval(-7 * 24 * 3600)
-        let fiveHoursAgo = now.addingTimeInterval(-5 * 3600)
+        let weekAgo = now.addingTimeInterval(-7 * 24 * 3_600)
+        let fiveHoursAgo = now.addingTimeInterval(-5 * 3_600)
 
         let jsonlFiles = enumerateRecentJSONL(in: projectsURL, modifiedAfter: weekAgo)
 
@@ -62,8 +62,8 @@ public enum ClaudeCodeJSONLReader {
                 }
                 guard record.type == "assistant",
                       let usage = record.message?.usage,
-                      let ts = record.timestamp,
-                      ts >= weekAgo
+                      let timestamp = record.timestamp,
+                      timestamp >= weekAgo
                 else { continue }
 
                 let billable = usage.weightedBillableTokens
@@ -74,10 +74,10 @@ public enum ClaudeCodeJSONLReader {
                 weeklyTokens += billable
                 totalRawTokens += raw
                 totalCost += cost
-                if ts >= fiveHoursAgo {
+                if timestamp >= fiveHoursAgo {
                     sessionTokens += billable
                 }
-                let dayKey = dayFmt.string(from: ts)
+                let dayKey = dayFmt.string(from: timestamp)
                 perDayBillable[dayKey, default: 0] += billable
                 perDayCost[dayKey, default: 0] += cost
                 perDayInput[dayKey, default: 0] += usage.inputTokens + usage.cacheCreationInputTokens
@@ -89,13 +89,13 @@ public enum ClaudeCodeJSONLReader {
         let primary = RateWindow(
             usedPercent: percent(used: sessionTokens, quota: plan.sessionTokenQuota),
             windowMinutes: 300,
-            resetsAt: fiveHoursAgo.addingTimeInterval(5 * 3600),
+            resetsAt: fiveHoursAgo.addingTimeInterval(5 * 3_600),
             resetDescription: "in 5h" // rolling — descriptive only
         )
         let secondary = RateWindow(
             usedPercent: percent(used: weeklyTokens, quota: plan.weeklyTokenQuota),
             windowMinutes: 7 * 24 * 60,
-            resetsAt: weekAgo.addingTimeInterval(7 * 24 * 3600),
+            resetsAt: weekAgo.addingTimeInterval(7 * 24 * 3_600),
             resetDescription: "in 7d"
         )
 
@@ -124,8 +124,8 @@ public enum ClaudeCodeJSONLReader {
     // MARK: - Private helpers
 
     private static func enumerateRecentJSONL(in projectsDir: URL, modifiedAfter cutoff: Date) -> [URL] {
-        let fm = FileManager.default
-        guard let projectDirs = try? fm.contentsOfDirectory(
+        let fileManager = FileManager.default
+        guard let projectDirs = try? fileManager.contentsOfDirectory(
             at: projectsDir,
             includingPropertiesForKeys: [.isDirectoryKey],
             options: [.skipsHiddenFiles]
@@ -134,9 +134,9 @@ public enum ClaudeCodeJSONLReader {
         var result: [URL] = []
         for projectDir in projectDirs {
             var isDir: ObjCBool = false
-            guard fm.fileExists(atPath: projectDir.path, isDirectory: &isDir), isDir.boolValue
+            guard fileManager.fileExists(atPath: projectDir.path, isDirectory: &isDir), isDir.boolValue
             else { continue }
-            guard let files = try? fm.contentsOfDirectory(
+            guard let files = try? fileManager.contentsOfDirectory(
                 at: projectDir,
                 includingPropertiesForKeys: [.contentModificationDateKey],
                 options: [.skipsHiddenFiles]

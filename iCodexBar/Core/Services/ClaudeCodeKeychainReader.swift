@@ -42,15 +42,15 @@ public enum ClaudeCodeKeychainError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .notSignedIn:
-            return "Claude Code: not signed in. Open Claude Code and sign in."
+            "Claude Code: not signed in. Open Claude Code and sign in."
         case .userDenied:
-            return "Claude Code: keychain access denied. Click Refresh to retry."
+            "Claude Code: keychain access denied. Click Refresh to retry."
         case .backgroundReadGated:
-            return "Claude Code: keychain access denied recently. Click Refresh to retry."
+            "Claude Code: keychain access denied recently. Click Refresh to retry."
         case let .keychainStatus(status):
-            return "Claude Code keychain error: \(status)"
+            "Claude Code keychain error: \(status)"
         case let .malformed(detail):
-            return "Claude Code credentials malformed: \(detail)"
+            "Claude Code credentials malformed: \(detail)"
         }
     }
 }
@@ -95,13 +95,12 @@ public enum ClaudeCodeKeychainReader {
             throw ClaudeCodeKeychainError.malformed("Missing `accessToken`")
         }
 
-        let expiresAt: Date?
-        if let ms = oauth["expiresAt"] as? Double {
-            expiresAt = Date(timeIntervalSince1970: ms / 1000)
-        } else if let ms = oauth["expiresAt"] as? Int {
-            expiresAt = Date(timeIntervalSince1970: TimeInterval(ms) / 1000)
+        let expiresAt: Date? = if let millis = oauth["expiresAt"] as? Double {
+            Date(timeIntervalSince1970: millis / 1_000)
+        } else if let millis = oauth["expiresAt"] as? Int {
+            Date(timeIntervalSince1970: TimeInterval(millis) / 1_000)
         } else {
-            expiresAt = nil
+            nil
         }
 
         return ClaudeCodeCredentials(
@@ -120,7 +119,7 @@ public enum ClaudeCodeKeychainReader {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: serviceName,
             kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecMatchLimit as String: kSecMatchLimitOne
         ]
 
         var result: AnyObject?
@@ -145,13 +144,13 @@ public enum ClaudeCodeKeychainReader {
 
 // MARK: - ClaudeCodePlan tier mapping
 
-extension ClaudeCodePlan {
+public extension ClaudeCodePlan {
     /// Map Anthropic's `rateLimitTier` identifier to a plan enum.
     /// Examples seen in the wild:
     ///   - `default_claude_pro`
     ///   - `default_claude_max_5x`
     ///   - `default_claude_max_20x`
-    public init?(rateLimitTier: String?) {
+    init?(rateLimitTier: String?) {
         guard let tier = rateLimitTier?.lowercased() else { return nil }
         if tier.contains("max_20x") || tier.contains("max20x") {
             self = .max20x

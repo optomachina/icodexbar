@@ -19,9 +19,9 @@ public struct ClaudeCodeRecord: Decodable, Sendable {
         }
 
         public init(from decoder: Decoder) throws {
-            let c = try decoder.container(keyedBy: CodingKeys.self)
-            model = try? c.decodeIfPresent(String.self, forKey: .model)
-            usage = try? c.decodeIfPresent(Usage.self, forKey: .usage)
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            model = try? container.decodeIfPresent(String.self, forKey: .model)
+            usage = try? container.decodeIfPresent(Usage.self, forKey: .usage)
         }
     }
 
@@ -39,11 +39,11 @@ public struct ClaudeCodeRecord: Decodable, Sendable {
         }
 
         public init(from decoder: Decoder) throws {
-            let c = try decoder.container(keyedBy: CodingKeys.self)
-            inputTokens = (try? c.decode(Int.self, forKey: .inputTokens)) ?? 0
-            cacheCreationInputTokens = (try? c.decode(Int.self, forKey: .cacheCreationInputTokens)) ?? 0
-            cacheReadInputTokens = (try? c.decode(Int.self, forKey: .cacheReadInputTokens)) ?? 0
-            outputTokens = (try? c.decode(Int.self, forKey: .outputTokens)) ?? 0
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            inputTokens = (try? container.decode(Int.self, forKey: .inputTokens)) ?? 0
+            cacheCreationInputTokens = (try? container.decode(Int.self, forKey: .cacheCreationInputTokens)) ?? 0
+            cacheReadInputTokens = (try? container.decode(Int.self, forKey: .cacheReadInputTokens)) ?? 0
+            outputTokens = (try? container.decode(Int.self, forKey: .outputTokens)) ?? 0
         }
 
         /// Cache-creation is billed at 25% of input rate; cache-read at 10%.
@@ -61,11 +61,11 @@ public struct ClaudeCodeRecord: Decodable, Sendable {
     }
 
     public init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        type = (try? c.decode(String.self, forKey: .type)) ?? ""
-        sessionId = try? c.decodeIfPresent(String.self, forKey: .sessionId)
-        message = try? c.decodeIfPresent(Message.self, forKey: .message)
-        if let raw = try? c.decodeIfPresent(String.self, forKey: .timestamp) {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = (try? container.decode(String.self, forKey: .type)) ?? ""
+        sessionId = try? container.decodeIfPresent(String.self, forKey: .sessionId)
+        message = try? container.decodeIfPresent(Message.self, forKey: .message)
+        if let raw = try? container.decodeIfPresent(String.self, forKey: .timestamp) {
             timestamp = Self.iso8601.date(from: raw)
         } else {
             timestamp = nil
@@ -73,9 +73,9 @@ public struct ClaudeCodeRecord: Decodable, Sendable {
     }
 
     private static let iso8601: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return f
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
     }()
 }
 
@@ -138,8 +138,8 @@ public enum ClaudeCodePricing {
     }
 }
 
-extension ClaudeCodePricing.Rate {
-    public static let opus = Self(inputPerMTok: 15.0, outputPerMTok: 75.0)
-    public static let sonnet = Self(inputPerMTok: 3.0, outputPerMTok: 15.0)
-    public static let haiku = Self(inputPerMTok: 0.80, outputPerMTok: 4.0)
+public extension ClaudeCodePricing.Rate {
+    static let opus = Self(inputPerMTok: 15.0, outputPerMTok: 75.0)
+    static let sonnet = Self(inputPerMTok: 3.0, outputPerMTok: 15.0)
+    static let haiku = Self(inputPerMTok: 0.80, outputPerMTok: 4.0)
 }
