@@ -16,13 +16,25 @@ public enum ClaudeCodeJSONLError: Error, LocalizedError {
 // MARK: - Reader
 
 public enum ClaudeCodeJSONLReader {
+    /// User home directory. `homeDirectoryForCurrentUser` is macOS-only; iOS gets a
+    /// path that won't contain a real Claude install (the reader will throw
+    /// `directoryNotFound`, which is the right behavior — Claude Code isn't on iOS).
+    private static var defaultHome: URL {
+        #if os(macOS)
+            FileManager.default.homeDirectoryForCurrentUser
+        #else
+            URL(fileURLWithPath: NSHomeDirectory())
+        #endif
+    }
+
     /// Builds a snapshot from `~/.claude/projects/<encoded-project>/<session>.jsonl`.
     /// `homeDirectory` and `now` are injectable for tests.
     public static func read(
-        homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
+        homeDirectory: URL? = nil,
         now: Date = Date(),
         plan: ClaudeCodePlan = .max20x
     ) throws -> ProviderUsageSnapshot {
+        let homeDirectory = homeDirectory ?? defaultHome
         let projectsURL = homeDirectory
             .appendingPathComponent(".claude")
             .appendingPathComponent("projects")
