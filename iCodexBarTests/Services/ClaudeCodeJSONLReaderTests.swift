@@ -163,6 +163,37 @@ final class ClaudeCodeJSONLReaderTests: XCTestCase {
         XCTAssertEqual(sonnetCost, 18.0, accuracy: 0.001)
     }
 
+    func testHaikuPricingAndUnknownModelFallback() {
+        let usage = ClaudeCodeRecord.Usage.fromValues(
+            input: 1_000_000, cacheCreate: 0, cacheRead: 0, output: 1_000_000
+        )
+        let haikuCost = ClaudeCodePricing.costUSD(for: usage, model: "claude-haiku-4-5")
+        // 1M input * $0.80 + 1M output * $4 = $4.80
+        XCTAssertEqual(haikuCost, 4.80, accuracy: 0.001)
+
+        // Unknown model and nil model both fall back to opus pricing.
+        let unknownRate = ClaudeCodePricing.rate(for: "claude-future-9000")
+        XCTAssertEqual(unknownRate.inputPerMTok, ClaudeCodePricing.Rate.opus.inputPerMTok)
+        let nilRate = ClaudeCodePricing.rate(for: nil)
+        XCTAssertEqual(nilRate.outputPerMTok, ClaudeCodePricing.Rate.opus.outputPerMTok)
+    }
+
+    // MARK: - Record decoder edge cases
+
+    func testRecordWithMissingTimestampDecodesWithNilTimestamp() throws {
+        let json = #"{"type":"assistant","sessionId":"abc"}"#
+        let record = try JSONDecoder().decode(ClaudeCodeRecord.self, from: Data(json.utf8))
+        XCTAssertEqual(record.type, "assistant")
+        XCTAssertNil(record.timestamp)
+        XCTAssertNil(record.message)
+    }
+
+    func testJSONLErrorDescriptionIsHumanReadable() throws {
+        let desc = ClaudeCodeJSONLError.directoryNotFound.errorDescription
+        XCTAssertNotNil(desc)
+        XCTAssertTrue(try XCTUnwrap(desc?.contains("~/.claude/projects")))
+    }
+
     // MARK: - Helpers
 
     private func writeSession(lines: [String], in projectName: String) throws {

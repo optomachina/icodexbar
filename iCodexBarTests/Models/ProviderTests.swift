@@ -19,6 +19,14 @@ final class ProviderTests: XCTestCase {
         XCTAssertTrue(Provider.allCases.contains(.claudeCode))
     }
 
+    func testClaudeCodeDisplayProperties() {
+        XCTAssertEqual(Provider.claudeCode.displayName, "Claude Code")
+        XCTAssertEqual(Provider.claudeCode.iconName, "sparkles")
+        XCTAssertEqual(Provider.claudeCode.rawValue, "claudecode")
+        // Smoke-test the accent color resolves (exercises the new switch arm).
+        _ = Provider.claudeCode.accentColor
+    }
+
     // MARK: - Display Name Tests
 
     func testProviderDisplayNames() {

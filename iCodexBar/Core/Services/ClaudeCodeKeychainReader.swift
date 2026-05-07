@@ -68,18 +68,19 @@ public enum ClaudeCodeKeychainReader {
     /// silently; user-initiated reads bypass the gate and clear the cooldown on success.
     public static func read(
         interaction: ProviderInteraction = .background,
-        serviceName: String = serviceName
+        serviceName: String = serviceName,
+        defaults: UserDefaults = .standard
     ) throws -> ClaudeCodeCredentials {
-        if interaction == .background, !ClaudeCodeKeychainAccessGate.shouldAllowPrompt() {
+        if interaction == .background, !ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults) {
             throw ClaudeCodeKeychainError.backgroundReadGated
         }
         if interaction == .userInitiated {
-            ClaudeCodeKeychainAccessGate.clearDenied()
+            ClaudeCodeKeychainAccessGate.clearDenied(defaults: defaults)
         }
         let data = try readRawData(serviceName: serviceName)
         let creds = try parse(data: data)
         // Successful read implicitly clears any stale denial state.
-        ClaudeCodeKeychainAccessGate.clearDenied()
+        ClaudeCodeKeychainAccessGate.clearDenied(defaults: defaults)
         return creds
     }
 

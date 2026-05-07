@@ -81,4 +81,77 @@ final class ClaudeCodeKeychainReaderTests: XCTestCase {
         let credsPro = ClaudeCodeCredentials(accessToken: "tok", rateLimitTier: "default_claude_pro")
         XCTAssertEqual(credsPro.inferredPlan, .pro)
     }
+
+    // MARK: - Error descriptions
+
+    func testErrorDescriptions() throws {
+        XCTAssertNotNil(ClaudeCodeKeychainError.notSignedIn.errorDescription)
+        XCTAssertNotNil(ClaudeCodeKeychainError.userDenied.errorDescription)
+        XCTAssertNotNil(ClaudeCodeKeychainError.backgroundReadGated.errorDescription)
+        XCTAssertNotNil(ClaudeCodeKeychainError.keychainStatus(-25300).errorDescription)
+        XCTAssertNotNil(ClaudeCodeKeychainError.malformed("bad").errorDescription)
+        // Spot-check the messages mention "Claude Code" so they're user-meaningful.
+        XCTAssertTrue(try XCTUnwrap(ClaudeCodeKeychainError.notSignedIn.errorDescription?.contains("Claude Code")))
+        XCTAssertTrue(try XCTUnwrap(ClaudeCodeKeychainError.userDenied.errorDescription?.contains("Refresh")))
+    }
+
+    // MARK: - read() integration paths
+
+    func testReadThrowsBackgroundReadGatedWhenCooldownActive() throws {
+        let suite = "ClaudeCodeKeychainReaderTests-gated-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+
+        ClaudeCodeKeychainAccessGate.recordDenied(defaults: defaults)
+
+        XCTAssertThrowsError(
+            try ClaudeCodeKeychainReader.read(
+                interaction: .background,
+                serviceName: "definitely-not-a-real-service-\(UUID().uuidString)",
+                defaults: defaults
+            )
+        ) { err in
+            guard case ClaudeCodeKeychainError.backgroundReadGated = err else {
+                return XCTFail("Expected .backgroundReadGated, got \(err)")
+            }
+        }
+    }
+
+    func testReadThrowsNotSignedInWhenServiceMissing() throws {
+        let suite = "ClaudeCodeKeychainReaderTests-missing-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+
+        // userInitiated bypasses the gate; the service name is unique-per-run so the
+        // Keychain returns errSecItemNotFound and we map it to .notSignedIn.
+        XCTAssertThrowsError(
+            try ClaudeCodeKeychainReader.read(
+                interaction: .userInitiated,
+                serviceName: "icodexbar-test-missing-\(UUID().uuidString)",
+                defaults: defaults
+            )
+        ) { err in
+            guard case ClaudeCodeKeychainError.notSignedIn = err else {
+                return XCTFail("Expected .notSignedIn, got \(err)")
+            }
+        }
+    }
+
+    func testReadUserInitiatedClearsCooldown() throws {
+        let suite = "ClaudeCodeKeychainReaderTests-clear-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+
+        ClaudeCodeKeychainAccessGate.recordDenied(defaults: defaults)
+        XCTAssertFalse(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults))
+
+        // userInitiated should clear cooldown before attempting the read; the read itself
+        // throws .notSignedIn (no service entry) but the cooldown is gone afterwards.
+        _ = try? ClaudeCodeKeychainReader.read(
+            interaction: .userInitiated,
+            serviceName: "icodexbar-test-clear-\(UUID().uuidString)",
+            defaults: defaults
+        )
+        XCTAssertTrue(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults))
+    }
 }
