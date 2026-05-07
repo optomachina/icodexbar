@@ -127,6 +127,36 @@ The narrowest end-to-end slice that proves the architecture. One provider, one m
 - [ ] Settings window (key management, refresh cadence, launch-at-login, inline vs dropdown provider config)
 - [ ] Unit tests: JSONL parser, cost calculator, pace-line math, API response models
 
+#### Claude Code OAuth follow-ups (carried from M1)
+
+M1 shipped a working Keychain → OAuth → JSONL pipeline for Claude Code, mirroring the
+core CodexBar approach. The polish below was deferred so M1 could land. References point
+to the CodexBar implementation (clone at `/tmp/icodex-research/CodexBar`).
+
+- [ ] **File credential fallback** — when Keychain access is denied or unavailable,
+      read `~/.claude/.credentials.json` (same JSON shape as the Keychain blob).
+      Mirrors `ClaudeOAuthCredentials.swift` file-fallback path.
+- [ ] **`security` CLI alternate read strategy** — opt-in alternate that shells out to
+      `/usr/bin/security find-generic-password -s "Claude Code-credentials" -w`,
+      avoiding the in-process Keychain prompt entirely. Mirrors
+      `ClaudeOAuthCredentials+SecurityCLIReader.swift`. Gate behind a Settings toggle.
+- [ ] **OAuth token refresh** — when `expiresAt` is past (or 401 from `/api/oauth/usage`),
+      refresh via `https://platform.claude.com/v1/oauth/token` using the stored refresh
+      token + PKCE `client_id: 9d1c250a-e61b-44d9-88ed-5944d1962f5e`. Persist new tokens
+      back to the Keychain entry. Add `ClaudeCodeRefreshFailureGate` to throttle repeated
+      refresh failures (mirror `ClaudeOAuthRefreshFailureGate.swift`).
+- [ ] **Wider OAuth usage decoder** — extend `AnthropicOAuthUsageResponse` to surface
+      `seven_day_opus`, `seven_day_sonnet`, `seven_day_design`/`omelette`,
+      `seven_day_routines`/`cowork`, and `iguana_necktie` windows so the menu can show
+      per-model breakdowns. Pattern in `ClaudeOAuthUsageFetcher.swift:111-194`.
+- [ ] **Demote `ClaudeCodePlan` to fallback-only** — rename or document that quotas in
+      `ClaudeCodeJSONL.swift` are only used when the OAuth call fails. CodexBar stores
+      `rateLimitTier` as metadata but never computes percentages from it; the server
+      already does that. Today's M1 code uses the tier correctly (only in the JSONL
+      fallback path), but the structure should make this obvious to future readers.
+- [ ] **Settings UI for plan tier override** — manual override when `rateLimitTier` is
+      missing or wrong (e.g., enterprise plans with custom quotas).
+
 ### Milestone 3 — CloudKit + iOS foundation (week 3)
 
 - [ ] `UsageSnapshot` CloudKit record schema (v1)

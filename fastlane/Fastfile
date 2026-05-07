@@ -118,6 +118,8 @@ platform :ios do
 
   desc "Run unit tests (macOS companion target)"
   lane :test do
+    xcresult_path = File.join(build_path, "iCodexBarMacTests.xcresult")
+    FileUtils.rm_rf(xcresult_path)
     sh(
       "xcodebuild",
       "test",
@@ -126,9 +128,12 @@ platform :ios do
       "-configuration", "Debug",
       "-destination", "platform=macOS",
       "-derivedDataPath", build_path,
+      "-enableCodeCoverage", "YES",
+      "-resultBundlePath", xcresult_path,
       "CODE_SIGNING_ALLOWED=NO"
     )
   end
+
 
   desc "Run UI tests"
   lane :ui_test do

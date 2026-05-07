@@ -14,12 +14,19 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    needs: test
     if: github.event_name == 'pull_request' || github.event_name == 'push'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sonar-coverage
+          path: build
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5
@@ -132,6 +139,17 @@ jobs:
         run: fastlane test
         env:
           CI: true
+
+      - name: Convert coverage for SonarCloud
+        run: python3 bin/xccov-to-sonar.py build/iCodexBarMacTests.xcresult > build/sonar-coverage.xml
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonar-coverage
+          path: build/sonar-coverage.xml
+          retention-days: 1
+          if-no-files-found: error
 
   # Gated behind workflow_dispatch until signing is provisioned (see
   # archive_release in fastlane/Fastfile). The DEVELOPMENT_TEAM secret alone

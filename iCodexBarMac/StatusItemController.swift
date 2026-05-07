@@ -5,18 +5,18 @@ import iCodexBarCore
 @MainActor
 final class StatusItemController {
     private let statusItem: NSStatusItem
-    private let refresher: CodexUsageRefresher
+    private let refresher: MacUsageRefresher
 
     init() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        refresher = CodexUsageRefresher()
+        refresher = MacUsageRefresher()
 
         configureButton()
         buildMenu(snapshots: [], errorMessage: nil)
 
-        // Initial fetch
+        // Initial fetch — user just launched the app, prompt is expected.
         Task {
-            await refresher.refresh()
+            await refresher.refresh(interaction: .userInitiated)
             self.update()
         }
 
@@ -27,11 +27,11 @@ final class StatusItemController {
             }
         }
 
-        // Background timer: refresh every 5 minutes
+        // Background timer: refresh every 5 minutes — gated, won't surprise-prompt.
         Task {
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 5 * 60 * 1_000_000_000)
-                await refresher.refresh()
+                await refresher.refresh(interaction: .background)
                 self.update()
             }
         }
@@ -54,7 +54,7 @@ final class StatusItemController {
     @objc private func handleButtonClick() {
         // Refresh on click, then show menu
         Task {
-            await refresher.refresh()
+            await refresher.refresh(interaction: .userInitiated)
             self.update()
         }
         statusItem.button?.performClick(nil)
@@ -88,7 +88,7 @@ final class StatusItemController {
 
     @objc private func handleRefresh() {
         Task {
-            await refresher.refresh()
+            await refresher.refresh(interaction: .userInitiated)
             self.update()
         }
     }

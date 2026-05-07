@@ -123,6 +123,8 @@ struct APIKeyEntryView: View {
             "Find your API key at openrouter.ai/settings/keys"
         case .codexCLI:
             "Codex CLI uses your ChatGPT login on macOS — no API key needed. Install the iCodexBar Mac companion."
+        case .claudeCode:
+            "Claude Code reads your local session logs on macOS — no API key needed. Install the iCodexBar Mac companion."
         }
     }
 
@@ -183,7 +185,7 @@ struct APIKeyEntryView: View {
                 testSnapshot = try await OpenRouterUsageAPI.shared.fetchUsage(apiKey: trimmedKey)
             case .anthropic:
                 testSnapshot = try await AnthropicUsageAPI.shared.fetchUsage(apiKey: trimmedKey)
-            case .codexCLI:
+            case .codexCLI, .claudeCode:
                 testSnapshot = nil
             }
         } catch {
@@ -225,7 +227,7 @@ struct APIKeyEntryView: View {
             key.count >= 10
         case .openRouter:
             key.hasPrefix("sk-or-") && key.count > 10
-        case .codexCLI:
+        case .codexCLI, .claudeCode:
             false
         }
     }
