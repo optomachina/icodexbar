@@ -60,10 +60,21 @@ final class MacUsageRefresher {
     private func fetchClaude(
         interaction: ProviderInteraction
     ) async -> (snap: ProviderUsageSnapshot?, err: String?) {
-        // Tier comes from Keychain when available; falls back to .max20x.
-        // Background reads after a denial throw .backgroundReadGated silently — we'll
-        // still return a JSONL-only snapshot in that case.
-        let credentials = try? ClaudeCodeKeychainReader.read(interaction: interaction)
+        // Tier comes from Keychain when available; falls back to .max20x. Match the
+        // gated case explicitly — other Keychain failures (corrupted entry, decode
+        // error, OS-level failures) should be surfaced, not swallowed.
+        let credentials: ClaudeCodeCredentials?
+        let keychainErr: String?
+        do {
+            credentials = try ClaudeCodeKeychainReader.read(interaction: interaction)
+            keychainErr = nil
+        } catch ClaudeCodeKeychainError.backgroundReadGated {
+            credentials = nil
+            keychainErr = nil
+        } catch {
+            credentials = nil
+            keychainErr = "Claude Code: keychain read failed — \(error.localizedDescription)"
+        }
         let plan = credentials?.inferredPlan ?? .max20x
 
         // JSONL gives us cost / daily detail / token totals (always available locally).
@@ -80,10 +91,10 @@ final class MacUsageRefresher {
             jsonlErr = "Claude Code: \(error.localizedDescription)"
         }
 
-        // OAuth gives authoritative quota %s. If the call fails, fall back to JSONL-derived %s.
+        // OAuth gives authoritative quota %s. Without credentials we return what we have.
         guard let credentials else {
-            // No credentials → return JSONL-only snapshot (with fallback plan).
-            return (jsonlSnap, jsonlErr)
+            let combined = [keychainErr, jsonlErr].compactMap { $0 }.joined(separator: "\n")
+            return (jsonlSnap, combined.isEmpty ? nil : combined)
         }
 
         do {
@@ -100,11 +111,14 @@ final class MacUsageRefresher {
             )
             return (merged, nil)
         } catch {
-            // OAuth failed — return JSONL snapshot if we have it, otherwise surface the error.
+            // OAuth failed — keep JSONL snapshot if we have it, but surface that the
+            // authoritative %s are stale. Combine all known failures.
+            let oauthErr = "Claude Code: OAuth usage unavailable — \(error.localizedDescription)"
             if let jsonlSnap {
-                return (jsonlSnap, nil)
+                return (jsonlSnap, oauthErr)
             }
-            return (nil, "Claude Code: \(error.localizedDescription)")
+            let combined = [jsonlErr, oauthErr].compactMap { $0 }.joined(separator: "\n")
+            return (nil, combined)
         }
     }
 }

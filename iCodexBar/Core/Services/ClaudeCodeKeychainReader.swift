@@ -74,12 +74,10 @@ public enum ClaudeCodeKeychainReader {
         if interaction == .background, !ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults) {
             throw ClaudeCodeKeychainError.backgroundReadGated
         }
-        if interaction == .userInitiated {
-            ClaudeCodeKeychainAccessGate.clearDenied(defaults: defaults)
-        }
-        let data = try readRawData(serviceName: serviceName)
+        // userInitiated bypasses the gate but does NOT clear cooldown up-front — only a
+        // successful read clears it, so a failed retry doesn't reset the cooldown silently.
+        let data = try readRawData(serviceName: serviceName, defaults: defaults)
         let creds = try parse(data: data)
-        // Successful read implicitly clears any stale denial state.
         ClaudeCodeKeychainAccessGate.clearDenied(defaults: defaults)
         return creds
     }
@@ -115,7 +113,7 @@ public enum ClaudeCodeKeychainReader {
 
     // MARK: - Private
 
-    private static func readRawData(serviceName: String) throws -> Data {
+    private static func readRawData(serviceName: String, defaults: UserDefaults) throws -> Data {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: serviceName,
@@ -135,7 +133,7 @@ public enum ClaudeCodeKeychainReader {
         case errSecItemNotFound:
             throw ClaudeCodeKeychainError.notSignedIn
         case errSecUserCanceled, errSecAuthFailed, errSecNoAccessForItem:
-            ClaudeCodeKeychainAccessGate.recordDenied()
+            ClaudeCodeKeychainAccessGate.recordDenied(defaults: defaults)
             throw ClaudeCodeKeychainError.userDenied
         default:
             throw ClaudeCodeKeychainError.keychainStatus(status)

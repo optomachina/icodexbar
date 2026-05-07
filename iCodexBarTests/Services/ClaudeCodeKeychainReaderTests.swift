@@ -137,21 +137,22 @@ final class ClaudeCodeKeychainReaderTests: XCTestCase {
         }
     }
 
-    func testReadUserInitiatedClearsCooldown() throws {
-        let suite = "ClaudeCodeKeychainReaderTests-clear-\(UUID().uuidString)"
+    func testFailedUserInitiatedReadDoesNotClearCooldown() throws {
+        let suite = "ClaudeCodeKeychainReaderTests-failed-clear-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
 
         ClaudeCodeKeychainAccessGate.recordDenied(defaults: defaults)
         XCTAssertFalse(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults))
 
-        // userInitiated should clear cooldown before attempting the read; the read itself
-        // throws .notSignedIn (no service entry) but the cooldown is gone afterwards.
+        // userInitiated bypasses the gate, but the contract is "clear on success only" —
+        // a failed retry (non-existent service throws .notSignedIn) must leave the
+        // cooldown intact so the next background refresh stays gated.
         _ = try? ClaudeCodeKeychainReader.read(
             interaction: .userInitiated,
-            serviceName: "icodexbar-test-clear-\(UUID().uuidString)",
+            serviceName: "icodexbar-test-failed-clear-\(UUID().uuidString)",
             defaults: defaults
         )
-        XCTAssertTrue(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults))
+        XCTAssertFalse(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(defaults: defaults))
     }
 }

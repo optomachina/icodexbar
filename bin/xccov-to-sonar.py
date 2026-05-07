@@ -58,7 +58,7 @@ def main():
     ap.add_argument("--repo-root", default=os.getcwd())
     args = ap.parse_args()
 
-    repo_root = os.path.abspath(args.repo_root)
+    repo_root = os.path.normpath(os.path.abspath(args.repo_root))
     report = xccov_report(args.xcresult)
 
     print('<?xml version="1.0" encoding="UTF-8"?>')
@@ -71,9 +71,14 @@ def main():
             if not path or path in seen:
                 continue
             seen.add(path)
-            if not path.startswith(repo_root):
+            abs_path = os.path.normpath(os.path.abspath(path))
+            try:
+                if os.path.commonpath([repo_root, abs_path]) != repo_root:
+                    continue
+            except ValueError:
+                # commonpath raises if paths are on different drives (Windows).
                 continue
-            rel = os.path.relpath(path, repo_root)
+            rel = os.path.relpath(abs_path, repo_root)
             try:
                 raw = xccov_file_lines(args.xcresult, path)
             except subprocess.CalledProcessError:

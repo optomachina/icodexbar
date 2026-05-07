@@ -17,7 +17,9 @@ public enum ProviderInteraction: Sendable {
 /// 6-hour cooldown.
 public enum ClaudeCodeKeychainAccessGate {
     static let cooldownInterval: TimeInterval = 6 * 60 * 60
-    private static let defaultsKey = "claudeCodeKeychainDeniedUntil"
+    /// UserDefaults key the gate persists denial state under. Exposed for tests so
+    /// renames here can't silently leave assertions referencing a stale literal.
+    public static let deniedUntilKey = "claudeCodeKeychainDeniedUntil"
 
     /// True if a background read is allowed to attempt the Keychain (and
     /// potentially trigger a system prompt). False during the cooldown window.
@@ -25,14 +27,14 @@ public enum ClaudeCodeKeychainAccessGate {
         now: Date = Date(),
         defaults: UserDefaults = .standard
     ) -> Bool {
-        guard let raw = defaults.object(forKey: defaultsKey) as? Double else {
+        guard let raw = defaults.object(forKey: deniedUntilKey) as? Double else {
             return true
         }
         let deniedUntil = Date(timeIntervalSince1970: raw)
         if deniedUntil > now {
             return false
         }
-        defaults.removeObject(forKey: defaultsKey)
+        defaults.removeObject(forKey: deniedUntilKey)
         return true
     }
 
@@ -43,11 +45,11 @@ public enum ClaudeCodeKeychainAccessGate {
         defaults: UserDefaults = .standard
     ) {
         let deniedUntil = now.addingTimeInterval(cooldownInterval)
-        defaults.set(deniedUntil.timeIntervalSince1970, forKey: defaultsKey)
+        defaults.set(deniedUntil.timeIntervalSince1970, forKey: deniedUntilKey)
     }
 
     /// Clears the cooldown — called on a successful read or on user-initiated retry.
     public static func clearDenied(defaults: UserDefaults = .standard) {
-        defaults.removeObject(forKey: defaultsKey)
+        defaults.removeObject(forKey: deniedUntilKey)
     }
 }

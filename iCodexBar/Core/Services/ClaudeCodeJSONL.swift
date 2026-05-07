@@ -48,11 +48,13 @@ public struct ClaudeCodeRecord: Decodable, Sendable {
 
         /// Cache-creation is billed at 25% of input rate; cache-read at 10%.
         /// This is the unit we use to compare against quota (Anthropic counts cache the same way).
+        /// Sum in Double then round once — flooring each weighted component independently
+        /// drops small cache-heavy records to zero.
         public var weightedBillableTokens: Int {
-            inputTokens
-                + Int(Double(cacheCreationInputTokens) * 0.25)
-                + Int(Double(cacheReadInputTokens) * 0.10)
-                + outputTokens
+            let weighted = Double(inputTokens + outputTokens)
+                + Double(cacheCreationInputTokens) * 0.25
+                + Double(cacheReadInputTokens) * 0.10
+            return Int(weighted.rounded())
         }
     }
 

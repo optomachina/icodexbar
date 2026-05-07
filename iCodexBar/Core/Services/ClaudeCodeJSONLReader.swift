@@ -55,6 +55,8 @@ public enum ClaudeCodeJSONLReader {
         var weeklyTokens = 0
         var totalRawTokens = 0
         var totalCost: Double = 0
+        var oldestSessionEvent: Date?
+        var oldestWeeklyEvent: Date?
         var perDayBillable: [String: Int] = [:]
         var perDayCost: [String: Double] = [:]
         var perDayInput: [String: Int] = [:]
@@ -84,10 +86,12 @@ public enum ClaudeCodeJSONLReader {
                 let cost = ClaudeCodePricing.costUSD(for: usage, model: record.message?.model)
 
                 weeklyTokens += billable
+                oldestWeeklyEvent = min(oldestWeeklyEvent ?? timestamp, timestamp)
                 totalRawTokens += raw
                 totalCost += cost
                 if timestamp >= fiveHoursAgo {
                     sessionTokens += billable
+                    oldestSessionEvent = min(oldestSessionEvent ?? timestamp, timestamp)
                 }
                 let dayKey = dayFmt.string(from: timestamp)
                 perDayBillable[dayKey, default: 0] += billable
@@ -98,17 +102,21 @@ public enum ClaudeCodeJSONLReader {
             }
         }
 
+        // Rolling-window resetsAt is "when the oldest in-window event ages out". When the
+        // window is empty, fall back to `now + window` so we never report a reset in the past.
+        let sessionResetsAt = (oldestSessionEvent ?? now).addingTimeInterval(5 * 3_600)
+        let weeklyResetsAt = (oldestWeeklyEvent ?? now).addingTimeInterval(7 * 24 * 3_600)
         let primary = RateWindow(
             usedPercent: percent(used: sessionTokens, quota: plan.sessionTokenQuota),
             windowMinutes: 300,
-            resetsAt: fiveHoursAgo.addingTimeInterval(5 * 3_600),
-            resetDescription: "in 5h" // rolling — descriptive only
+            resetsAt: sessionResetsAt,
+            resetDescription: relativeCountdown(from: now, to: sessionResetsAt)
         )
         let secondary = RateWindow(
             usedPercent: percent(used: weeklyTokens, quota: plan.weeklyTokenQuota),
             windowMinutes: 7 * 24 * 60,
-            resetsAt: weekAgo.addingTimeInterval(7 * 24 * 3_600),
-            resetDescription: "in 7d"
+            resetsAt: weeklyResetsAt,
+            resetDescription: relativeCountdown(from: now, to: weeklyResetsAt)
         )
 
         let dailyUsage: [DailyUsageEntry] = perDayBillable.keys.sorted().map { day in
@@ -167,5 +175,21 @@ public enum ClaudeCodeJSONLReader {
     private static func percent(used: Int, quota: Int) -> Double {
         guard quota > 0 else { return 0 }
         return min(100, max(0, Double(used) / Double(quota) * 100))
+    }
+
+    private static func relativeCountdown(from now: Date, to target: Date) -> String {
+        let interval = target.timeIntervalSince(now)
+        guard interval > 0 else { return "now" }
+        let totalMinutes = Int(interval / 60)
+        let days = totalMinutes / (60 * 24)
+        let hours = (totalMinutes / 60) % 24
+        let minutes = totalMinutes % 60
+        if days > 0 {
+            return "in \(days)d \(hours)h"
+        }
+        if hours > 0 {
+            return "in \(hours)h \(minutes)m"
+        }
+        return "in \(minutes)m"
     }
 }

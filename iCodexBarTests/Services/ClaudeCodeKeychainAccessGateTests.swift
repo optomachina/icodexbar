@@ -52,6 +52,6 @@ final class ClaudeCodeKeychainAccessGateTests: XCTestCase {
         // First call observes expiration and clears it.
         XCTAssertTrue(ClaudeCodeKeychainAccessGate.shouldAllowPrompt(now: expired, defaults: defaults))
         // Persisted state should be gone.
-        XCTAssertNil(defaults.object(forKey: "claudeCodeKeychainDeniedUntil"))
+        XCTAssertNil(defaults.object(forKey: ClaudeCodeKeychainAccessGate.deniedUntilKey))
     }
 }
