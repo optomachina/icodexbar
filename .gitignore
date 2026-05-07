@@ -29,8 +29,12 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/.env*
+fastlane/README.md
 
-# Bundler
+# Bundler — Gemfile.lock intentionally untracked: CI installs fastlane via
+# `gem install`, not bundler, so a lockfile only causes drift between local
+# bundler-managed runs and CI.
+Gemfile.lock
 vendor/bundle/
 .bundle/
 
