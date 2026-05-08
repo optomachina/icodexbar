@@ -190,6 +190,10 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
+      - path: iCodexBarMacTests
+        excludes:
+          - "**/.DS_Store"
+      - path: iCodexBarMac/StatusIconRenderer.swift
       - path: iCodexBarTests
         excludes:
           - "**/.DS_Store"
