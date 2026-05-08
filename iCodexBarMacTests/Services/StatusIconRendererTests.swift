@@ -126,8 +126,8 @@ private struct PixelMap {
         collected.reserveCapacity(width * height)
         bytes.reserveCapacity(width * height * 4)
 
-        for y in 0..<height {
-            for x in 0..<width {
+        for y in 0 ..< height {
+            for x in 0 ..< width {
                 guard let color = rep.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) else {
                     throw PixelError.missingColor
                 }
