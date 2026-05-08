@@ -105,7 +105,7 @@ The narrowest end-to-end slice that proves the architecture. One provider, one m
 - [ ] Claude Code reader: parse `~/.claude/projects/*.jsonl` into `UsageSnapshot`
 - [ ] Codex CLI reader: parse `~/.codex/` into `UsageSnapshot`
 - [ ] In-memory `UsageStore` shared across menu bar + widget
-- [ ] 2-bar menu bar icon (session top, weekly bottom)
+- [x] 2-bar menu bar icon (session top, weekly bottom)
 - [ ] Dropdown with Claude Code + Codex CLI rows (pace-line, relative reset)
 - [ ] Refresh cadence: manual + 5m default
 - [ ] Keychain preflight explanation (even though no keys yet, validate the flow)
